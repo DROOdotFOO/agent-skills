@@ -20,6 +20,14 @@ syntax patterns (types, modules, generics), see droo-stack's noir-patterns rule.
 This skill covers the **why** of ZK: circuit architecture, security pitfalls,
 Aztec integration, and testing strategy.
 
+## What You Get
+
+- Circuit architecture and constraint optimization patterns
+- ZK-specific security: privacy leaks, oracle safety, nullifier attacks
+- Aztec contract integration (notes, storage, account abstraction)
+- Testing strategy: nargo tests, e2e setup, cross-chain messaging
+- Constrained vs unconstrained computation guidance
+
 ## When to use
 
 This skill activates when working on ZK circuit design, proof systems, or Aztec

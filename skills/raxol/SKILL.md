@@ -21,6 +21,14 @@ runs in terminal, browser (LiveView), and SSH. OTP provides supervision, crash
 isolation, and hot reload. Package split: `:raxol` (core TUI) and
 `:raxol_agent` (agent framework).
 
+## What You Get
+
+- TEA agent and Process agent patterns with lifecycle examples
+- Multi-agent orchestration (teams, cockpit, message protocol)
+- Headless session and MCP tool integration
+- AI backend strategy (mock, local, remote)
+- Agent testing patterns (unit, integration, E2E)
+
 ## Two Agent Models
 
 | | TEA Agent (`use Raxol.Agent`) | Process Agent (`use Raxol.Agent.UseProcess`) |

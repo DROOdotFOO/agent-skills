@@ -20,6 +20,13 @@ metadata:
 
 Concrete coding patterns for a polyglot stack. Each rule shows **Incorrect** and **Correct** examples with rationale. These complement CLAUDE.md (which sets high-level preferences) with detailed, actionable reference material.
 
+## What You Get
+
+- Incorrect/Correct code examples with rationale for each language
+- Patterns organized by impact level (critical, high, medium)
+- Language-specific idioms: pipes, pattern matching, error handling, testing
+- Complements CLAUDE.md preferences with concrete, actionable rules
+
 ## When to use
 
 This skill activates contextually when working in the languages below. Read the relevant rule file for the language you're working in.

@@ -17,6 +17,13 @@ metadata:
 Ethereum ecosystem tooling, framework selection, and standards reference.
 For Solidity code and auditing, use solidity-audit. For ZK/Noir, use noir.
 
+## What You Get
+
+- Framework comparison (Foundry vs Hardhat vs Scaffold-ETH 2)
+- RPC provider, block explorer, and faucet reference
+- EIP/ERC standards lookup with status and usage guidance
+- Blockscout MCP and abi.ninja tool patterns
+
 ## When to use
 
 This skill activates for ecosystem-level questions: which tools to use,

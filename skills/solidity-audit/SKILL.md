@@ -19,6 +19,14 @@ Opinionated Solidity development standards and security auditing methodology.
 Foundry-first. Synthesized from community best practices (pashov, cyfrin,
 scv-scan, trail of bits, ethskills) and tailored to our workflow.
 
+## What You Get
+
+- Foundry-first development patterns (testing, fuzzing, invariants, forks)
+- Vulnerability taxonomy: reentrancy, access control, oracles, flash loans, MEV
+- 4-phase audit methodology with finding report template
+- Code quality standards (NatSpec, errors, events, gas patterns)
+- Live documentation sources (ETHSkills, community references)
+
 ## Philosophy
 
 Everything will be attacked. Write code as if the attacker has unlimited

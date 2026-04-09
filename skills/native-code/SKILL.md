@@ -21,6 +21,14 @@ apply regardless of implementation language.
 
 For general language patterns (C, Zig, Rust), see droo-stack.
 
+## What You Get
+
+- NIF boundary patterns (C `erl_nif.h`, Rust Rustler, Zig SIMD)
+- Scheduler contract and memory model rules
+- Elixir-side module structure for NIF wrappers
+- Common crash/leak patterns and fixes
+- Two-level testing strategy (native unit + ExUnit boundary)
+
 ## When to use
 
 - Writing or reviewing NIF code (C `erl_nif.h` or Rust Rustler)

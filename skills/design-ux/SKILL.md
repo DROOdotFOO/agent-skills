@@ -21,6 +21,14 @@ Constraint-based design. Monospace-first. Every pixel earns its place. Zero layo
 
 Design decisions flow from constraints, not decoration. Start from the character grid, add only what communicates. If a visual element does not serve information hierarchy, remove it.
 
+## What You Get
+
+- Design token systems and theming architecture
+- Component composition patterns (React, TUI, mobile)
+- Typography, color, and spacing decisions with constraint rationale
+- Accessibility audit checklist (WCAG AA)
+- Terminal-first design principles for monospace layouts
+
 ## When to Use
 
 - Component architecture and composition patterns
@@ -62,6 +70,18 @@ Design decisions flow from constraints, not decoration. Start from the character
 - `droo-stack` -- for code-level patterns (TypeScript, React hooks, error handling)
 - `raxol` -- for Raxol TUI framework API (TEA agents, headless sessions)
 - `ethskills` -- for Ethereum/dApp ecosystem tooling
+
+## Common Pitfalls
+
+| Mistake | Why It Fails | Better Approach |
+|---------|-------------|-----------------|
+| Fixed-width containers | Breaks responsive design and terminal scaling | Use `min/max/fit-content` constraints |
+| Raw hex colors in components | Breaks theming, dark mode fails silently | Use semantic tokens (`text-foreground`, `bg-surface`) |
+| Decorative visual elements | Noise, obscures info hierarchy | Remove if it doesn't communicate or differentiate |
+| Color-only differentiation | Excludes colorblind users (WCAG fail) | Combine color with icon, shape, or text label |
+| Keyboard-inaccessible components | Excludes keyboard-only users (WCAG AA fail) | Test all interactive components with Tab key |
+| Giant component with boolean props | Unmaintainable, untestable API surface | Compose small focused components |
+| Pixel-perfect layouts | Fragile across viewports and font sizes | Constraint-based sizing from content |
 
 ## Key Conventions
 

@@ -17,6 +17,26 @@ metadata:
 
 This skill helps you build LLM-powered applications with Claude. Choose the right surface based on your needs, detect the project language, then read the relevant language-specific documentation.
 
+## What You Get
+
+- Language-detected SDK examples (Python, TypeScript, Go, Elixir, Rust, Lua, cURL)
+- Decision tree: single call vs workflow vs agent vs Agent SDK
+- Current model IDs, thinking/effort config, caching patterns
+- Tool use patterns (tool runner, manual loop, code execution)
+- Error taxonomy and live documentation URLs
+
+## Top Pitfalls (quick reference)
+
+| Mistake | Fix |
+|---------|-----|
+| Using `budget_tokens` on Opus 4.6 / Sonnet 4.6 | Use `thinking: {type: "adaptive"}` -- budget_tokens is deprecated |
+| Lowballing `max_tokens` | Default ~16K non-streaming, ~64K streaming. Truncation = wasted retry |
+| Prefilling assistant message on Opus 4.6 | Returns 400. Use structured outputs or system prompt instead |
+| Silent cache invalidation | Check `usage.cache_read_input_tokens`. Common culprit: `datetime.now()` in system prompt |
+| Redefining SDK types | Use `Anthropic.MessageParam`, `Anthropic.Tool`, etc. -- don't roll your own |
+
+Full list at the bottom of this file under "Common Pitfalls".
+
 ## Defaults
 
 Unless the user requests otherwise:

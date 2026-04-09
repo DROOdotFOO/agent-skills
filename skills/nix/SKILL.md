@@ -20,6 +20,14 @@ Practical patterns for the Nix ecosystem: the language itself, flake
 architecture, NixOS/Home Manager configuration, package building, and the
 emerging pattern of packaging AI agent skills as Nix derivations.
 
+## What You Get
+
+- Nix language idioms (let/with/inherit, builtins, lazy evaluation)
+- Flake architecture (inputs, outputs, lockfiles, overlays)
+- NixOS and Home Manager module patterns
+- Package builders (mkDerivation, buildGoModule, buildNpmPackage)
+- Agent-skills-as-Nix-packages patterns (rigup, nix-agent MCP)
+
 ## When to use
 
 - Writing or reviewing `.nix` files (flakes, modules, overlays, packages)
