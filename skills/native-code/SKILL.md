@@ -8,7 +8,7 @@ description: >
   language questions (use droo-stack), general Elixir patterns (use droo-stack),
   Raxol framework (use raxol skill).
 metadata:
-  author: hydepwns
+  author: DROOdotFOO
   version: "1.0.0"
   tags: nif, simd, ffi, beam, erlang, elixir, rustler, zig, c, native
 ---

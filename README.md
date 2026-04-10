@@ -43,7 +43,7 @@ Add to your `home/.chezmoiexternal.toml`:
 ```toml
 [".agents/skills"]
     type = "archive"
-    url = "https://github.com/Hydepwns/agent-skills/archive/v1.0.0.tar.gz"
+    url = "https://github.com/DROOdotFOO/agent-skills/archive/v1.0.0.tar.gz"
     stripComponents = 2
     include = ["*/skills/**"]
     refreshPeriod = "0"
@@ -61,7 +61,7 @@ done
 ### Manual
 
 ```bash
-git clone https://github.com/Hydepwns/agent-skills.git ~/.agents/skills-repo
+git clone https://github.com/DROOdotFOO/agent-skills.git ~/.agents/skills-repo
 ln -s ~/.agents/skills-repo/skills ~/.agents/skills
 ```
 

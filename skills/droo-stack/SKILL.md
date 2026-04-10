@@ -11,7 +11,7 @@ description: >
   language syntax), or NIF/SIMD domain questions (use native-code skill --
   this skill only covers C and Zig language syntax).
 metadata:
-  author: hydepwns
+  author: DROOdotFOO
   version: "1.0.0"
   tags: elixir, typescript, go, rust, python, lua, c, zig, shell, noir, chezmoi
 ---

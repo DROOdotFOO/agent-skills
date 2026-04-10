@@ -9,7 +9,7 @@ description: >
   working on ZK circuits (use noir skill), or Nix language is incidental
   to another domain.
 metadata:
-  author: hydepwns
+  author: DROOdotFOO
   version: "1.0.0"
   tags: nix, nixos, flakes, home-manager, devshell, agent-skills, rigup
 ---

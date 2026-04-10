@@ -7,7 +7,7 @@ description: >
   TRIGGER when: writing or auditing Solidity code (use solidity-audit skill),
   or working with Noir/ZK circuits (use noir skill).
 metadata:
-  author: hydepwns
+  author: DROOdotFOO
   version: "1.0.0"
   tags: ethereum, web3, foundry, blockscout, eip, erc, tooling
 ---

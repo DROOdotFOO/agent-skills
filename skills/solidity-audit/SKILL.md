@@ -8,7 +8,7 @@ description: >
   when: general Ethereum tooling/ecosystem questions (use ethskills skill),
   or Noir/ZK circuits (use noir skill).
 metadata:
-  author: hydepwns
+  author: DROOdotFOO
   version: "1.0.0"
   tags: solidity, audit, security, foundry, smart-contracts, vulnerabilities
 ---

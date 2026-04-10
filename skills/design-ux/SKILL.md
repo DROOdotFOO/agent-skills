@@ -10,7 +10,7 @@ description: >
   building Raxol TUI framework features (use raxol skill), or working with
   CSS-in-JS runtime concerns (this skill covers design decisions, not runtime).
 metadata:
-  author: hydepwns
+  author: DROOdotFOO
   version: "1.0.0"
   tags: design, ux, ui, tailwind, react, accessibility, tokens, typography, tui
 ---

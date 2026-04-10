@@ -8,7 +8,7 @@ description: >
   integration. DO NOT TRIGGER when: only Noir language syntax is needed
   (droo-stack handles that), or working with Solidity (use solidity-audit skill).
 metadata:
-  author: hydepwns
+  author: DROOdotFOO
   version: "1.0.0"
   tags: noir, zk, zero-knowledge, aztec, circuits, proofs, nargo, zoir
 ---
