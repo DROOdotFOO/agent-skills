@@ -17,6 +17,7 @@ Context-injection skills for Claude Code sessions. Each skill lives in `skills/<
 | `design-ux`      | UI/UX design patterns, design tokens, accessibility, TUI aesthetics                 |
 | `nix`            | Nix language, flakes, NixOS, Home Manager, packaging                                |
 | `native-code`    | NIF development (C/Rust/Rustler), SIMD (Zig), BEAM native boundary                  |
+| `polymath`       | Split-brain research methodology, parallel multi-agent lens synthesis               |
 
 ## Agents
 
