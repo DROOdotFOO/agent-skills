@@ -126,14 +126,14 @@ function claimReward(bytes32[] calldata merkleProof) external {
 
 ## MEV protection strategies
 
-| Strategy | Protection | Tradeoff |
-|----------|-----------|----------|
-| Slippage bounds | Sandwich | User must set appropriate bounds |
-| Commit-reveal | Frontrunning | 2-tx UX, reveal window timing |
-| Private mempool (Flashbots) | All MEV | Centralization, censorship risk |
-| Batch auctions | Frontrunning | Delayed execution, complexity |
-| Time-weighted operations | Flash loans | Slower price discovery |
-| MEV-Share / OFA | Sandwich | Requires MEV-aware infrastructure |
+| Strategy                    | Protection   | Tradeoff                          |
+| --------------------------- | ------------ | --------------------------------- |
+| Slippage bounds             | Sandwich     | User must set appropriate bounds  |
+| Commit-reveal               | Frontrunning | 2-tx UX, reveal window timing     |
+| Private mempool (Flashbots) | All MEV      | Centralization, censorship risk   |
+| Batch auctions              | Frontrunning | Delayed execution, complexity     |
+| Time-weighted operations    | Flash loans  | Slower price discovery            |
+| MEV-Share / OFA             | Sandwich     | Requires MEV-aware infrastructure |
 
 ## Deadline parameters
 

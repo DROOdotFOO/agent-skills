@@ -189,7 +189,9 @@ for (const block of response.content) {
         { role: "assistant", content: response.content },
         {
           role: "user",
-          content: [{ type: "tool_result", tool_use_id: block.id, content: result }],
+          content: [
+            { type: "tool_result", tool_use_id: block.id, content: result },
+          ],
         },
       ],
     });
@@ -266,7 +268,8 @@ const response = await client.messages.create({
   messages: [
     {
       role: "user",
-      content: "Calculate the mean and standard deviation of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]",
+      content:
+        "Calculate the mean and standard deviation of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]",
     },
   ],
   tools: [{ type: "code_execution_20260120", name: "code_execution" }],
@@ -343,8 +346,12 @@ for (const block of response.content) {
     if (result.type === "bash_code_execution_result" && result.content) {
       for (const fileRef of result.content) {
         if (fileRef.type === "bash_code_execution_output") {
-          const metadata = await client.beta.files.retrieveMetadata(fileRef.file_id);
-          const downloadResponse = await client.beta.files.download(fileRef.file_id);
+          const metadata = await client.beta.files.retrieveMetadata(
+            fileRef.file_id,
+          );
+          const downloadResponse = await client.beta.files.download(
+            fileRef.file_id,
+          );
           const fileBytes = Buffer.from(await downloadResponse.arrayBuffer());
           const safeName = path.basename(metadata.filename);
           if (!safeName || safeName === "." || safeName === "..") {

@@ -76,21 +76,36 @@ INCORRECT:
 
 ```css
 /* Light gray on white: 2.85:1 ratio -- fails WCAG AA */
-.muted-text { color: #999; background: #fff; }
+.muted-text {
+  color: #999;
+  background: #fff;
+}
 
 /* Low contrast accent: 2.1:1 ratio */
-.link { color: #6366f1; background: #e0e7ff; }
+.link {
+  color: #6366f1;
+  background: #e0e7ff;
+}
 ```
 
 CORRECT:
 
 ```css
 /* Meets 4.5:1 for normal text */
-.muted-text { color: #6b7280; background: #fff; }    /* 5.0:1 */
+.muted-text {
+  color: #6b7280;
+  background: #fff;
+} /* 5.0:1 */
 
 /* DROO palette: high contrast by default */
-.text-primary { color: #e2e8f0; background: #1a1a2e; }  /* 11.3:1 */
-.text-muted { color: #94a3b8; background: #1a1a2e; }    /* 6.4:1 */
+.text-primary {
+  color: #e2e8f0;
+  background: #1a1a2e;
+} /* 11.3:1 */
+.text-muted {
+  color: #94a3b8;
+  background: #1a1a2e;
+} /* 6.4:1 */
 ```
 
 ## Keyboard Navigation
@@ -106,7 +121,9 @@ INCORRECT:
   {open && (
     <div className="dropdown-menu">
       {options.map((opt) => (
-        <div key={opt} onClick={() => select(opt)}>{opt}</div>
+        <div key={opt} onClick={() => select(opt)}>
+          {opt}
+        </div>
       ))}
     </div>
   )}
@@ -124,7 +141,10 @@ CORRECT:
     onClick={() => setOpen(!open)}
     onKeyDown={(e) => {
       if (e.key === "Escape") setOpen(false);
-      if (e.key === "ArrowDown") { setOpen(true); focusFirst(); }
+      if (e.key === "ArrowDown") {
+        setOpen(true);
+        focusFirst();
+      }
     }}
   >
     {selected}
@@ -195,11 +215,13 @@ INCORRECT:
 ```css
 /* Animation with no reduced-motion fallback */
 .card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 .card:hover {
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 ```
 
@@ -215,7 +237,9 @@ CORRECT:
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card { transition: none; }
+  .card {
+    transition: none;
+  }
 }
 ```
 
@@ -227,8 +251,12 @@ INCORRECT:
 
 ```css
 /* Removing focus for "cleaner" look */
-*:focus { outline: none; }
-button:focus { outline: none; }
+*:focus {
+  outline: none;
+}
+button:focus {
+  outline: none;
+}
 ```
 
 CORRECT:

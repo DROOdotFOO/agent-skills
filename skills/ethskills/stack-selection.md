@@ -9,16 +9,16 @@ tags: ethereum, foundry, hardhat, scaffold-eth, framework
 
 ## Decision matrix
 
-| Factor | Foundry | Hardhat | Scaffold-ETH 2 |
-|--------|---------|---------|-----------------|
-| Language | Solidity (tests too) | JavaScript/TypeScript | TypeScript + Solidity |
-| Speed | Fast (Rust) | Slower (Node.js) | Depends on underlying |
-| Fuzzing | Built-in | Plugin (echidna) | Via Foundry/Hardhat |
-| Fork testing | Built-in | Built-in | Via underlying |
-| Debugger | `forge debug` | `console.log` + Tenderly | Depends |
-| Frontend | None | None | Next.js + wagmi + viem |
-| Best for | Protocol development, auditing | DApp backends, migrations | Full-stack prototypes |
-| Learning curve | Medium (Solidity tests) | Low (JS familiarity) | Low (scaffolded) |
+| Factor         | Foundry                        | Hardhat                   | Scaffold-ETH 2         |
+| -------------- | ------------------------------ | ------------------------- | ---------------------- |
+| Language       | Solidity (tests too)           | JavaScript/TypeScript     | TypeScript + Solidity  |
+| Speed          | Fast (Rust)                    | Slower (Node.js)          | Depends on underlying  |
+| Fuzzing        | Built-in                       | Plugin (echidna)          | Via Foundry/Hardhat    |
+| Fork testing   | Built-in                       | Built-in                  | Via underlying         |
+| Debugger       | `forge debug`                  | `console.log` + Tenderly  | Depends                |
+| Frontend       | None                           | None                      | Next.js + wagmi + viem |
+| Best for       | Protocol development, auditing | DApp backends, migrations | Full-stack prototypes  |
+| Learning curve | Medium (Solidity tests)        | Low (JS familiarity)      | Low (scaffolded)       |
 
 ## When to use Foundry (default choice)
 

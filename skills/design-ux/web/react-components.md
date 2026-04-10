@@ -80,6 +80,7 @@ CORRECT:
 ```
 
 Standard prop vocabulary:
+
 - **size**: `"sm" | "md" | "lg"` (not `small`, `compact`, `tiny`)
 - **variant**: `"default" | "primary" | "accent" | "destructive" | "ghost"`
 - **Events**: `on{Event}` (not `handle{Event}`, `onPress`, `onDismiss`)
@@ -95,9 +96,7 @@ INCORRECT:
 // Component owns its own margins -- breaks in different layouts
 function Card({ children }: { children: React.ReactNode }) {
   return (
-    <div className="p-4 mb-6 ml-4 w-1/3 border border-default">
-      {children}
-    </div>
+    <div className="p-4 mb-6 ml-4 w-1/3 border border-default">{children}</div>
   );
 }
 ```
@@ -106,11 +105,15 @@ CORRECT:
 
 ```tsx
 // Component owns only its internals
-function Card({ children, className }: { children: React.ReactNode; className?: string }) {
+function Card({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <div className={cn("p-4 border border-default", className)}>
-      {children}
-    </div>
+    <div className={cn("p-4 border border-default", className)}>{children}</div>
   );
 }
 
@@ -119,7 +122,7 @@ function Card({ children, className }: { children: React.ReactNode; className?: 
   <Card>First</Card>
   <Card>Second</Card>
   <Card>Third</Card>
-</div>
+</div>;
 ```
 
 ## Render Slots for Flexibility
@@ -172,14 +175,26 @@ function UserList() {
   const { data, isLoading, error } = useUsers();
   if (isLoading) return <div className="animate-pulse h-32 bg-gray-200" />;
   if (error) return <div className="text-red-500">Failed to load users</div>;
-  return <ul>{data.map((u) => <li key={u.id}>{u.name}</li>)}</ul>;
+  return (
+    <ul>
+      {data.map((u) => (
+        <li key={u.id}>{u.name}</li>
+      ))}
+    </ul>
+  );
 }
 
 function ProjectList() {
   const { data, isLoading, error } = useProjects();
   if (isLoading) return <div className="animate-pulse h-32 bg-gray-200" />;
   if (error) return <div className="text-red-500">Failed to load projects</div>;
-  return <ul>{data.map((p) => <li key={p.id}>{p.name}</li>)}</ul>;
+  return (
+    <ul>
+      {data.map((p) => (
+        <li key={p.id}>{p.name}</li>
+      ))}
+    </ul>
+  );
 }
 ```
 
@@ -194,12 +209,18 @@ CORRECT:
   <Suspense fallback={<Skeleton className="h-32" />}>
     <ProjectList />
   </Suspense>
-</ErrorBoundary>
+</ErrorBoundary>;
 
 // Components only handle the happy path
 function UserList() {
   const users = useUsers(); // throws on error, suspends on loading
-  return <ul>{users.map((u) => <li key={u.id}>{u.name}</li>)}</ul>;
+  return (
+    <ul>
+      {users.map((u) => (
+        <li key={u.id}>{u.name}</li>
+      ))}
+    </ul>
+  );
 }
 ```
 
@@ -223,7 +244,10 @@ CORRECT:
 ```tsx
 // Open component: forwards ref, spreads HTML attributes
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, variant = "default", size = "md", className, ...props }, ref) => {
+  (
+    { children, variant = "default", size = "md", className, ...props },
+    ref,
+  ) => {
     return (
       <button
         ref={ref}
@@ -233,6 +257,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {children}
       </button>
     );
-  }
+  },
 );
 ```

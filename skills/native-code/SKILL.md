@@ -46,13 +46,13 @@ For general language patterns (C, Zig, Rust), see droo-stack.
 
 ## Reading guide
 
-| Working on | Read |
-|-----------|------|
-| Scheduler contract, memory model, deployment | [references/boundary-patterns](references/boundary-patterns.md) |
-| Elixir-side NIF module structure | [references/nif-elixir](references/nif-elixir.md) |
-| C NIFs (`erl_nif.h`, resources, tree-sitter) | [references/nif-c](references/nif-c.md) |
-| Rust NIFs (Rustler, ResourceArc, safety) | [references/nif-rust](references/nif-rust.md) |
-| Zig SIMD (`@Vector`, reductions, NIF integration) | [references/simd-zig](references/simd-zig.md) |
+| Working on                                        | Read                                                            |
+| ------------------------------------------------- | --------------------------------------------------------------- |
+| Scheduler contract, memory model, deployment      | [references/boundary-patterns](references/boundary-patterns.md) |
+| Elixir-side NIF module structure                  | [references/nif-elixir](references/nif-elixir.md)               |
+| C NIFs (`erl_nif.h`, resources, tree-sitter)      | [references/nif-c](references/nif-c.md)                         |
+| Rust NIFs (Rustler, ResourceArc, safety)          | [references/nif-rust](references/nif-rust.md)                   |
+| Zig SIMD (`@Vector`, reductions, NIF integration) | [references/simd-zig](references/simd-zig.md)                   |
 
 ## Key principles
 
@@ -64,13 +64,13 @@ For general language patterns (C, Zig, Rust), see droo-stack.
 
 ## Common pitfalls
 
-| Mistake | Impact | Fix |
-|---------|--------|-----|
-| NIF takes >1ms without dirty scheduler | Scheduler starvation, latency spikes | Add `ERL_NIF_DIRTY_JOB_CPU_BOUND` or `schedule = "DirtyCpu"` |
-| Storing `ERL_NIF_TERM` in native struct | Use-after-free, undefined behavior | Copy data out of terms, or use `enif_make_copy` with a process-independent env |
-| Rust `panic!` / `unwrap()` inside NIF | Entire BEAM VM crashes | Use `Result`, catch panics at boundary with `std::panic::catch_unwind` |
-| Missing NIF stub in Elixir module | Silent `nil` return or confusing error | Stub must `raise "NIF not loaded"` |
-| Not freeing native resources | Memory leak proportional to call rate | Register destructors via resource types |
+| Mistake                                 | Impact                                 | Fix                                                                            |
+| --------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------ |
+| NIF takes >1ms without dirty scheduler  | Scheduler starvation, latency spikes   | Add `ERL_NIF_DIRTY_JOB_CPU_BOUND` or `schedule = "DirtyCpu"`                   |
+| Storing `ERL_NIF_TERM` in native struct | Use-after-free, undefined behavior     | Copy data out of terms, or use `enif_make_copy` with a process-independent env |
+| Rust `panic!` / `unwrap()` inside NIF   | Entire BEAM VM crashes                 | Use `Result`, catch panics at boundary with `std::panic::catch_unwind`         |
+| Missing NIF stub in Elixir module       | Silent `nil` return or confusing error | Stub must `raise "NIF not loaded"`                                             |
+| Not freeing native resources            | Memory leak proportional to call rate  | Register destructors via resource types                                        |
 
 ## See also
 

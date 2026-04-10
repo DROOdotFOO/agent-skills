@@ -58,12 +58,12 @@ static ERL_NIF_TERM continue_work(ErlNifEnv *env, int argc,
 
 Two memory worlds that must not leak into each other:
 
-| | BEAM (managed) | Native (manual) |
-|-|----------------|-----------------|
-| **Allocator** | BEAM GC | malloc/Allocator/Box |
-| **Lifetime** | process-scoped | explicit free or RAII |
-| **Thread safety** | process isolation | your responsibility |
-| **Cleanup** | automatic GC | resource destructors |
+|                   | BEAM (managed)    | Native (manual)       |
+| ----------------- | ----------------- | --------------------- |
+| **Allocator**     | BEAM GC           | malloc/Allocator/Box  |
+| **Lifetime**      | process-scoped    | explicit free or RAII |
+| **Thread safety** | process isolation | your responsibility   |
+| **Cleanup**       | automatic GC      | resource destructors  |
 
 **Critical rules:**
 

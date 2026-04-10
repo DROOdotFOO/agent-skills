@@ -41,18 +41,18 @@ Rustler auto-registers functions annotated with `#[rustler::nif]`.
 
 ## Type mapping
 
-| Elixir | Rust (Rustler) |
-|--------|----------------|
-| integer | `i64`, `u64`, `i32`, etc. |
-| float | `f64` |
-| binary | `Binary`, `OwnedBinary`, `&[u8]` |
-| string | `String`, `&str` |
-| atom | `Atom`, `rustler::atoms!` |
-| list | `Vec<T>`, `ListIterator` |
-| tuple | `(A, B, C)` |
-| map | `HashMap<K, V>`, `Term` |
-| nil | `()` or `Option<T>` (None) |
-| resource | `ResourceArc<T>` |
+| Elixir   | Rust (Rustler)                   |
+| -------- | -------------------------------- |
+| integer  | `i64`, `u64`, `i32`, etc.        |
+| float    | `f64`                            |
+| binary   | `Binary`, `OwnedBinary`, `&[u8]` |
+| string   | `String`, `&str`                 |
+| atom     | `Atom`, `rustler::atoms!`        |
+| list     | `Vec<T>`, `ListIterator`         |
+| tuple    | `(A, B, C)`                      |
+| map      | `HashMap<K, V>`, `Term`          |
+| nil      | `()` or `Option<T>` (None)       |
+| resource | `ResourceArc<T>`                 |
 
 ## Returning tagged tuples
 

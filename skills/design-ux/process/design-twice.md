@@ -96,13 +96,13 @@ Before designing, answer these:
 
 When comparing two designs, evaluate on these axes:
 
-| Dimension | Question |
-|-----------|----------|
-| **Simplicity** | How many concepts must the user learn? |
-| **Generality** | Does it handle edge cases without special-casing? |
-| **Efficiency** | How many interactions to complete the common task? |
-| **Surface area** | How many components/props/states to maintain? |
-| **Depth** | How much complexity is hidden behind a simple interface? |
+| Dimension         | Question                                                   |
+| ----------------- | ---------------------------------------------------------- |
+| **Simplicity**    | How many concepts must the user learn?                     |
+| **Generality**    | Does it handle edge cases without special-casing?          |
+| **Efficiency**    | How many interactions to complete the common task?         |
+| **Surface area**  | How many components/props/states to maintain?              |
+| **Depth**         | How much complexity is hidden behind a simple interface?   |
 | **Accessibility** | Which is easier to make keyboard/screen-reader accessible? |
 
 A good design is a "deep module": minimal surface area hiding significant complexity.

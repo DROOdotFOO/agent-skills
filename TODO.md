@@ -164,7 +164,7 @@ Pre-session context builder. Generates a briefing before starting work on a proj
 
 **Tech:** Python (typer, gh CLI, sqlite3 for recall DB). Could also be a Claude Code hook.
 
-**Key insight:** recall captures *after* sessions, prepper prepares *before*. Together they close the knowledge loop.
+**Key insight:** recall captures _after_ sessions, prepper prepares _before_. Together they close the knowledge loop.
 
 ---
 

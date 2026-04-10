@@ -101,12 +101,14 @@ constraints. Unconstrained code compiles to Brillig -- runs as a VM
 program in the prover with no constraints.
 
 **When to use unconstrained:**
+
 - Expensive computation with cheap verification (sorting, searching, optimization)
 - Data formatting / string manipulation
 - Complex conditional logic that would branch-explode in constraints
 - Anything where you can verify the result more cheaply than computing it
 
 **When NOT to use unconstrained:**
+
 - Simple arithmetic (Field ops are already cheap)
 - Hash computations (must be constrained for soundness)
 - Anything where verification is as expensive as computation

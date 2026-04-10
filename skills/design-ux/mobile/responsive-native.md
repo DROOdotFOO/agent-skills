@@ -16,9 +16,15 @@ INCORRECT:
 ```tsx
 // Tiny tap targets: 24x24px icons with no spacing
 <div className="flex gap-1">
-  <button className="w-6 h-6"><IconEdit /></button>
-  <button className="w-6 h-6"><IconDelete /></button>
-  <button className="w-6 h-6"><IconShare /></button>
+  <button className="w-6 h-6">
+    <IconEdit />
+  </button>
+  <button className="w-6 h-6">
+    <IconDelete />
+  </button>
+  <button className="w-6 h-6">
+    <IconShare />
+  </button>
 </div>
 ```
 
@@ -49,7 +55,7 @@ INCORRECT:
 
 ```html
 <!-- Content hidden behind notch and home indicator -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <body style="padding: 0;">
   <header>Title</header>
   <footer>Navigation</footer>
@@ -59,7 +65,10 @@ INCORRECT:
 CORRECT:
 
 ```html
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover"
+/>
 ```
 
 ```css
@@ -76,11 +85,8 @@ footer {
 
 /* Or use logical properties for the whole app */
 .app {
-  padding:
-    env(safe-area-inset-top)
-    env(safe-area-inset-right)
-    env(safe-area-inset-bottom)
-    env(safe-area-inset-left);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 ```
 
@@ -94,8 +100,8 @@ INCORRECT:
 // Desktop-first: hiding things on mobile
 <nav className="flex items-center gap-4">
   <Logo />
-  <NavLinks className="sm:hidden" />           {/* hidden on mobile */}
-  <SearchBar className="sm:hidden" />           {/* hidden on mobile */}
+  <NavLinks className="sm:hidden" /> {/* hidden on mobile */}
+  <SearchBar className="sm:hidden" /> {/* hidden on mobile */}
   <HamburgerMenu className="hidden sm:block" /> {/* shown only on mobile */}
 </nav>
 ```
@@ -106,9 +112,9 @@ CORRECT:
 // Mobile-first: mobile is the base, desktop adds
 <nav className="flex items-center justify-between">
   <Logo />
-  <HamburgerMenu className="md:hidden" />         {/* mobile: hamburger */}
+  <HamburgerMenu className="md:hidden" /> {/* mobile: hamburger */}
   <div className="hidden md:flex md:items-center md:gap-4">
-    <NavLinks />                                    {/* desktop: full nav */}
+    <NavLinks /> {/* desktop: full nav */}
     <SearchBar />
   </div>
 </nav>
@@ -151,10 +157,12 @@ INCORRECT:
 function HomePage() {
   const [data, setData] = useState(null);
   useEffect(() => {
-    fetch("/api/homepage").then(r => r.json()).then(setData);
+    fetch("/api/homepage")
+      .then((r) => r.json())
+      .then(setData);
   }, []);
 
-  if (!data) return null;  // blank screen while loading
+  if (!data) return null; // blank screen while loading
   return <PageContent data={data} />;
 }
 ```
@@ -187,7 +195,9 @@ INCORRECT:
 
 ```css
 /* Scroll hijacking: takes over native scroll behavior */
-html { overflow: hidden; }
+html {
+  overflow: hidden;
+}
 .container {
   height: 100vh;
   overflow-y: scroll;
@@ -215,7 +225,9 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
+  html {
+    scroll-behavior: auto;
+  }
 }
 ```
 

@@ -9,17 +9,18 @@ tags: ethereum, eip, erc, standards, tokens
 
 ## Token standards
 
-| Standard | Type | Key features |
-|----------|------|-------------|
-| ERC-20 | Fungible token | `transfer`, `approve`, `transferFrom` |
-| ERC-721 | NFT | `ownerOf`, `safeTransferFrom`, unique token IDs |
-| ERC-1155 | Multi-token | Batch transfers, fungible + non-fungible in one contract |
-| ERC-4626 | Tokenized vault | Standardized yield-bearing vault interface |
-| ERC-2612 | Permit | Gasless approvals via EIP-712 signatures |
+| Standard | Type            | Key features                                             |
+| -------- | --------------- | -------------------------------------------------------- |
+| ERC-20   | Fungible token  | `transfer`, `approve`, `transferFrom`                    |
+| ERC-721  | NFT             | `ownerOf`, `safeTransferFrom`, unique token IDs          |
+| ERC-1155 | Multi-token     | Batch transfers, fungible + non-fungible in one contract |
+| ERC-4626 | Tokenized vault | Standardized yield-bearing vault interface               |
+| ERC-2612 | Permit          | Gasless approvals via EIP-712 signatures                 |
 
 ## Account abstraction
 
 **EIP-7702** (Pectra upgrade, 2025):
+
 - EOAs can temporarily delegate to smart contract code
 - New transaction type (`0x04`) with `authorization_list`
 - EOA sets its code to a proxy, gaining smart account features
@@ -36,36 +37,37 @@ struct Authorization {
 ```
 
 **ERC-4337** (Account abstraction without protocol changes):
+
 - Smart contract wallets with `UserOperation` mempool
 - Bundlers submit operations, paymasters sponsor gas
 - EntryPoint contract validates and executes
 
 ## Governance & permissions
 
-| Standard | Purpose |
-|----------|---------|
-| ERC-5267 | EIP-712 domain discovery |
-| EIP-712 | Typed structured data signing |
+| Standard | Purpose                                            |
+| -------- | -------------------------------------------------- |
+| ERC-5267 | EIP-712 domain discovery                           |
+| EIP-712  | Typed structured data signing                      |
 | ERC-1271 | Contract signature validation (`isValidSignature`) |
-| ERC-2771 | Meta-transactions (trusted forwarder) |
+| ERC-2771 | Meta-transactions (trusted forwarder)              |
 
 ## DeFi primitives
 
-| Standard | Purpose |
-|----------|---------|
-| ERC-4626 | Tokenized vault (deposit/withdraw/mint/redeem) |
-| ERC-3156 | Flash loans (standard interface) |
+| Standard | Purpose                                              |
+| -------- | ---------------------------------------------------- |
+| ERC-4626 | Tokenized vault (deposit/withdraw/mint/redeem)       |
+| ERC-3156 | Flash loans (standard interface)                     |
 | ERC-7540 | Async tokenized vaults (for RWA, queued redemptions) |
 
 ## Recent & emerging
 
-| Standard | Status | Purpose |
-|----------|--------|---------|
-| ERC-8004 | Draft | Native asset representation |
-| EIP-7702 | Final (Pectra) | EOA code delegation |
-| ERC-7579 | Draft | Modular smart accounts |
+| Standard | Status         | Purpose                                     |
+| -------- | -------------- | ------------------------------------------- |
+| ERC-8004 | Draft          | Native asset representation                 |
+| EIP-7702 | Final (Pectra) | EOA code delegation                         |
+| ERC-7579 | Draft          | Modular smart accounts                      |
 | EIP-7251 | Final (Pectra) | Max effective balance increase (validators) |
-| EIP-7691 | Final (Pectra) | Blob throughput increase |
+| EIP-7691 | Final (Pectra) | Blob throughput increase                    |
 
 ## EIP-712 typed data signing
 

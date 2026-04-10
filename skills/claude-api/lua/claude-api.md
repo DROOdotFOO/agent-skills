@@ -12,12 +12,14 @@ tags: lua, claude, api, rest, lua-cjson, anthropic
 ## Dependencies
 
 **OpenResty (recommended for production):**
+
 ```
 lua-resty-http    -- HTTP client
 lua-cjson         -- JSON (bundled with OpenResty)
 ```
 
 **Standard Lua (LuaSocket):**
+
 ```
 luarocks install luasocket
 luarocks install luasec        -- TLS support

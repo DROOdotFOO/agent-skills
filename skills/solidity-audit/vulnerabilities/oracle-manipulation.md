@@ -112,6 +112,7 @@ function getTWAP(address pool, uint32 twapInterval) public view returns (int24) 
 ```
 
 **TWAP considerations:**
+
 - Longer window = more manipulation-resistant but slower to reflect real price changes
 - Short windows (< 10 minutes) are still vulnerable to multi-block manipulation
 - Low-liquidity pools are cheaper to manipulate regardless of window length

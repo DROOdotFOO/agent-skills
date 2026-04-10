@@ -153,11 +153,11 @@ fn deduct_public(from: AztecAddress, amount: u64) {
 
 ## Storage patterns
 
-| Type | Visibility | Mutability | Use case |
-|------|-----------|------------|----------|
-| `PrivateSet<Note>` | Private | Append/nullify | Token balances, credentials |
-| `PrivateImmutable<Note>` | Private | Write-once | Identity, permanent records |
-| `PublicMutable<T>` | Public | Read/write | Total supply, admin address |
-| `PublicImmutable<T>` | Public | Write-once | Contract parameters |
-| `SharedImmutable<T>` | Both | Write-once | Cross-context constants |
-| `Map<K, V>` | Either | Per-value | Per-user storage |
+| Type                     | Visibility | Mutability     | Use case                    |
+| ------------------------ | ---------- | -------------- | --------------------------- |
+| `PrivateSet<Note>`       | Private    | Append/nullify | Token balances, credentials |
+| `PrivateImmutable<Note>` | Private    | Write-once     | Identity, permanent records |
+| `PublicMutable<T>`       | Public     | Read/write     | Total supply, admin address |
+| `PublicImmutable<T>`     | Public     | Write-once     | Contract parameters         |
+| `SharedImmutable<T>`     | Both       | Write-once     | Cross-context constants     |
+| `Map<K, V>`              | Either     | Per-value      | Per-user storage            |

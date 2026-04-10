@@ -15,13 +15,28 @@ INCORRECT:
 
 ```css
 /* Ad-hoc colors: no system, impossible to theme */
-.header { background: #2d2d3f; }
-.sidebar { background: #1a1b2e; }
-.card { background: #252538; border-color: #3a3a50; }
-.button-primary { background: #6366f1; }
-.button-danger { background: #ef4444; }
-.link { color: #818cf8; }
-.success-text { color: #22c55e; }
+.header {
+  background: #2d2d3f;
+}
+.sidebar {
+  background: #1a1b2e;
+}
+.card {
+  background: #252538;
+  border-color: #3a3a50;
+}
+.button-primary {
+  background: #6366f1;
+}
+.button-danger {
+  background: #ef4444;
+}
+.link {
+  color: #818cf8;
+}
+.success-text {
+  color: #22c55e;
+}
 ```
 
 CORRECT:
@@ -102,12 +117,12 @@ INCORRECT:
 ```css
 /* Starting from a "web" palette and adding terminal colors as afterthought */
 :root {
-  --primary: #3b82f6;   /* Web blue */
+  --primary: #3b82f6; /* Web blue */
   --bg: white;
   --text: black;
 }
 .terminal-view {
-  --bg: #000;           /* Bolted-on terminal mode */
+  --bg: #000; /* Bolted-on terminal mode */
   --text: #0f0;
 }
 ```
@@ -117,17 +132,17 @@ CORRECT:
 ```css
 /* Terminal palette is the origin; light mode is the projection */
 :root {
-  --bg: #1a1a2e;         /* Terminal black */
-  --fg: #e2e8f0;         /* Terminal white */
-  --accent: #ff7edb;     /* Terminal magenta */
-  --success: #72f1b8;    /* Terminal cyan */
+  --bg: #1a1a2e; /* Terminal black */
+  --fg: #e2e8f0; /* Terminal white */
+  --accent: #ff7edb; /* Terminal magenta */
+  --success: #72f1b8; /* Terminal cyan */
 }
 
 [data-theme="light"] {
   --bg: #f1f5f9;
   --fg: #1a1a2e;
-  --accent: #c026d3;     /* Darkened magenta for light bg contrast */
-  --success: #059669;    /* Darkened cyan */
+  --accent: #c026d3; /* Darkened magenta for light bg contrast */
+  --success: #059669; /* Darkened cyan */
 }
 ```
 
@@ -156,6 +171,7 @@ CORRECT:
 ```
 
 Integrate contrast checks:
+
 - Tailwind: `tailwindcss-contrast` plugin or manual audit
 - CI: `axe-core` or `pa11y` in test pipeline
 - Design time: browser devtools contrast picker
@@ -177,12 +193,14 @@ CORRECT:
 
 ```tsx
 // Color as state: border communicates status
-<div className={cn(
-  "border-l-4 bg-surface p-4 font-mono",
-  status === "healthy" && "border-success",
-  status === "degraded" && "border-warning",
-  status === "down" && "border-error",
-)}>
+<div
+  className={cn(
+    "border-l-4 bg-surface p-4 font-mono",
+    status === "healthy" && "border-success",
+    status === "degraded" && "border-warning",
+    status === "down" && "border-error",
+  )}
+>
   <h2 className="text-foreground">{serviceName}</h2>
   <span className="text-muted">{statusMessage}</span>
 </div>

@@ -49,21 +49,21 @@ Design decisions flow from constraints, not decoration. Start from the character
 
 ## Reading Guide
 
-| Working on | Read |
-|-----------|------|
-| Design philosophy, constraint-based thinking | `shared/principles.md` |
-| Accessibility, WCAG, keyboard, screen readers | `shared/accessibility.md` |
-| Design token systems, dark/light mode | `shared/design-tokens.md` |
-| React component architecture, composition | `web/react-components.md` |
-| Tailwind utility patterns, DROO-flavored config | `web/tailwind-patterns.md` |
-| Grid, spacing, responsive breakpoints | `web/layout-grid.md` |
-| Type scale, font stacks, vertical rhythm | `web/typography.md` |
-| Color palettes, semantic tokens, contrast | `web/color-systems.md` |
-| Terminal UI layout, box-drawing, constraints | `terminal/tui-layout.md` |
-| Monospace design language, density, ASCII | `terminal/terminal-aesthetic.md` |
-| Mobile/responsive/touch, native patterns | `mobile/responsive-native.md` |
-| "Design It Twice" agent methodology | `process/design-twice.md` |
-| DESIGN.md template, living documentation | `process/design-docs.md` |
+| Working on                                      | Read                             |
+| ----------------------------------------------- | -------------------------------- |
+| Design philosophy, constraint-based thinking    | `shared/principles.md`           |
+| Accessibility, WCAG, keyboard, screen readers   | `shared/accessibility.md`        |
+| Design token systems, dark/light mode           | `shared/design-tokens.md`        |
+| React component architecture, composition       | `web/react-components.md`        |
+| Tailwind utility patterns, DROO-flavored config | `web/tailwind-patterns.md`       |
+| Grid, spacing, responsive breakpoints           | `web/layout-grid.md`             |
+| Type scale, font stacks, vertical rhythm        | `web/typography.md`              |
+| Color palettes, semantic tokens, contrast       | `web/color-systems.md`           |
+| Terminal UI layout, box-drawing, constraints    | `terminal/tui-layout.md`         |
+| Monospace design language, density, ASCII       | `terminal/terminal-aesthetic.md` |
+| Mobile/responsive/touch, native patterns        | `mobile/responsive-native.md`    |
+| "Design It Twice" agent methodology             | `process/design-twice.md`        |
+| DESIGN.md template, living documentation        | `process/design-docs.md`         |
 
 ## See also
 
@@ -73,15 +73,15 @@ Design decisions flow from constraints, not decoration. Start from the character
 
 ## Common Pitfalls
 
-| Mistake | Why It Fails | Better Approach |
-|---------|-------------|-----------------|
-| Fixed-width containers | Breaks responsive design and terminal scaling | Use `min/max/fit-content` constraints |
-| Raw hex colors in components | Breaks theming, dark mode fails silently | Use semantic tokens (`text-foreground`, `bg-surface`) |
-| Decorative visual elements | Noise, obscures info hierarchy | Remove if it doesn't communicate or differentiate |
-| Color-only differentiation | Excludes colorblind users (WCAG fail) | Combine color with icon, shape, or text label |
-| Keyboard-inaccessible components | Excludes keyboard-only users (WCAG AA fail) | Test all interactive components with Tab key |
-| Giant component with boolean props | Unmaintainable, untestable API surface | Compose small focused components |
-| Pixel-perfect layouts | Fragile across viewports and font sizes | Constraint-based sizing from content |
+| Mistake                            | Why It Fails                                  | Better Approach                                       |
+| ---------------------------------- | --------------------------------------------- | ----------------------------------------------------- |
+| Fixed-width containers             | Breaks responsive design and terminal scaling | Use `min/max/fit-content` constraints                 |
+| Raw hex colors in components       | Breaks theming, dark mode fails silently      | Use semantic tokens (`text-foreground`, `bg-surface`) |
+| Decorative visual elements         | Noise, obscures info hierarchy                | Remove if it doesn't communicate or differentiate     |
+| Color-only differentiation         | Excludes colorblind users (WCAG fail)         | Combine color with icon, shape, or text label         |
+| Keyboard-inaccessible components   | Excludes keyboard-only users (WCAG AA fail)   | Test all interactive components with Tab key          |
+| Giant component with boolean props | Unmaintainable, untestable API surface        | Compose small focused components                      |
+| Pixel-perfect layouts              | Fragile across viewports and font sizes       | Constraint-based sizing from content                  |
 
 ## Key Conventions
 

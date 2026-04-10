@@ -50,14 +50,14 @@ When `mix phx.server` is running, six tools are auto-injected into Tidewave
 at `localhost:4000/tidewave/mcp`. Server must be running before starting
 Claude Code.
 
-| Tool | Inputs | Returns |
-|------|--------|---------|
-| `raxol_start` | module OR path, id?, width?, height? | session id |
-| `raxol_screenshot` | id | plain text screen |
-| `raxol_send_key` | id, key, ctrl?, alt?, shift?, wait_ms? | updated screen |
-| `raxol_get_model` | id | inspected model |
-| `raxol_stop` | id | confirmation |
-| `raxol_list` | (none) | active session ids |
+| Tool               | Inputs                                 | Returns            |
+| ------------------ | -------------------------------------- | ------------------ |
+| `raxol_start`      | module OR path, id?, width?, height?   | session id         |
+| `raxol_screenshot` | id                                     | plain text screen  |
+| `raxol_send_key`   | id, key, ctrl?, alt?, shift?, wait_ms? | updated screen     |
+| `raxol_get_model`  | id                                     | inspected model    |
+| `raxol_stop`       | id                                     | confirmation       |
+| `raxol_list`       | (none)                                 | active session ids |
 
 Typical workflow: start -> screenshot -> send keys -> screenshot -> get model -> stop.
 

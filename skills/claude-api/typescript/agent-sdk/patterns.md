@@ -41,7 +41,10 @@ import { appendFileSync } from "fs";
 
 const logFileChange: HookCallback = async (input) => {
   const filePath = (input as any).tool_input?.file_path ?? "unknown";
-  appendFileSync("./audit.log", `${new Date().toISOString()}: modified ${filePath}\n`);
+  appendFileSync(
+    "./audit.log",
+    `${new Date().toISOString()}: modified ${filePath}\n`,
+  );
   return {};
 };
 
@@ -135,13 +138,19 @@ for await (const message of query({
 ## Session History
 
 ```typescript
-import { listSessions, getSessionMessages, getSessionInfo } from "@anthropic-ai/claude-agent-sdk";
+import {
+  listSessions,
+  getSessionMessages,
+  getSessionInfo,
+} from "@anthropic-ai/claude-agent-sdk";
 
 async function main() {
   // List past sessions (supports pagination via limit/offset)
   const sessions = await listSessions();
   for (const session of sessions) {
-    console.log(`Session ${session.sessionId} in ${session.cwd} (tag: ${session.tag})`);
+    console.log(
+      `Session ${session.sessionId} in ${session.cwd} (tag: ${session.tag})`,
+    );
   }
 
   // Get metadata for a single session
@@ -152,7 +161,9 @@ async function main() {
 
   // Retrieve messages from the most recent session
   if (sessions.length > 0) {
-    const messages = await getSessionMessages(sessions[0].sessionId, { limit: 50 });
+    const messages = await getSessionMessages(sessions[0].sessionId, {
+      limit: 50,
+    });
     for (const msg of messages) {
       console.log(msg);
     }
@@ -167,7 +178,11 @@ main();
 ## Session Mutations
 
 ```typescript
-import { renameSession, tagSession, forkSession } from "@anthropic-ai/claude-agent-sdk";
+import {
+  renameSession,
+  tagSession,
+  forkSession,
+} from "@anthropic-ai/claude-agent-sdk";
 
 async function main() {
   const sessionId = "your-session-id";

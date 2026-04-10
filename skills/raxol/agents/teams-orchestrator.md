@@ -31,6 +31,7 @@ Each agent starts as a `Session` with `team_id` set.
 `Raxol.Agent.Orchestrator` -- multi-pane cockpit for Process agents.
 
 Pilot modes:
+
 - `:observe` -- watch agents work (default)
 - `:command` -- send directives to agents
 - `:takeover` -- directly control focused agent's terminal

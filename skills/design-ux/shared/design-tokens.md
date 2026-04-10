@@ -66,7 +66,13 @@ INCORRECT:
 function Card({ children }: { children: React.ReactNode }) {
   const { isDark } = useTheme();
   return (
-    <div className={isDark ? "bg-gray-900 text-gray-100 border-gray-700" : "bg-white text-gray-900 border-gray-200"}>
+    <div
+      className={
+        isDark
+          ? "bg-gray-900 text-gray-100 border-gray-700"
+          : "bg-white text-gray-900 border-gray-200"
+      }
+    >
       {children}
     </div>
   );
@@ -77,7 +83,8 @@ CORRECT:
 
 ```css
 /* Token swap at root -- components are theme-unaware */
-:root, [data-theme="dark"] {
+:root,
+[data-theme="dark"] {
   --color-bg-primary: #1a1a2e;
   --color-text-primary: #e2e8f0;
   --color-border: #334155;
@@ -109,9 +116,18 @@ INCORRECT:
 
 ```css
 /* Arbitrary values -- no system, no rhythm */
-.header { padding: 13px 22px; gap: 11px; }
-.card { margin: 17px; padding: 9px; }
-.sidebar { padding: 15px; gap: 7px; }
+.header {
+  padding: 13px 22px;
+  gap: 11px;
+}
+.card {
+  margin: 17px;
+  padding: 9px;
+}
+.sidebar {
+  padding: 15px;
+  gap: 7px;
+}
 ```
 
 CORRECT:
@@ -119,18 +135,24 @@ CORRECT:
 ```css
 /* Geometric scale from 4px base */
 :root {
-  --space-1: 0.25rem;  /* 4px */
-  --space-2: 0.5rem;   /* 8px */
-  --space-3: 0.75rem;  /* 12px */
-  --space-4: 1rem;     /* 16px */
-  --space-5: 1.5rem;   /* 24px */
-  --space-6: 2rem;     /* 32px */
-  --space-7: 3rem;     /* 48px */
-  --space-8: 4rem;     /* 64px */
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.5rem; /* 24px */
+  --space-6: 2rem; /* 32px */
+  --space-7: 3rem; /* 48px */
+  --space-8: 4rem; /* 64px */
 }
 
-.header { padding: var(--space-2) var(--space-5); gap: var(--space-3); }
-.card { margin: var(--space-4); padding: var(--space-3); }
+.header {
+  padding: var(--space-2) var(--space-5);
+  gap: var(--space-3);
+}
+.card {
+  margin: var(--space-4);
+  padding: var(--space-3);
+}
 ```
 
 In Tailwind: use the default spacing scale (`p-1` through `p-16`) which maps to a 4px base. Avoid arbitrary values (`p-[13px]`).
@@ -142,33 +164,61 @@ Type scale, weights, and line-heights defined as tokens, not ad-hoc values.
 INCORRECT:
 
 ```css
-h1 { font-size: 28px; line-height: 1.1; font-weight: 800; }
-h2 { font-size: 22px; line-height: 1.3; font-weight: 700; }
-p { font-size: 15px; line-height: 1.4; }
-.small { font-size: 11px; line-height: 1.2; }
+h1 {
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 800;
+}
+h2 {
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+p {
+  font-size: 15px;
+  line-height: 1.4;
+}
+.small {
+  font-size: 11px;
+  line-height: 1.2;
+}
 ```
 
 CORRECT:
 
 ```css
 :root {
-  --text-xs: 0.75rem;    /* 12px */
-  --text-sm: 0.875rem;   /* 14px */
-  --text-base: 1rem;     /* 16px */
-  --text-lg: 1.25rem;    /* 20px */
-  --text-xl: 1.5rem;     /* 24px */
-  --text-2xl: 1.875rem;  /* 30px */
-  --text-3xl: 2.25rem;   /* 36px */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.25rem; /* 20px */
+  --text-xl: 1.5rem; /* 24px */
+  --text-2xl: 1.875rem; /* 30px */
+  --text-3xl: 2.25rem; /* 36px */
 
   --leading-tight: 1.25;
   --leading-normal: 1.5;
   --leading-relaxed: 1.625;
 }
 
-h1 { font-size: var(--text-2xl); line-height: var(--leading-tight); font-weight: 600; }
-h2 { font-size: var(--text-xl); line-height: var(--leading-tight); font-weight: 600; }
-p { font-size: var(--text-base); line-height: var(--leading-normal); }
-.small { font-size: var(--text-xs); line-height: var(--leading-normal); }
+h1 {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+  font-weight: 600;
+}
+h2 {
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight);
+  font-weight: 600;
+}
+p {
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+.small {
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+}
 ```
 
 ## Token Naming Conventions
@@ -209,12 +259,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'special-bg': '#1a1a2e',
-        'my-accent': '#ff7edb',
-      }
-    }
-  }
-}
+        "special-bg": "#1a1a2e",
+        "my-accent": "#ff7edb",
+      },
+    },
+  },
+};
 ```
 
 CORRECT:
@@ -224,33 +274,33 @@ CORRECT:
 module.exports = {
   theme: {
     colors: {
-      surface: 'var(--color-bg-primary)',
-      foreground: 'var(--color-text-primary)',
-      muted: 'var(--color-text-muted)',
-      accent: 'var(--color-accent)',
+      surface: "var(--color-bg-primary)",
+      foreground: "var(--color-text-primary)",
+      muted: "var(--color-text-muted)",
+      accent: "var(--color-accent)",
       border: {
-        DEFAULT: 'var(--color-border)',
+        DEFAULT: "var(--color-border)",
       },
       // Primitive palette available but discouraged in components
       neutral: {
-        900: '#1a1a2e',
-        800: '#1e293b',
-        700: '#334155',
-        400: '#94a3b8',
-        100: '#e2e8f0',
-      }
+        900: "#1a1a2e",
+        800: "#1e293b",
+        700: "#334155",
+        400: "#94a3b8",
+        100: "#e2e8f0",
+      },
     },
     spacing: {
       // Maps to --space-N tokens
-      1: '0.25rem',
-      2: '0.5rem',
-      3: '0.75rem',
-      4: '1rem',
-      5: '1.5rem',
-      6: '2rem',
-      8: '3rem',
-      10: '4rem',
-    }
-  }
-}
+      1: "0.25rem",
+      2: "0.5rem",
+      3: "0.75rem",
+      4: "1rem",
+      5: "1.5rem",
+      6: "2rem",
+      8: "3rem",
+      10: "4rem",
+    },
+  },
+};
 ```

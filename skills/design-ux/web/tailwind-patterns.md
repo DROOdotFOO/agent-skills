@@ -19,14 +19,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'special-bg': '#1a1a2e',
-        'my-accent': '#ff7edb',
-        'text-main': '#e2e8f0',
-        'card-bg-dark': '#1e293b',
-      }
-    }
-  }
-}
+        "special-bg": "#1a1a2e",
+        "my-accent": "#ff7edb",
+        "text-main": "#e2e8f0",
+        "card-bg-dark": "#1e293b",
+      },
+    },
+  },
+};
 ```
 
 CORRECT:
@@ -36,25 +36,38 @@ CORRECT:
 module.exports = {
   theme: {
     fontFamily: {
-      mono: ['"Monaspace Neon"', '"Monaspace Argon"', '"Monaspace Krypton"', 'ui-monospace', 'monospace'],
-      sans: ['"General Sans"', '"Satoshi"', '"Cabinet Grotesk"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      mono: [
+        '"Monaspace Neon"',
+        '"Monaspace Argon"',
+        '"Monaspace Krypton"',
+        "ui-monospace",
+        "monospace",
+      ],
+      sans: [
+        '"General Sans"',
+        '"Satoshi"',
+        '"Cabinet Grotesk"',
+        "ui-sans-serif",
+        "system-ui",
+        "sans-serif",
+      ],
     },
     colors: {
-      transparent: 'transparent',
-      current: 'currentColor',
+      transparent: "transparent",
+      current: "currentColor",
       // Semantic tokens (use these in markup)
-      surface: 'var(--color-bg-primary)',
-      foreground: 'var(--color-text-primary)',
-      muted: 'var(--color-text-muted)',
-      accent: 'var(--color-accent)',
-      border: 'var(--color-border)',
+      surface: "var(--color-bg-primary)",
+      foreground: "var(--color-text-primary)",
+      muted: "var(--color-text-muted)",
+      accent: "var(--color-accent)",
+      border: "var(--color-border)",
       // Functional tokens
-      error: 'var(--color-error)',
-      success: 'var(--color-success)',
-      warning: 'var(--color-warning)',
+      error: "var(--color-error)",
+      success: "var(--color-success)",
+      warning: "var(--color-warning)",
     },
-  }
-}
+  },
+};
 ```
 
 ## Extracting Components vs @apply
@@ -91,7 +104,13 @@ CORRECT:
 
 ```tsx
 // React component extraction: readable, typed, composable
-function Card({ children, className }: { children: React.ReactNode; className?: string }) {
+function Card({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <div className={cn("border border-default bg-surface p-4", className)}>
       {children}
@@ -100,7 +119,11 @@ function Card({ children, className }: { children: React.ReactNode; className?: 
 }
 
 function CardTitle({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-lg font-semibold text-foreground mb-2 truncate">{children}</h3>;
+  return (
+    <h3 className="text-lg font-semibold text-foreground mb-2 truncate">
+      {children}
+    </h3>
+  );
 }
 ```
 
@@ -146,8 +169,8 @@ INCORRECT:
 ```js
 // tailwind.config.js
 module.exports = {
-  darkMode: 'media', // no user toggle, follows OS only
-}
+  darkMode: "media", // no user toggle, follows OS only
+};
 ```
 
 CORRECT:
@@ -155,14 +178,15 @@ CORRECT:
 ```js
 // tailwind.config.js
 module.exports = {
-  darkMode: ['selector', '[data-theme="dark"]'],
-}
+  darkMode: ["selector", '[data-theme="dark"]'],
+};
 ```
 
 ```tsx
 // Theme toggle sets the attribute on <html>
 function toggleTheme() {
-  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  const next =
+    document.documentElement.dataset.theme === "dark" ? "light" : "dark";
   document.documentElement.dataset.theme = next;
   localStorage.setItem("theme", next);
 }

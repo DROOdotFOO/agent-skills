@@ -47,6 +47,7 @@ aderyn .
 ```
 
 **Automated tools catch ~30% of real vulnerabilities.** They excel at:
+
 - Reentrancy patterns
 - Unchecked return values
 - Uninitialized storage
@@ -54,6 +55,7 @@ aderyn .
 - Floating pragmas
 
 They miss:
+
 - Business logic errors
 - Economic attacks
 - Cross-contract interactions
@@ -64,6 +66,7 @@ They miss:
 Two-pass approach (adapted from scv-scan methodology):
 
 **Pass A -- Syntactic (line-by-line):**
+
 - Read every line of in-scope code
 - Check each function against the vulnerability checklist:
   - [ ] CEI pattern followed?
@@ -75,6 +78,7 @@ Two-pass approach (adapted from scv-scan methodology):
   - [ ] Events emitted for state changes?
 
 **Pass B -- Semantic (intent vs implementation):**
+
 - Does the code do what the documentation says?
 - Are there edge cases the developer didn't consider?
 - Can function call ordering produce unexpected states?
@@ -86,17 +90,18 @@ Two-pass approach (adapted from scv-scan methodology):
 
 #### Severity definitions
 
-| Severity | Impact | Likelihood | Description |
-|----------|--------|------------|-------------|
-| Critical | High | High | Direct fund loss, exploitable without special conditions |
-| High | High | Medium | Fund loss requiring specific conditions, privilege escalation |
-| Medium | Medium | Medium | Limited fund loss, griefing, protocol dysfunction |
-| Low | Low | Any | Best practice violations, informational |
-| Informational | -- | -- | Gas optimizations, code quality, style |
+| Severity      | Impact | Likelihood | Description                                                   |
+| ------------- | ------ | ---------- | ------------------------------------------------------------- |
+| Critical      | High   | High       | Direct fund loss, exploitable without special conditions      |
+| High          | High   | Medium     | Fund loss requiring specific conditions, privilege escalation |
+| Medium        | Medium | Medium     | Limited fund loss, griefing, protocol dysfunction             |
+| Low           | Low    | Any        | Best practice violations, informational                       |
+| Informational | --     | --         | Gas optimizations, code quality, style                        |
 
 #### Finding structure
 
 Each finding should include:
+
 1. **Title** -- concise vulnerability name
 2. **Severity** -- Critical/High/Medium/Low/Informational
 3. **Location** -- file, function, line numbers

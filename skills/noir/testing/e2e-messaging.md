@@ -31,9 +31,9 @@ CORRECT:
 const harness = await CrossChainTestHarness.new(
   aztecNode,
   pxeService,
-  publicClient,      // L1 viem client
-  walletClient,      // L1 wallet
-  wallet,            // L2 wallet
+  publicClient, // L1 viem client
+  walletClient, // L1 wallet
+  wallet, // L2 wallet
   l1ContractAddresses,
 );
 
@@ -62,7 +62,9 @@ CORRECT:
 ```typescript
 await harness.mintTokensOnL1(amount);
 const { messageHash } = await harness.sendTokensToPortalPublic(
-  l2Recipient, amount, secretHash,
+  l2Recipient,
+  amount,
+  secretHash,
 );
 
 // Wait for rollup to fetch and process the message
@@ -121,25 +123,22 @@ INCORRECT:
 
 ```typescript
 // BUG: no scopes -- can't decrypt private events
-const events = await wallet.getPrivateEvents(
-  TokenContract.events.Transfer,
-  { contractAddress: token.address, fromBlock: 1 },
-);
+const events = await wallet.getPrivateEvents(TokenContract.events.Transfer, {
+  contractAddress: token.address,
+  fromBlock: 1,
+});
 // events is empty even though transfers happened
 ```
 
 CORRECT:
 
 ```typescript
-const events = await wallet.getPrivateEvents(
-  TokenContract.events.Transfer,
-  {
-    contractAddress: token.address,
-    fromBlock: startBlock,
-    toBlock: endBlock + 1,  // toBlock is exclusive
-    scopes: [senderAddress, recipientAddress],
-  },
-);
+const events = await wallet.getPrivateEvents(TokenContract.events.Transfer, {
+  contractAddress: token.address,
+  fromBlock: startBlock,
+  toBlock: endBlock + 1, // toBlock is exclusive
+  scopes: [senderAddress, recipientAddress],
+});
 
 expect(events).toHaveLength(1);
 expect(events[0].data.amount).toBe(transferAmount);
@@ -158,7 +157,7 @@ INCORRECT:
 ```typescript
 // Raw log parsing -- fragile, no type safety
 const logs = await aztecNode.getLogs(startBlock, endBlock);
-const amount = logs[0].data[2];  // index-based, breaks if fields change
+const amount = logs[0].data[2]; // index-based, breaks if fields change
 ```
 
 CORRECT:

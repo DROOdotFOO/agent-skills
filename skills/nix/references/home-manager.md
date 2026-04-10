@@ -145,6 +145,7 @@ home.activation = {
 ## macOS specifics
 
 Home Manager works on macOS without NixOS. Key differences:
+
 - `home.homeDirectory = "/Users/droo"` (not `/home/droo`)
 - No systemd -- use `launchd.agents` for services
 - Some programs modules may not work (systemd-dependent)

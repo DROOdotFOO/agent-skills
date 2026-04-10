@@ -31,9 +31,7 @@ const balance = await token.methods
 For public balances, `from` is not needed since state is unencrypted:
 
 ```typescript
-const publicBalance = await token.methods
-  .balance_of_public(address)
-  .simulate();
+const publicBalance = await token.methods.balance_of_public(address).simulate();
 ```
 
 ## Transfer patterns
@@ -41,12 +39,12 @@ const publicBalance = await token.methods
 Three transfer types exist. Using the wrong method for the context is
 a common source of silent failures.
 
-| Operation | Method | Notes |
-|-----------|--------|-------|
-| Private to private | `transfer(to, amount)` | Consumes sender notes, creates recipient notes |
-| Public to public | `transfer_public(from, to, amount, nonce)` | Direct state mutation |
-| Private to public | `transfer_to_public(to, amount)` | Burns notes, credits public balance |
-| Public to private | `transfer_to_private(to, amount)` | Debits public, creates notes |
+| Operation          | Method                                     | Notes                                          |
+| ------------------ | ------------------------------------------ | ---------------------------------------------- |
+| Private to private | `transfer(to, amount)`                     | Consumes sender notes, creates recipient notes |
+| Public to public   | `transfer_public(from, to, amount, nonce)` | Direct state mutation                          |
+| Private to public  | `transfer_to_public(to, amount)`           | Burns notes, credits public balance            |
+| Public to private  | `transfer_to_private(to, amount)`          | Debits public, creates notes                   |
 
 INCORRECT:
 
@@ -126,7 +124,8 @@ Self-initiated transfers (msg_sender == from) use nonce=0:
 
 ```typescript
 // Self-transfer: nonce MUST be zero
-await token.methods.transfer_public(myAddress, recipient, amount, 0n)
+await token.methods
+  .transfer_public(myAddress, recipient, amount, 0n)
   .send()
   .wait();
 ```
@@ -181,24 +180,24 @@ CORRECT:
 ```typescript
 // Specific error patterns
 await expect(
-  token.methods.transfer(to, excessiveAmount).send().wait()
+  token.methods.transfer(to, excessiveAmount).send().wait(),
 ).rejects.toThrow(/Balance too low/);
 
-await expect(
-  replayedAuthwitAction.send().wait()
-).rejects.toThrow(/DUPLICATE_NULLIFIER_ERROR/);
+await expect(replayedAuthwitAction.send().wait()).rejects.toThrow(
+  /DUPLICATE_NULLIFIER_ERROR/,
+);
 
-await expect(
-  unauthorizedAction.send().wait()
-).rejects.toThrow(/Unknown auth witness/);
+await expect(unauthorizedAction.send().wait()).rejects.toThrow(
+  /Unknown auth witness/,
+);
 ```
 
 Common error patterns:
 
-| Error | Cause |
-|-------|-------|
+| Error                       | Cause                                            |
+| --------------------------- | ------------------------------------------------ |
 | `DUPLICATE_NULLIFIER_ERROR` | Double-spend, replayed authwit, re-consumed note |
-| `Balance too low` | Transfer/burn exceeds available balance |
-| `Unknown auth witness` | Missing or wrong authwit for delegated action |
-| `Arithmetic overflow` | u128/u64 operation exceeded type bounds |
-| `Not initialized` | Calling init-checked function before initializer |
+| `Balance too low`           | Transfer/burn exceeds available balance          |
+| `Unknown auth witness`      | Missing or wrong authwit for delegated action    |
+| `Arithmetic overflow`       | u128/u64 operation exceeded type bounds          |
+| `Not initialized`           | Calling init-checked function before initializer |

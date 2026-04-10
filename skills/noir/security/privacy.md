@@ -115,6 +115,7 @@ Even with private inputs, metadata can leak information:
 - **Transaction patterns**: Timing, frequency, and gas usage create fingerprints
 
 Mitigations:
+
 - Use fixed-size circuits (pad to maximum expected size)
 - Add dummy operations to normalize execution paths
 - Use relayers to break sender-transaction links

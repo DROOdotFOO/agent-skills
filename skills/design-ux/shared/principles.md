@@ -27,9 +27,7 @@ CORRECT:
 ```tsx
 // Constraint-first: every element earns its place
 <div className="border border-neutral-700 bg-neutral-900 p-4 font-mono">
-  <h2 className="text-lg text-foreground">
-    Welcome Back
-  </h2>
+  <h2 className="text-lg text-foreground">Welcome Back</h2>
 </div>
 ```
 
@@ -53,9 +51,7 @@ INCORRECT:
     <SearchBar />
     <UserMenu />
   </Header>
-  <Content>
-    {/* "now what goes here?" */}
-  </Content>
+  <Content>{/* "now what goes here?" */}</Content>
 </AppShell>
 ```
 
@@ -79,14 +75,16 @@ INCORRECT:
 
 ```tsx
 // Skeleton that changes height when content loads
-{isLoading ? (
-  <div className="h-8 bg-gray-200 animate-pulse rounded" />
-) : (
-  <div className="py-4">
-    <h3>{title}</h3>
-    <p>{description}</p>
-  </div>
-)}
+{
+  isLoading ? (
+    <div className="h-8 bg-gray-200 animate-pulse rounded" />
+  ) : (
+    <div className="py-4">
+      <h3>{title}</h3>
+      <p>{description}</p>
+    </div>
+  );
+}
 ```
 
 CORRECT:
@@ -113,18 +111,36 @@ INCORRECT:
 
 ```css
 /* Arbitrary spacing -- no rhythm, no system */
-.card { padding: 13px; margin-bottom: 17px; }
-.header { padding: 9px 22px; gap: 11px; }
-.sidebar { width: 273px; padding: 15px; }
+.card {
+  padding: 13px;
+  margin-bottom: 17px;
+}
+.header {
+  padding: 9px 22px;
+  gap: 11px;
+}
+.sidebar {
+  width: 273px;
+  padding: 15px;
+}
 ```
 
 CORRECT:
 
 ```css
 /* Harmonic scale: 4px base (4, 8, 12, 16, 24, 32, 48, 64) */
-.card { padding: var(--space-4); margin-bottom: var(--space-5); }     /* 16px, 24px */
-.header { padding: var(--space-2) var(--space-5); gap: var(--space-3); } /* 8px 24px, 12px */
-.sidebar { width: 16rem; padding: var(--space-4); }                   /* 256px, 16px */
+.card {
+  padding: var(--space-4);
+  margin-bottom: var(--space-5);
+} /* 16px, 24px */
+.header {
+  padding: var(--space-2) var(--space-5);
+  gap: var(--space-3);
+} /* 8px 24px, 12px */
+.sidebar {
+  width: 16rem;
+  padding: var(--space-4);
+} /* 256px, 16px */
 ```
 
 In terminal contexts: 1ch width, 1.5rem line-height. All dimensions are integer multiples.
@@ -149,10 +165,7 @@ CORRECT:
 ```tsx
 // Handles missing data, long names, no avatar, empty bio
 <UserCard>
-  <Avatar
-    src={user.avatar}
-    fallback={user.name?.[0] ?? "?"}
-  />
+  <Avatar src={user.avatar} fallback={user.name?.[0] ?? "?"} />
   <h3 className="truncate">{user.name ?? "Unknown"}</h3>
   {user.bio ? (
     <p className="line-clamp-2">{user.bio}</p>
@@ -171,11 +184,11 @@ INCORRECT:
 ```tsx
 // Everything visible at once -- user has to scan all of it
 <SettingsPage>
-  <GeneralSettings />      {/* 12 fields */}
-  <NotificationSettings />  {/* 8 fields */}
-  <SecuritySettings />      {/* 6 fields */}
-  <BillingSettings />       {/* 10 fields */}
-  <APISettings />           {/* 14 fields */}
+  <GeneralSettings /> {/* 12 fields */}
+  <NotificationSettings /> {/* 8 fields */}
+  <SecuritySettings /> {/* 6 fields */}
+  <BillingSettings /> {/* 10 fields */}
+  <APISettings /> {/* 14 fields */}
 </SettingsPage>
 ```
 

@@ -44,9 +44,9 @@ resources.
 
 ## Reading guide
 
-| Question | Read |
-|----------|------|
-| Foundry commands, Blockscout MCP, abi.ninja | [tools](tools.md) |
-| Foundry vs Hardhat vs Scaffold-ETH 2 | [stack-selection](stack-selection.md) |
-| RPC providers, block explorers, faucets | [rpc-explorers](rpc-explorers.md) |
-| EIP/ERC standards reference | [standards](standards.md) |
+| Question                                    | Read                                  |
+| ------------------------------------------- | ------------------------------------- |
+| Foundry commands, Blockscout MCP, abi.ninja | [tools](tools.md)                     |
+| Foundry vs Hardhat vs Scaffold-ETH 2        | [stack-selection](stack-selection.md) |
+| RPC providers, block explorers, faucets     | [rpc-explorers](rpc-explorers.md)     |
+| EIP/ERC standards reference                 | [standards](standards.md)             |

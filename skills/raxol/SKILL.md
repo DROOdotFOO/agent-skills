@@ -31,14 +31,14 @@ isolation, and hot reload. Package split: `:raxol` (core TUI) and
 
 ## Two Agent Models
 
-| | TEA Agent (`use Raxol.Agent`) | Process Agent (`use Raxol.Agent.UseProcess`) |
-|---|---|---|
-| Loop | Message-driven (`update/2`) | Tick-driven (observe/think/act) |
-| Rendering | Optional `view/1` | Headless only |
-| Input | Messages from agents, commands, MCP | Events buffer, directives |
-| Best for | Agents with UI, reactive workflows | Autonomous background agents |
-| Crash recovery | OTP restart, fresh `init/1` | `context_snapshot` + `restore_context` |
-| AI backend | Manual (call in async commands) | Built-in via Strategy |
+|                | TEA Agent (`use Raxol.Agent`)       | Process Agent (`use Raxol.Agent.UseProcess`) |
+| -------------- | ----------------------------------- | -------------------------------------------- |
+| Loop           | Message-driven (`update/2`)         | Tick-driven (observe/think/act)              |
+| Rendering      | Optional `view/1`                   | Headless only                                |
+| Input          | Messages from agents, commands, MCP | Events buffer, directives                    |
+| Best for       | Agents with UI, reactive workflows  | Autonomous background agents                 |
+| Crash recovery | OTP restart, fresh `init/1`         | `context_snapshot` + `restore_context`       |
+| AI backend     | Manual (call in async commands)     | Built-in via Strategy                        |
 
 ## See also
 
@@ -48,16 +48,16 @@ isolation, and hot reload. Package split: `:raxol` (core TUI) and
 
 ## Reading Guide
 
-| Task | File |
-|------|------|
-| Build a TEA agent + messaging | `agents/tea-agent.md` |
-| Build an autonomous agent | `agents/process-agent.md` |
-| Reusable actions / LLM tools | `agents/actions-pipelines.md` |
-| Multi-agent teams / cockpit | `agents/teams-orchestrator.md` |
-| AI backend integration | `ai/backends.md` |
-| Consume external MCP servers | `ai/mcp-client.md` |
-| Headless sessions + MCP tools | `headless/sessions.md` |
-| Testing agents and actions | `testing/agent-testing.md` |
+| Task                          | File                           |
+| ----------------------------- | ------------------------------ |
+| Build a TEA agent + messaging | `agents/tea-agent.md`          |
+| Build an autonomous agent     | `agents/process-agent.md`      |
+| Reusable actions / LLM tools  | `agents/actions-pipelines.md`  |
+| Multi-agent teams / cockpit   | `agents/teams-orchestrator.md` |
+| AI backend integration        | `ai/backends.md`               |
+| Consume external MCP servers  | `ai/mcp-client.md`             |
+| Headless sessions + MCP tools | `headless/sessions.md`         |
+| Testing agents and actions    | `testing/agent-testing.md`     |
 
 ## Message Protocol
 

@@ -27,13 +27,13 @@ This skill helps you build LLM-powered applications with Claude. Choose the righ
 
 ## Top Pitfalls (quick reference)
 
-| Mistake | Fix |
-|---------|-----|
-| Using `budget_tokens` on Opus 4.6 / Sonnet 4.6 | Use `thinking: {type: "adaptive"}` -- budget_tokens is deprecated |
-| Lowballing `max_tokens` | Default ~16K non-streaming, ~64K streaming. Truncation = wasted retry |
-| Prefilling assistant message on Opus 4.6 | Returns 400. Use structured outputs or system prompt instead |
-| Silent cache invalidation | Check `usage.cache_read_input_tokens`. Common culprit: `datetime.now()` in system prompt |
-| Redefining SDK types | Use `Anthropic.MessageParam`, `Anthropic.Tool`, etc. -- don't roll your own |
+| Mistake                                        | Fix                                                                                      |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Using `budget_tokens` on Opus 4.6 / Sonnet 4.6 | Use `thinking: {type: "adaptive"}` -- budget_tokens is deprecated                        |
+| Lowballing `max_tokens`                        | Default ~16K non-streaming, ~64K streaming. Truncation = wasted retry                    |
+| Prefilling assistant message on Opus 4.6       | Returns 400. Use structured outputs or system prompt instead                             |
+| Silent cache invalidation                      | Check `usage.cache_read_input_tokens`. Common culprit: `datetime.now()` in system prompt |
+| Redefining SDK types                           | Use `Anthropic.MessageParam`, `Anthropic.Tool`, etc. -- don't roll your own              |
 
 Full list at the bottom of this file under "Common Pitfalls".
 
@@ -50,7 +50,6 @@ For the Claude model version, please use Claude Opus 4.6, which you can access v
 Before reading code examples, determine which language the user is working in:
 
 1. **Look at project files** to infer the language:
-
    - `*.py`, `requirements.txt`, `pyproject.toml`, `setup.py`, `Pipfile` → **Python** — read from `python/`
    - `*.ts`, `*.tsx`, `package.json`, `tsconfig.json` → **TypeScript** — read from `typescript/`
    - `*.js`, `*.jsx` (no `.ts` files present) → **TypeScript** — JS uses the same SDK, read from `typescript/`
@@ -60,17 +59,14 @@ Before reading code examples, determine which language the user is working in:
    - `*.lua`, `.luarc.json`, `.luacheckrc` → **Lua** — read from `lua/`
 
 2. **If multiple languages detected** (e.g., both Python and TypeScript files):
-
    - Check which language the user's current file or question relates to
    - If still ambiguous, ask: "I detected both Python and TypeScript files. Which language are you using for the Claude API integration?"
 
 3. **If language can't be inferred** (empty project, no source files, or unsupported language):
-
    - Use AskUserQuestion with options: Python, TypeScript, Go, Elixir, Rust, Lua, cURL/raw HTTP
    - If AskUserQuestion is unavailable, default to Python examples and note: "Showing Python examples. Let me know if you need a different language."
 
 4. **If unsupported language detected** (Swift, C++, Java, C#, PHP, etc.):
-
    - Suggest cURL/raw HTTP examples from `curl/` and note that community SDKs may exist
    - Offer to show Python or TypeScript examples as reference implementations
 
@@ -78,15 +74,15 @@ Before reading code examples, determine which language the user is working in:
 
 ### Language-Specific Feature Support
 
-| Language   | Tool Runner | Agent SDK | Notes                                          |
-| ---------- | ----------- | --------- | ---------------------------------------------- |
-| Python     | Yes (beta)  | Yes       | Full support -- `@beta_tool` decorator         |
-| TypeScript | Yes (beta)  | Yes       | Full support -- `betaZodTool` + Zod            |
-| Go         | Yes (beta)  | No        | `BetaToolRunner` in `toolrunner` pkg           |
-| Elixir     | N/A         | N/A       | No official SDK -- uses Req + REST API         |
-| Rust       | N/A         | N/A       | No official SDK -- uses reqwest + REST API     |
+| Language   | Tool Runner | Agent SDK | Notes                                               |
+| ---------- | ----------- | --------- | --------------------------------------------------- |
+| Python     | Yes (beta)  | Yes       | Full support -- `@beta_tool` decorator              |
+| TypeScript | Yes (beta)  | Yes       | Full support -- `betaZodTool` + Zod                 |
+| Go         | Yes (beta)  | No        | `BetaToolRunner` in `toolrunner` pkg                |
+| Elixir     | N/A         | N/A       | No official SDK -- uses Req + REST API              |
+| Rust       | N/A         | N/A       | No official SDK -- uses reqwest + REST API          |
 | Lua        | N/A         | N/A       | No official SDK -- uses lua-resty-http or LuaSocket |
-| cURL       | N/A         | N/A       | Raw HTTP, no SDK features                      |
+| cURL       | N/A         | N/A       | Raw HTTP, no SDK features                           |
 
 ---
 

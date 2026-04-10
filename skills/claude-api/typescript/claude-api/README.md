@@ -165,8 +165,8 @@ const response2 = await client.messages.create({
 
 ```typescript
 console.log(response.usage.cache_creation_input_tokens); // tokens written to cache (~1.25x cost)
-console.log(response.usage.cache_read_input_tokens);     // tokens served from cache (~0.1x cost)
-console.log(response.usage.input_tokens);                // uncached tokens (full cost)
+console.log(response.usage.cache_read_input_tokens); // tokens served from cache (~0.1x cost)
+console.log(response.usage.input_tokens); // uncached tokens (full cost)
 ```
 
 If `cache_read_input_tokens` is zero across repeated identical-prefix requests, a silent invalidator is at work — `Date.now()` or a UUID in the system prompt, non-deterministic key ordering, or a varying tool set. See `shared/prompt-caching.md` for the full audit table.

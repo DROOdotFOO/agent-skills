@@ -63,11 +63,11 @@ Schnorr, ECDSA, multisig, biometrics, or even permissionless (always true).
 
 Schnorr is the default. Use ECDSA only when wallet interop is required.
 
-| Scheme | Circuit gates | Use case |
-|--------|--------------|----------|
-| Schnorr | ~26k | Default, efficient, native |
-| ECDSA-k1 | ~40k | MetaMask/Ethereum wallet compat |
-| ECDSA-r1 | ~40k | WebAuthn/passkey compat |
+| Scheme   | Circuit gates | Use case                        |
+| -------- | ------------- | ------------------------------- |
+| Schnorr  | ~26k          | Default, efficient, native      |
+| ECDSA-k1 | ~40k          | MetaMask/Ethereum wallet compat |
+| ECDSA-r1 | ~40k          | WebAuthn/passkey compat         |
 
 ECDSA adds ~14k gates over Schnorr for the same verification. Choose
 based on whether you need to interop with existing Ethereum wallets or
@@ -79,11 +79,13 @@ Aztec uses multiple key types. Protocol keys are immutable and embedded
 in the address. Signing keys are application-defined and rotatable.
 
 **Protocol keys (cannot rotate):**
+
 - Nullifier master key (`nhk_m`) -- derives per-app nullifier keys
 - Incoming viewing key (`ivsk`) -- decrypts received notes
 - These are embedded in the account address at creation
 
 **Signing keys (can rotate):**
+
 - Defined by the account contract's `is_valid_impl`
 - Stored in contract storage, changeable by contract logic
 
@@ -159,12 +161,12 @@ fails, the entire transaction reverts including private state changes.
 
 `msg_sender` behaves consistently but the source differs by context.
 
-| Call type | msg_sender is |
-|-----------|---------------|
-| Entrypoint | Account contract address |
-| Private -> private | Calling contract address |
-| Private -> public (enqueue) | Original private caller |
-| Public -> public | Calling contract address |
+| Call type                   | msg_sender is            |
+| --------------------------- | ------------------------ |
+| Entrypoint                  | Account contract address |
+| Private -> private          | Calling contract address |
+| Private -> public (enqueue) | Original private caller  |
+| Public -> public            | Calling contract address |
 
 INCORRECT:
 

@@ -95,12 +95,21 @@ for await (const message of query({
 You can define custom tools that run in-process using `tool()` and `createSdkMcpServer`:
 
 ```typescript
-import { query, tool, createSdkMcpServer } from "@anthropic-ai/claude-agent-sdk";
+import {
+  query,
+  tool,
+  createSdkMcpServer,
+} from "@anthropic-ai/claude-agent-sdk";
 import { z } from "zod";
 
-const myTool = tool("my-tool", "Description", { input: z.string() }, async (args) => {
-  return { content: [{ type: "text", text: "result" }] };
-});
+const myTool = tool(
+  "my-tool",
+  "Description",
+  { input: z.string() },
+  async (args) => {
+    return { content: [{ type: "text", text: "result" }] };
+  },
+);
 
 const server = createSdkMcpServer({ name: "my-server", tools: [myTool] });
 
@@ -123,7 +132,10 @@ import { appendFileSync } from "fs";
 
 const logFileChange: HookCallback = async (input) => {
   const filePath = (input as any).tool_input?.file_path ?? "unknown";
-  appendFileSync("./audit.log", `${new Date().toISOString()}: modified ${filePath}\n`);
+  appendFileSync(
+    "./audit.log",
+    `${new Date().toISOString()}: modified ${filePath}\n`,
+  );
   return {};
 };
 
@@ -231,7 +243,11 @@ Task-related system messages are also emitted for subagent operations:
 Retrieve past session data:
 
 ```typescript
-import { listSessions, getSessionMessages, getSessionInfo } from "@anthropic-ai/claude-agent-sdk";
+import {
+  listSessions,
+  getSessionMessages,
+  getSessionInfo,
+} from "@anthropic-ai/claude-agent-sdk";
 
 // List all past sessions (supports pagination via limit/offset)
 const sessions = await listSessions({ limit: 20, offset: 0 });
@@ -256,7 +272,11 @@ for (const msg of messages) {
 Rename, tag, or fork sessions:
 
 ```typescript
-import { renameSession, tagSession, forkSession } from "@anthropic-ai/claude-agent-sdk";
+import {
+  renameSession,
+  tagSession,
+  forkSession,
+} from "@anthropic-ai/claude-agent-sdk";
 
 // Rename a session
 await renameSession(sessionId, "My refactoring session");

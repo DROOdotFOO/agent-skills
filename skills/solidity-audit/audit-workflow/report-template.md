@@ -11,7 +11,7 @@ tags: solidity, audit, report, template
 
 Use this template for each finding in an audit report:
 
-```markdown
+````markdown
 ## [S-N] Title
 
 **Severity:** Critical | High | Medium | Low | Informational
@@ -43,6 +43,7 @@ function test_exploit() public {
     assertGt(attacker.balance, initialBalance);
 }
 ```
+````
 
 ### Recommendation
 
@@ -56,7 +57,8 @@ function withdraw(uint256 amount) external nonReentrant {
     if (!success) revert TransferFailed();
 }
 ```
-```
+
+````
 
 ## Report structure
 
@@ -102,4 +104,4 @@ function withdraw(uint256 amount) external nonReentrant {
 
 [Standard disclaimer about point-in-time review, no guarantee of
 completeness, etc.]
-```
+````

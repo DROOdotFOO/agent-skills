@@ -69,6 +69,7 @@ Browser tool for interacting with any contract using just its ABI or
 a verified address. No wallet connection needed for read calls.
 
 Use cases:
+
 - Quick contract inspection without setting up a project
 - Testing function calls with different parameters
 - Reading storage on any verified contract

@@ -111,15 +111,15 @@ complement to `mcp-nixos` (read-only discovery).
 
 ### MCP tools
 
-| Tool | Purpose |
-|------|---------|
-| `inspect_state` | Read config file contents |
-| `plan_change` | Plan a change, detect scope (home-manager vs system) |
-| `apply_patch_set` | Apply file replacements with SHA256 verification |
-| `run_formatters` | Run nixpkgs-fmt on changed files |
-| `classify_change` | Policy check (high-risk: SSH, networking, hardware) |
-| `dry_activate_system` | nixos-rebuild dry-activate |
-| `apply_change` | Full workflow: classify -> dry-activate -> switch |
+| Tool                  | Purpose                                              |
+| --------------------- | ---------------------------------------------------- |
+| `inspect_state`       | Read config file contents                            |
+| `plan_change`         | Plan a change, detect scope (home-manager vs system) |
+| `apply_patch_set`     | Apply file replacements with SHA256 verification     |
+| `run_formatters`      | Run nixpkgs-fmt on changed files                     |
+| `classify_change`     | Policy check (high-risk: SSH, networking, hardware)  |
+| `dry_activate_system` | nixos-rebuild dry-activate                           |
+| `apply_change`        | Full workflow: classify -> dry-activate -> switch    |
 
 ### Policy rules
 

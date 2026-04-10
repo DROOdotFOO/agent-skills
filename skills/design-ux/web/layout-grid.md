@@ -19,9 +19,17 @@ INCORRECT:
   display: flex;
   flex-wrap: wrap;
 }
-.sidebar { flex: 0 0 250px; }
-.main { flex: 1; display: flex; flex-direction: column; }
-.footer { flex: 0 0 100%; }
+.sidebar {
+  flex: 0 0 250px;
+}
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.footer {
+  flex: 0 0 100%;
+}
 ```
 
 CORRECT:
@@ -119,9 +127,15 @@ INCORRECT:
 
 ```css
 /* Fixed widths that break on content changes */
-.sidebar { width: 250px; }
-.label-col { width: 120px; }
-.action-col { width: 80px; }
+.sidebar {
+  width: 250px;
+}
+.label-col {
+  width: 120px;
+}
+.action-col {
+  width: 80px;
+}
 ```
 
 CORRECT:

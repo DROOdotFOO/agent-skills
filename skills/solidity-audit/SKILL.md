@@ -54,25 +54,25 @@ This skill activates when writing, reviewing, or auditing Solidity contracts.
 
 ### Development patterns
 
-| Working on | Read |
-|-----------|------|
-| Code quality, NatSpec, errors, events, gas | [patterns/standards](patterns/standards.md) |
-| Foundry testing, fuzzing, invariants, forks | [patterns/foundry](patterns/foundry.md) |
+| Working on                                  | Read                                        |
+| ------------------------------------------- | ------------------------------------------- |
+| Code quality, NatSpec, errors, events, gas  | [patterns/standards](patterns/standards.md) |
+| Foundry testing, fuzzing, invariants, forks | [patterns/foundry](patterns/foundry.md)     |
 
 ### Vulnerability knowledge (by severity)
 
-| Category | Read |
-|----------|------|
-| Reentrancy (classic, cross-function, read-only) | [vulnerabilities/reentrancy](vulnerabilities/reentrancy.md) |
-| Access control, tx.origin, delegatecall | [vulnerabilities/access-control](vulnerabilities/access-control.md) |
-| Oracle manipulation, Chainlink, TWAP | [vulnerabilities/oracle-manipulation](vulnerabilities/oracle-manipulation.md) |
-| Flash loan price/governance attacks | [vulnerabilities/flash-loans](vulnerabilities/flash-loans.md) |
-| MEV, frontrunning, sandwich protection | [vulnerabilities/mev](vulnerabilities/mev.md) |
+| Category                                        | Read                                                                          |
+| ----------------------------------------------- | ----------------------------------------------------------------------------- |
+| Reentrancy (classic, cross-function, read-only) | [vulnerabilities/reentrancy](vulnerabilities/reentrancy.md)                   |
+| Access control, tx.origin, delegatecall         | [vulnerabilities/access-control](vulnerabilities/access-control.md)           |
+| Oracle manipulation, Chainlink, TWAP            | [vulnerabilities/oracle-manipulation](vulnerabilities/oracle-manipulation.md) |
+| Flash loan price/governance attacks             | [vulnerabilities/flash-loans](vulnerabilities/flash-loans.md)                 |
+| MEV, frontrunning, sandwich protection          | [vulnerabilities/mev](vulnerabilities/mev.md)                                 |
 
 ### Audit workflow
 
-| Task | Read |
-|------|------|
-| Full audit methodology (4 phases) | [audit-workflow/methodology](audit-workflow/methodology.md) |
-| Finding report template | [audit-workflow/report-template](audit-workflow/report-template.md) |
-| Live documentation sources (ETHSkills, etc.) | [live-sources](live-sources.md) |
+| Task                                         | Read                                                                |
+| -------------------------------------------- | ------------------------------------------------------------------- |
+| Full audit methodology (4 phases)            | [audit-workflow/methodology](audit-workflow/methodology.md)         |
+| Finding report template                      | [audit-workflow/report-template](audit-workflow/report-template.md) |
+| Live documentation sources (ETHSkills, etc.) | [live-sources](live-sources.md)                                     |

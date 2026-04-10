@@ -118,6 +118,7 @@ Calling public functions from private context leaks more than just
 arguments. The call itself reveals that a private action occurred.
 
 What leaks when private calls public:
+
 - All arguments to the public function
 - All L2-to-L1 messages (full content)
 - Public logs (topics and arguments)
@@ -199,6 +200,7 @@ When the PXE queries a node for state (nullifier existence, note
 membership), the node learns which data the user is interested in.
 
 This is not a code-level bug but an architectural concern:
+
 - Node operators can correlate queries to user IP addresses
 - Nullifier existence checks reveal which notes a user might own
 - Repeated queries for the same state are linkable

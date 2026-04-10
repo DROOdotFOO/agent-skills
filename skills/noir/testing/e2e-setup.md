@@ -81,8 +81,13 @@ INCORRECT:
 
 ```typescript
 // Missing .deployed() -- contract may not be ready
-const token = await TokenContract.deploy(wallet, admin, 'Test', 'TST', 18n)
-  .send();
+const token = await TokenContract.deploy(
+  wallet,
+  admin,
+  "Test",
+  "TST",
+  18n,
+).send();
 // Calling methods before deployment is confirmed
 await token.methods.mint_public(admin, 1000n).send().wait();
 ```
@@ -90,7 +95,7 @@ await token.methods.mint_public(admin, 1000n).send().wait();
 CORRECT:
 
 ```typescript
-const token = await TokenContract.deploy(wallet, admin, 'Test', 'TST', 18n)
+const token = await TokenContract.deploy(wallet, admin, "Test", "TST", 18n)
   .send()
   .deployed();
 
@@ -101,7 +106,7 @@ await token.methods.mint_public(admin, 1000n).send().wait();
 For deterministic addresses across environments, use universal deploy:
 
 ```typescript
-const token = await TokenContract.deploy(wallet, admin, 'Test', 'TST', 18n)
+const token = await TokenContract.deploy(wallet, admin, "Test", "TST", 18n)
   .send({ universalDeploy: true })
   .deployed();
 ```
@@ -139,7 +144,7 @@ await expectMapping(
 await expectMappingDelta(
   token.methods.balance_of_public,
   [addr1, addr2],
-  [-100n, +100n],  // deltas from previous state
+  [-100n, +100n], // deltas from previous state
 );
 ```
 
