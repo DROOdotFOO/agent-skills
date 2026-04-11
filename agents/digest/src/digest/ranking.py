@@ -1,10 +1,17 @@
-"""Engagement-weighted ranking across platforms."""
+"""Engagement-weighted ranking across platforms with credibility scoring.
+
+Three-layer scoring:
+1. Log-weighted engagement (normalized per platform)
+2. Recency decay (linear over 30 days)
+3. Credibility multiplier (verified stakes > deliberate > passive)
+"""
 
 from __future__ import annotations
 
 import math
 from datetime import datetime, timezone
 
+from digest.credibility import credibility_multiplier
 from digest.models import Item
 
 # Platform-specific weights to normalize engagement scales.
@@ -19,14 +26,17 @@ PLATFORM_WEIGHTS: dict[str, float] = {
     "snapshot": 1.5,  # Governance votes are deliberate signals
     "polymarket": 0.8,  # Volume is noisy, but odds are credibility signals
     "packages": 0.3,  # Downloads are massive numbers, scale down heavily
+    "coingecko": 0.4,  # Market data, not discussion
+    "blockscout": 1.2,  # On-chain activity, real value transfers
 }
 
 
 def score(item: Item, now: datetime | None = None) -> float:
-    """Score an item by log-weighted engagement with a mild recency boost.
+    """Score an item by engagement * recency * credibility.
 
     Engagement is log-scaled so a 1000-point story doesn't drown a 50-point one.
     Recency decays linearly over 30 days.
+    Credibility adjusts based on signal quality (verified > deliberate > passive).
     """
     now = now or datetime.now(timezone.utc)
     weight = PLATFORM_WEIGHTS.get(item.source, 1.0)
@@ -35,7 +45,9 @@ def score(item: Item, now: datetime | None = None) -> float:
     age_days = max((now - item.timestamp).total_seconds() / 86400, 0)
     recency = max(1.0 - age_days / 30, 0.1)
 
-    return engagement_score * (0.7 + 0.3 * recency)
+    cred = credibility_multiplier(item)
+
+    return engagement_score * (0.7 + 0.3 * recency) * cred
 
 
 def rank(items: list[Item], limit: int | None = None) -> list[Item]:
