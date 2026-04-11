@@ -121,3 +121,12 @@ def pr(
             console.print(f"  [green]PR created: {pr_url}[/green]")
         else:
             console.print("  [red]failed to create PR[/red]")
+
+
+@app.command()
+def serve() -> None:
+    """Start the MCP server (stdio transport)."""
+    from patchbot.mcp_server import create_server
+
+    server = create_server()
+    server.run(transport="stdio")

@@ -148,5 +148,14 @@ def alerts(
     console.print(table)
 
 
+@app.command()
+def serve() -> None:
+    """Start the MCP server (stdio transport)."""
+    from sentinel.mcp_server import create_server
+
+    server = create_server()
+    server.run(transport="stdio")
+
+
 if __name__ == "__main__":
     app()

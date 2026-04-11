@@ -7,9 +7,11 @@ from pathlib import Path
 from prepper.gatherers import (
     gather_ci_status,
     gather_dependency_status,
+    gather_digest_summary,
     gather_git_activity,
     gather_github_state,
     gather_recall_context,
+    gather_sentinel_alerts,
 )
 from prepper.models import Briefing, Priority
 
@@ -51,6 +53,15 @@ def generate_briefing(
         recall_section = gather_recall_context(project)
         if recall_section:
             sections.append(recall_section)
+
+    # Cross-agent context
+    sentinel_section = gather_sentinel_alerts()
+    if sentinel_section:
+        sections.append(sentinel_section)
+
+    digest_section = gather_digest_summary(project_name)
+    if digest_section:
+        sections.append(digest_section)
 
     return Briefing(project_name=project_name, sections=sections)
 

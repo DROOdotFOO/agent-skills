@@ -38,6 +38,9 @@ resources.
 
 ## See also
 
+- `blockscout` -- full Blockscout MCP tool reference (16 tools, usage patterns)
+- `coingecko` -- crypto market data, token prices, DEX pools, trending tokens
+- `sentinel` -- automated on-chain contract monitoring with alert rules
 - `solidity-audit` -- for EIP/ERC implementation guidance and security review
 - `noir` -- for ZK circuit patterns and Aztec contract integration
 - `design-ux` -- for dApp frontend design patterns
@@ -50,3 +53,5 @@ resources.
 | Foundry vs Hardhat vs Scaffold-ETH 2        | [stack-selection](stack-selection.md) |
 | RPC providers, block explorers, faucets     | [rpc-explorers](rpc-explorers.md)     |
 | EIP/ERC standards reference                 | [standards](standards.md)             |
+| Full Blockscout MCP tool reference          | blockscout skill                      |
+| Token prices, DEX pools, market data        | coingecko skill                       |

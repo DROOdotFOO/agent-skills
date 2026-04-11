@@ -46,6 +46,14 @@ def generate(
         bool,
         typer.Option("--no-expansion", help="Skip query expansion; search topic literally"),
     ] = False,
+    remember: Annotated[
+        bool,
+        typer.Option("--remember", help="Store digest in feed memory for differential tracking"),
+    ] = False,
+    diff: Annotated[
+        bool,
+        typer.Option("--diff", help="Show differential: new/accelerating/ongoing/declining"),
+    ] = False,
 ) -> None:
     """Generate a digest for TOPIC."""
     platform_list = [p.strip() for p in platforms.split(",") if p.strip()]
@@ -71,6 +79,7 @@ def generate(
             request,
             synthesize_narrative=not no_synthesis,
             use_expansion=not no_expansion,
+            store_memory=remember,
         )
 
     if query.matched_rules:
@@ -81,6 +90,25 @@ def generate(
             err.print(f"[dim]GitHub topics:[/dim] {query.github_topics}")
     elif not no_expansion:
         err.print(f"[dim]No expansion rules matched '{topic}' -- using literal search.[/dim]")
+
+    if diff:
+        from digest.diff import classify_items, format_differential
+        from digest.memory import FeedMemory
+
+        mem = FeedMemory()
+        if mem.digest_count(topic) == 0:
+            err.print("[dim]No previous digests found -- all items shown as new.[/dim]")
+        classified = classify_items(result, mem)
+        mem.close()
+        diff_text = format_differential(classified)
+        if output:
+            output.write_text(to_markdown(result) + "\n\n---\n\n" + diff_text)
+            err.print(f"[green]Wrote differential digest to[/green] {output}")
+        else:
+            from rich.markdown import Markdown
+
+            console.print(Markdown(diff_text))
+        return
 
     if output:
         output.write_text(to_markdown(result))
@@ -94,6 +122,15 @@ def list_platforms() -> None:
     """List available platform adapters."""
     for name in ADAPTERS:
         console.print(f"  {name}")
+
+
+@app.command()
+def serve() -> None:
+    """Start the MCP server (stdio transport)."""
+    from digest.mcp_server import create_server
+
+    server = create_server()
+    server.run(transport="stdio")
 
 
 if __name__ == "__main__":

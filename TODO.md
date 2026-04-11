@@ -2,6 +2,29 @@
 
 ## Session log
 
+**2026-04-11** -- Integration sprint. 47 skills, 7 agents, 302 tests, 0 lint errors.
+
+- CoinGecko MCP server documented (remote keyless + local stdio options)
+- CoinGecko digest adapter: trending tokens, gainers/losers, new listings (7 tests)
+- Blockscout digest adapter: on-chain token transfers, address activity (8 tests)
+- Differential digests: SQLite feed memory, new/ongoing/accelerating/declining classification (15 tests)
+- Prepper SessionStart hook: auto-inject briefing at session start (script + settings.json docs)
+- Cross-agent composition: prepper now gathers sentinel alerts + digest history
+- MCP server tests: 21 tests across all 7 agents (3 per server factory)
+- Skill trigger accuracy harness: 37 snapshot tests, keyword-based, covers all categories
+- Polymarket Gamma API verified working
+- Snyk agent-scan blocked on SNYK_TOKEN (needs `snyk auth`)
+- New skills: `coingecko` (4 ref files), `blockscout` (16-tool reference)
+- Sentinel expanded: +3 chains (Celo, Mode, Neon EVM/Solana)
+- Solana/Tron support via CoinGecko platform IDs + Neon EVM bridge
+
+**2026-04-11** -- Agent <-> skill MCP integration. All 7 agents now expose MCP servers via `<agent> serve`. 45 skills, 7 agents, 253 tests, 0 lint errors.
+
+- All 7 agents now have `mcp_server.py` + `serve` CLI command (FastMCP, stdio transport)
+- 5 new agent skill stubs: autoresearch, watchdog, prepper, sentinel, patchbot
+- Updated digest skill with MCP section, recall already had it
+- 23 MCP tools total across all agents (8 recall + 3 digest + 3 autoresearch + 2 watchdog + 2 prepper + 2 sentinel + 3 patchbot)
+
 **2026-04-11** -- All phases (1-7) complete. 40 skills, 7 agents, 253 tests, 0 lint errors.
 
 - Ruff lint + format pass: all 7 agents at 0 errors.
@@ -217,13 +240,12 @@ Knowledge capture and retrieval. Our version of [paperclip](https://github.com/p
 
 Skills that invoke or surface agent capabilities inside Claude Code sessions:
 
-- [ ] `/digest` slash command skill -- invoke digest agent from within Claude Code
-- [ ] `recall` context skill -- auto-inject relevant knowledge from recall DB into session context (Claude Code hook on SessionStart or similar)
-- [ ] `autoresearch` status skill -- check experiment progress, surface latest results
-- [ ] `watchdog` digest skill -- surface weekly health report in session
-- [ ] `sentinel` alert skill -- check recent on-chain alerts
-- [ ] `prepper` hook -- auto-inject briefing on SessionStart
-- [ ] Design the boundary: agents run standalone, skills are the Claude Code interface to them
+- [x] All 7 agents expose MCP servers via `<agent> serve` (stdio transport, FastMCP)
+- [x] 5 new agent skill stubs (autoresearch, watchdog, prepper, sentinel, patchbot)
+- [x] Updated digest skill with MCP config section
+- [x] recall already had MCP server + skill docs
+- [ ] `prepper` hook -- auto-inject briefing on SessionStart (needs Claude Code hook support)
+- [ ] Design proactive triggers: sentinel alerts, watchdog degradation -> session notification
 
 ### Skills structural patterns (apply as we go)
 

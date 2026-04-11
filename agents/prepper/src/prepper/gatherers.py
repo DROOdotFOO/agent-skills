@@ -236,6 +236,73 @@ def gather_recall_context(project: str) -> BriefingSection | None:
         return None
 
 
+def gather_sentinel_alerts(alert_log: str = "alerts.jsonl") -> BriefingSection | None:
+    """Surface recent on-chain alerts from sentinel's log."""
+    alerts_path = Path(alert_log)
+    if not alerts_path.exists():
+        # Check default location
+        alerts_path = Path.home() / ".local" / "share" / "sentinel" / "alerts.jsonl"
+        if not alerts_path.exists():
+            return None
+
+    try:
+        import json
+
+        lines_raw = alerts_path.read_text().strip().splitlines()
+        recent = lines_raw[-5:]  # Last 5 alerts
+        if not recent:
+            return None
+
+        lines: list[str] = []
+        for raw_line in reversed(recent):
+            data = json.loads(raw_line)
+            severity = data.get("severity", "").upper()
+            rule = data.get("rule_name", "")
+            contract = data.get("contract", {}).get("name", "")
+            message = data.get("message", "")
+            lines.append(f"- **[{severity}]** {rule} ({contract}): {message}")
+
+        return BriefingSection(
+            title="On-Chain Alerts (Sentinel)",
+            content="\n".join(lines),
+            priority=Priority.HIGH,
+        )
+    except Exception:
+        return None
+
+
+def gather_digest_summary(project: str) -> BriefingSection | None:
+    """Summarize recent digest activity for project-related topics."""
+    db_path = Path.home() / ".local" / "share" / "digest" / "feed.db"
+    if not db_path.exists():
+        return None
+
+    try:
+        import sqlite3
+
+        conn = sqlite3.connect(str(db_path))
+        rows = conn.execute(
+            "SELECT topic, item_count, generated_at FROM digests ORDER BY generated_at DESC LIMIT 5"
+        ).fetchall()
+        conn.close()
+
+        if not rows:
+            return None
+
+        lines: list[str] = []
+        for topic, count, generated_at in rows:
+            ts = generated_at[:10] if generated_at else "?"
+            lines.append(f"- **{topic}**: {count} items ({ts})")
+
+        return BriefingSection(
+            title="Recent Digests",
+            content="\n".join(lines),
+            priority=Priority.LOW,
+        )
+    except Exception:
+        return None
+
+
 def gather_ci_status(repo: str) -> BriefingSection | None:
     """Last CI run result."""
     if not which("gh"):

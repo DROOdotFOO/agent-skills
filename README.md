@@ -1,6 +1,6 @@
 # agent-skills
 
-Claude Code skills and autonomous agents for polyglot development, web3, ZK, UI/UX, and systems programming.
+47 Claude Code skills and 7 autonomous agents for polyglot development, web3, ZK, UI/UX, and systems programming.
 
 ## Skills
 
@@ -19,6 +19,8 @@ Context-injection skills for Claude Code sessions. Each skill lives in `skills/<
 | `design-ux`      | UI/UX design patterns, design tokens, accessibility, TUI aesthetics                 |
 | `nix`            | Nix language, flakes, NixOS, Home Manager, packaging                                |
 | `native-code`    | NIF development (C/Rust/Rustler), SIMD (Zig), BEAM native boundary                  |
+| `coingecko`      | CoinGecko/GeckoTerminal API: prices, markets, DEX pools, trending tokens             |
+| `blockscout`     | Blockscout MCP tool reference: 16 tools for on-chain data across 8+ chains           |
 
 ### Workflow skills
 
@@ -63,22 +65,46 @@ Context-injection skills for Claude Code sessions. Each skill lives in `skills/<
 | `codebase-onboarding`  | Auto-generate onboarding docs, audience-aware                         |
 | `rag-architect`        | RAG pipeline design: chunking, embedding, retrieval, evaluation       |
 | `llm-cost-optimizer`   | 6 optimization techniques in priority order                           |
-| `digest`               | Multi-platform activity digest (8 platforms)                          |
+| `digest`               | Multi-platform activity digest (9 sources + differential mode)        |
 | `recall`               | Knowledge base: query past decisions, patterns, gotchas               |
+| `autoresearch`         | Check experiment status, run iterations, view dashboards              |
+| `watchdog`             | Scan repos for stale PRs, failing CI, security advisories             |
+| `prepper`              | Generate pre-session project briefings                                |
+| `sentinel`             | Monitor on-chain contracts for anomalous transactions                 |
+| `patchbot`             | Scan and update outdated dependencies across ecosystems               |
 
 ## Agents
 
-Autonomous tools that run independently. Each agent lives in `agents/<name>/`.
+Autonomous tools that run independently. Each agent lives in `agents/<name>/`. All agents expose MCP servers via `<agent> serve` (stdio transport) for direct Claude Code integration.
 
-| Agent          | Description                                                         | Priority | Status   |
-| -------------- | ------------------------------------------------------------------- | -------- | -------- |
-| `digest`       | Multi-platform activity digest (HN, GitHub, Reddit, YouTube + web3) | High     | MVP done |
-| `recall`       | Knowledge capture and retrieval (SQLite + FTS5 + MCP server)        | Medium   | MVP done |
-| `autoresearch` | Domain-agnostic autonomous experiment runner (ML, Noir, Solidity)   | Medium   | MVP done |
-| `watchdog`     | Continuous repo health monitor (PRs, CI, deps, advisories)          | Low      | MVP done |
-| `prepper`      | Pre-session context builder (git, GitHub, deps, recall, CI)         | Low      | MVP done |
-| `sentinel`     | On-chain contract monitor via Blockscout API (8 chains)             | Low      | MVP done |
-| `patchbot`     | Polyglot dependency updater (Elixir, Rust, Node, Go, Python)        | Low      | MVP done |
+| Agent          | Description                                                         | MCP tools | Status   |
+| -------------- | ------------------------------------------------------------------- | --------- | -------- |
+| `digest`       | Multi-platform activity digest (HN, GitHub, Reddit, YouTube + web3) | 3         | MVP done |
+| `recall`       | Knowledge capture and retrieval (SQLite + FTS5 + MCP server)        | 8         | MVP done |
+| `autoresearch` | Domain-agnostic autonomous experiment runner (ML, Noir, Solidity)   | 3         | MVP done |
+| `watchdog`     | Continuous repo health monitor (PRs, CI, deps, advisories)          | 2         | MVP done |
+| `prepper`      | Pre-session context builder (git, GitHub, deps, recall, sentinel, digest) | 2   | MVP done |
+| `sentinel`     | On-chain contract monitor via Blockscout API (11 chains)            | 2         | MVP done |
+| `patchbot`     | Polyglot dependency updater (Elixir, Rust, Node, Go, Python)        | 3         | MVP done |
+
+### MCP integration
+
+Each agent can run as an MCP server for Claude Code. Add to `~/.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "digest":       { "command": "digest",       "args": ["serve"] },
+    "recall":       { "command": "recall",       "args": ["serve"] },
+    "autoresearch": { "command": "autoresearch", "args": ["serve"] },
+    "watchdog":     { "command": "watchdog",     "args": ["serve"] },
+    "prepper":      { "command": "prepper",      "args": ["serve"] },
+    "sentinel":     { "command": "sentinel",     "args": ["serve"] },
+    "patchbot":     { "command": "patchbot",     "args": ["serve"] },
+    "coingecko":    { "url": "https://mcp.api.coingecko.com/mcp" }
+  }
+}
+```
 
 See [TODO.md](TODO.md) for the full roadmap.
 
@@ -141,9 +167,9 @@ git clone https://github.com/DROOdotFOO/agent-skills.git ~/.agents/skills-repo
 ln -s ~/.agents/skills-repo/skills ~/.agents/skills
 ```
 
-## Agents
+### Agents
 
-Agents are standalone tools. Install each independently:
+Install each agent independently:
 
 ```bash
 cd agents/<name> && pip install -e .

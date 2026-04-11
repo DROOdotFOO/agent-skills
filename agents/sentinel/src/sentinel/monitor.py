@@ -22,6 +22,9 @@ BLOCKSCOUT_URLS: dict[int, str] = {
     100: "https://gnosis.blockscout.com",
     324: "https://zksync.blockscout.com",
     534352: "https://scroll.blockscout.com",
+    42220: "https://celo.blockscout.com",
+    34443: "https://explorer.mode.network",
+    245022934: "https://neon.blockscout.com",
 }
 
 

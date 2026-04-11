@@ -129,5 +129,14 @@ def watch(
             raise typer.Exit(0) from None
 
 
+@app.command()
+def serve() -> None:
+    """Start the MCP server (stdio transport)."""
+    from watchdog.mcp_server import create_server
+
+    server = create_server()
+    server.run(transport="stdio")
+
+
 if __name__ == "__main__":
     app()

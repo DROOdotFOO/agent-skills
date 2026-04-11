@@ -41,27 +41,35 @@ chisel                                # interactive Solidity REPL
 
 ## Blockscout MCP
 
-Query blockchain data via Model Context Protocol (configured in `~/.mcp.json`):
+16 tools via Model Context Protocol (configured in `~/.mcp.json`).
+For full reference with usage patterns, see the **blockscout** skill.
 
 ```
-# Address info (balance, token holdings)
+# Address info (balance, token holdings, ENS)
 get_address_info(chain_id=1, address="0x...")
+get_tokens_by_address(chain_id=1, address="0x...")
+nft_tokens_by_address(chain_id=1, address="0x...")
+get_address_by_ens_name(name="vitalik.eth")
 
-# Token transfers for an address
+# Transactions
+get_transactions_by_address(chain_id=1, address="0x...")
 get_token_transfers_by_address(chain_id=1, address="0x...")
+get_transaction_info(chain_id=1, transaction_hash="0x...")
 
-# Read contract state (verified contracts)
+# Contracts
+get_contract_abi(chain_id=1, address="0x...")
+inspect_contract_code(chain_id=1, address="0x...")
 read_contract(chain_id=1, address="0x...", function_name="totalSupply")
 
-# Get contract ABI
-get_contract_abi(chain_id=1, address="0x...")
-
-# Transaction details
-get_transaction_info(chain_id=1, transaction_hash="0x...")
+# Blocks & lookup
+get_block_info(chain_id=1, block_number=20000000)
+get_block_number(chain_id=1, timestamp="2024-06-01T00:00:00Z")
+lookup_token_by_symbol(chain_id=1, symbol="USDC")
+get_chains_list()
 ```
 
 Common chain IDs: Ethereum (1), Polygon (137), Base (8453), Arbitrum (42161),
-Optimism (10), zkSync (324).
+Optimism (10), zkSync (324), Gnosis (100), Scroll (534352).
 
 ## abi.ninja
 

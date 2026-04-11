@@ -1,6 +1,8 @@
 """Platform adapters for fetching items."""
 
 from digest.adapters.base import Adapter
+from digest.adapters.blockscout import BlockscoutAdapter
+from digest.adapters.coingecko import CoinGeckoAdapter
 from digest.adapters.ethresearch import EthResearchAdapter
 from digest.adapters.github import GitHubAdapter
 from digest.adapters.hackernews import HackerNewsAdapter
@@ -17,6 +19,8 @@ ADAPTERS: dict[str, type[Adapter]] = {
     "snapshot": SnapshotAdapter,
     "ethresearch": EthResearchAdapter,
     "packages": PackagesAdapter,
+    "coingecko": CoinGeckoAdapter,
+    "blockscout": BlockscoutAdapter,
 }
 
 

@@ -238,5 +238,16 @@ def status(
         console.print(f"  Best: {state.best_metric} (run #{state.best_run})")
 
 
+@app.command()
+def serve(
+    work_dir: Annotated[Path, typer.Option("--dir", hidden=True)] = Path("."),
+) -> None:
+    """Start the MCP server (stdio transport)."""
+    from autoresearch.mcp_server import create_server
+
+    server = create_server(work_dir=work_dir)
+    server.run(transport="stdio")
+
+
 if __name__ == "__main__":
     app()

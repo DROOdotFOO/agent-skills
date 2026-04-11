@@ -50,6 +50,8 @@ digest list-platforms
 | Snapshot | `snapshot` | GraphQL governance API (votes, scores) |
 | Polymarket | `polymarket` | Gamma API market data (volume traded) |
 | Package registries | `packages` | hex.pm + crates.io + npm (recent downloads) |
+| CoinGecko | `coingecko` | Trending tokens, top gainers/losers, new listings |
+| Blockscout | `blockscout` | On-chain token transfers and address activity (Ethereum) |
 
 ## Flags
 
@@ -86,6 +88,37 @@ to force literal search even when rules exist.
 4. Rank by log-weighted engagement + recency decay
 5. Synthesize narrative via Claude (unless `--no-synthesis`)
 6. Output to terminal (rich) or markdown file
+
+## MCP Server
+
+Start the MCP server (stdio transport):
+
+```bash
+digest serve
+```
+
+### Configure MCP
+
+Add to `~/.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "digest": {
+      "command": "digest",
+      "args": ["serve"]
+    }
+  }
+}
+```
+
+### MCP Tools
+
+| Tool | Description |
+|------|-------------|
+| `digest_generate` | Generate a synthesized digest for a topic across platforms |
+| `digest_list_platforms` | List available platform adapters |
+| `digest_expand_query` | Preview query expansion for a topic |
 
 ## Install
 

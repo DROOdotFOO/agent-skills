@@ -15,6 +15,7 @@ def run(
     *,
     synthesize_narrative: bool = True,
     use_expansion: bool = True,
+    store_memory: bool = False,
 ) -> tuple[DigestResult, ExpandedQuery]:
     """Run the full digest pipeline.
 
@@ -42,4 +43,12 @@ def run(
         items=ranked,
         narrative=narrative,
     )
+
+    if store_memory:
+        from digest.memory import FeedMemory
+
+        mem = FeedMemory()
+        mem.store(result)
+        mem.close()
+
     return result, query
