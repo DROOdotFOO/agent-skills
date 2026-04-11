@@ -156,9 +156,7 @@ class GitHubAdapter:
         args = ["search", "issues"]
         if term:
             args.append(term)
-        args.extend(
-            ["--created", f">={since}", "--limit", str(limit), "--json", fields]
-        )
+        args.extend(["--created", f">={since}", "--limit", str(limit), "--json", fields])
         # `gh search issues` supports --owner and --repo but not --topic.
         # --repo is more specific; if we have repos, prefer them over owners.
         if repos:

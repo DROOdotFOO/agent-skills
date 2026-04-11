@@ -26,9 +26,7 @@ def run(
     raw_items: list[Item] = []
     for platform in request.platforms:
         adapter = get_adapter(platform)
-        raw_items.extend(
-            adapter.fetch(query, request.days, request.max_items_per_platform)
-        )
+        raw_items.extend(adapter.fetch(query, request.days, request.max_items_per_platform))
 
     deduped = dedupe(raw_items)
     ranked = rank(deduped, limit=request.max_items_per_platform)

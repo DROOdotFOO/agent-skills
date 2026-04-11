@@ -1,0 +1,26 @@
+{
+  "name": "agent-skills",
+  "description": "40 Claude Code skills and 7 autonomous agents for polyglot development, web3, ZK, UI/UX, and systems programming.",
+  "version": "1.0.0",
+  "author": {
+    "name": "DROOdotFOO"
+  },
+  "homepage": "https://github.com/DROOdotFOO/agent-skills",
+  "repository": "https://github.com/DROOdotFOO/agent-skills",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "agents",
+    "polyglot",
+    "web3",
+    "solidity",
+    "noir",
+    "elixir",
+    "rust",
+    "tdd",
+    "code-review",
+    "mcp",
+    "rag",
+    "observability"
+  ]
+}

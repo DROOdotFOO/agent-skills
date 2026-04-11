@@ -1,0 +1,45 @@
+[project]
+name = "autoresearch"
+version = "0.1.0"
+description = "Domain-agnostic autonomous experiment runner"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "droo" }]
+dependencies = [
+    "typer>=0.12.0",
+    "pydantic>=2.6.0",
+    "rich>=13.7.0",
+    "anthropic>=0.40.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.4.0",
+]
+
+[project.scripts]
+autoresearch = "autoresearch.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/autoresearch"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/autoresearch/cli.py" = ["B006"]  # Typer requires mutable defaults for list options
+"src/autoresearch/models.py" = ["E501"]  # Long Field descriptions
+"src/autoresearch/runner.py" = ["E501"]  # Complex return type annotation
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

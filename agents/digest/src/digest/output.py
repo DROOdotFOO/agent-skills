@@ -20,8 +20,7 @@ def to_markdown(result: DigestResult) -> str:
     body = result.narrative + "\n\n---\n\n## Sources\n\n"
     for idx, item in enumerate(result.items, 1):
         body += (
-            f"{idx}. [{item.source}] [{item.title}]({item.url}) "
-            f"-- {item.engagement} engagement\n"
+            f"{idx}. [{item.source}] [{item.title}]({item.url}) -- {item.engagement} engagement\n"
         )
     return header + body
 

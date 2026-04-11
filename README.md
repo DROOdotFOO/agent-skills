@@ -6,6 +6,8 @@ Claude Code skills and autonomous agents for polyglot development, web3, ZK, UI/
 
 Context-injection skills for Claude Code sessions. Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
 
+### Domain skills
+
 | Skill            | Description                                                                         |
 | ---------------- | ----------------------------------------------------------------------------------- |
 | `claude-api`     | Anthropic SDK reference (Python, TS, Go, Elixir, Rust, Lua, cURL)                   |
@@ -17,37 +19,110 @@ Context-injection skills for Claude Code sessions. Each skill lives in `skills/<
 | `design-ux`      | UI/UX design patterns, design tokens, accessibility, TUI aesthetics                 |
 | `nix`            | Nix language, flakes, NixOS, Home Manager, packaging                                |
 | `native-code`    | NIF development (C/Rust/Rustler), SIMD (Zig), BEAM native boundary                  |
-| `polymath`       | Split-brain research methodology, parallel multi-agent lens synthesis               |
+
+### Workflow skills
+
+| Skill                 | Description                                                             |
+| --------------------- | ----------------------------------------------------------------------- |
+| `tdd`                 | Test-driven development: vertical slices, mutation testing, polyglot    |
+| `code-review`         | PR review: blast radius, security scan, SOLID checks, 40-item checklist |
+| `prd-to-plan`         | PRD -> phased tracer-bullet vertical slices                             |
+| `prd-to-issues`       | PRD -> GitHub issues with HITL/AFK classification                       |
+| `triage-issue`        | Bug investigation -> GitHub issue with TDD fix plan                     |
+| `focused-fix`         | 5-phase bug fix: SCOPE -> TRACE -> DIAGNOSE -> FIX -> VERIFY            |
+| `release`             | Conventional commits, semver bumping, changelog, readiness checks       |
+| `qa`                  | Interactive QA with background explorer, issue filing                   |
+| `design-an-interface` | "Design It Twice" -- parallel sub-agents with divergent constraints     |
+| `ubiquitous-language` | DDD glossary extraction, canonical terms                                |
+| `grill-me`            | Stress-test designs via structured interrogation                        |
+
+### Infrastructure skills
+
+| Skill                    | Description                                                     |
+| ------------------------ | --------------------------------------------------------------- |
+| `mcp-server-builder`     | OpenAPI -> MCP server scaffolding (Python FastMCP + TypeScript) |
+| `ci-cd-pipeline-builder` | Stack detection -> GitHub Actions/GitLab CI generation          |
+| `dependency-auditor`     | Multi-language vuln scanning + license compliance               |
+| `observability-designer` | SLO/SLI design, burn rate alerting, dashboard generation        |
+| `database-designer`      | Schema analysis, ERD generation, index optimization             |
+| `performance-profiler`   | Polyglot profiling (Node/Python/Go/Elixir/Rust)                 |
+| `git-guardrails`         | PreToolUse hooks to block dangerous git operations              |
+| `git-worktree-manager`   | Parallel dev with deterministic port allocation                 |
+| `env-secrets-manager`    | Leak detection, rotation, pre-commit setup                      |
+| `tech-debt-tracker`      | Debt scanning, cost-of-delay prioritization                     |
+
+### Meta skills
+
+| Skill                  | Description                                                           |
+| ---------------------- | --------------------------------------------------------------------- |
+| `polymath`             | Split-brain research: three-tier roster, polymath persona composition |
+| `architect`            | ADR workflows, dependency classification, pattern detection           |
+| `agent-designer`       | Multi-agent architecture patterns, tool schemas, guardrails           |
+| `adversarial-reviewer` | Three-persona devil's advocate review                                 |
+| `self-improving-agent` | Auto-memory curation, pattern promotion lifecycle                     |
+| `codebase-onboarding`  | Auto-generate onboarding docs, audience-aware                         |
+| `rag-architect`        | RAG pipeline design: chunking, embedding, retrieval, evaluation       |
+| `llm-cost-optimizer`   | 6 optimization techniques in priority order                           |
+| `digest`               | Multi-platform activity digest (8 platforms)                          |
+| `recall`               | Knowledge base: query past decisions, patterns, gotchas               |
 
 ## Agents
 
 Autonomous tools that run independently. Each agent lives in `agents/<name>/`.
 
-| Agent          | Description                                                     | Priority | Status   |
-| -------------- | --------------------------------------------------------------- | -------- | -------- |
-| `digest`       | Multi-platform activity digest (Reddit, HN, GitHub, X, YouTube) | High     | Planning |
-| `recall`       | Knowledge capture and retrieval across projects                 | Medium   | Planning |
-| `autoresearch` | Autonomous ML experiment runner (target: mini-axol)             | Medium   | Planning |
-| `watchdog`     | Continuous repo health monitor (PRs, CI, deps, advisories)      | Low      | Planning |
-| `sentinel`     | On-chain contract monitor via Blockscout MCP                    | Low      | Planning |
-| `patchbot`     | Polyglot dependency updater across repos                        | Low      | Planning |
-| `prepper`      | Pre-session context builder for Claude Code                     | Low      | Planning |
+| Agent          | Description                                                         | Priority | Status   |
+| -------------- | ------------------------------------------------------------------- | -------- | -------- |
+| `digest`       | Multi-platform activity digest (HN, GitHub, Reddit, YouTube + web3) | High     | MVP done |
+| `recall`       | Knowledge capture and retrieval (SQLite + FTS5 + MCP server)        | Medium   | MVP done |
+| `autoresearch` | Domain-agnostic autonomous experiment runner (ML, Noir, Solidity)   | Medium   | MVP done |
+| `watchdog`     | Continuous repo health monitor (PRs, CI, deps, advisories)          | Low      | MVP done |
+| `prepper`      | Pre-session context builder (git, GitHub, deps, recall, CI)         | Low      | MVP done |
+| `sentinel`     | On-chain contract monitor via Blockscout API (8 chains)             | Low      | MVP done |
+| `patchbot`     | Polyglot dependency updater (Elixir, Rust, Node, Go, Python)        | Low      | MVP done |
 
 See [TODO.md](TODO.md) for the full roadmap.
 
 ## Installation
 
-### With chezmoi (recommended)
+### Claude Code plugin (recommended)
 
-Add to your `home/.chezmoiexternal.toml`:
+```bash
+/plugin install agent-skills@DROOdotFOO/agent-skills
+```
+
+Or add to your Claude Code marketplace:
+
+```bash
+/plugin marketplace add DROOdotFOO/agent-skills
+```
+
+### npx skills CLI
+
+Install individual skills:
+
+```bash
+npx skills@latest add DROOdotFOO/agent-skills/tdd
+npx skills@latest add DROOdotFOO/agent-skills/code-review
+npx skills@latest add DROOdotFOO/agent-skills/polymath
+```
+
+Or install all:
+
+```bash
+npx skills@latest add DROOdotFOO/agent-skills
+```
+
+### With chezmoi
+
+Add to your `.chezmoiexternal.toml`:
 
 ```toml
 [".agents/skills"]
     type = "archive"
-    url = "https://github.com/DROOdotFOO/agent-skills/archive/v1.0.0.tar.gz"
+    url = "https://github.com/DROOdotFOO/agent-skills/archive/main.tar.gz"
     stripComponents = 2
     include = ["*/skills/**"]
-    refreshPeriod = "0"
+    refreshPeriod = "168h"
 ```
 
 Then symlink to Claude Code's skills directory:
@@ -64,6 +139,14 @@ done
 ```bash
 git clone https://github.com/DROOdotFOO/agent-skills.git ~/.agents/skills-repo
 ln -s ~/.agents/skills-repo/skills ~/.agents/skills
+```
+
+## Agents
+
+Agents are standalone tools. Install each independently:
+
+```bash
+cd agents/<name> && pip install -e .
 ```
 
 ## Linting

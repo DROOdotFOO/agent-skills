@@ -69,8 +69,15 @@ def test_dedupe_keeps_distinct_items():
 
 def test_dedupe_merges_similar_titles_across_urls():
     items = [
-        make_item("hn", "Rust 2.0 released with async improvements", "https://rust-lang.org/post1", 200),
-        make_item("reddit", "Rust 2.0 released with async improvements!", "https://reddit.com/r/rust/post2", 80),
+        make_item(
+            "hn", "Rust 2.0 released with async improvements", "https://rust-lang.org/post1", 200
+        ),
+        make_item(
+            "reddit",
+            "Rust 2.0 released with async improvements!",
+            "https://reddit.com/r/rust/post2",
+            80,
+        ),
     ]
     result = dedupe(items)
     assert len(result) == 1

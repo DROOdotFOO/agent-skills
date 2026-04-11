@@ -52,10 +52,7 @@ class ExpandedQuery(BaseModel):
     def matched_rules(self) -> bool:
         """True if any expansion rule fired beyond the literal topic."""
         return bool(
-            self.github_qualifiers
-            or self.github_topics
-            or self.hn_terms
-            or len(self.terms) > 1
+            self.github_qualifiers or self.github_topics or self.hn_terms or len(self.terms) > 1
         )
 
 

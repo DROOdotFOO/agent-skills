@@ -36,9 +36,7 @@ class HackerNewsAdapter:
 
         return list(seen.values())[:limit]
 
-    def _search_term(
-        self, term: str, since: datetime, limit: int
-    ) -> list[dict]:
+    def _search_term(self, term: str, since: datetime, limit: int) -> list[dict]:
         params = {
             "query": term,
             "tags": "story",

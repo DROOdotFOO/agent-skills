@@ -2,6 +2,18 @@
 
 ## Session log
 
+**2026-04-11** -- All phases (1-7) complete. 40 skills, 7 agents, 253 tests, 0 lint errors.
+
+- Ruff lint + format pass: all 7 agents at 0 errors.
+- Phase 7: 5 agents shipped (autoresearch, watchdog, prepper, sentinel, patchbot).
+- Distribution: .claude-plugin/plugin.json + marketplace.json, npx skills CLI, chezmoi, manual.
+- Phase 6: 20 skill extractions (8 Tier 1 + 12 Tier 2). 40 skills total.
+- Phase 5: Recall agent MVP + auto-extraction + digest web3 adapters + skill wiring.
+- Polymath v2.0.0: three-tier roster, polymath persona composition, roster caching.
+- Phase 4: 5 merged skill extractions (tdd, code-review, mcp-server-builder, prd-to-plan, prd-to-issues).
+- Phase 3: digest adapters (HN, GitHub, Reddit, YouTube + ethresear.ch, Snapshot, Polymarket, packages).
+- Snyk agent-scan: uv + snyk installed, auth done. Analysis server returning 503 (retry later).
+
 **2026-04-10** -- Phases 1 + 2 + most of Phase 3 landed.
 
 - Claude-api SKILL.md split 283 -> 89 lines; extracted `shared/surfaces.md`, `shared/thinking-effort.md`, `shared/pitfalls.md`
@@ -13,6 +25,7 @@
 - Snyk scan deferred (needs `uv` installed); live Claude synthesis blocked on API credit balance (`--no-synthesis` flag added as workaround)
 
 **New skill extraction candidates discovered via digest:**
+
 - `travisvn/awesome-claude-skills` -- curated list, scrape for more candidates
 - `thedotmack/claude-mem` -- session memory plugin, directly relevant to recall agent design
 - `wshobson/agents` -- multi-agent orchestration patterns
@@ -33,7 +46,7 @@ Phases are sequential but produce usable output at each step. Skills and agents 
 - [x] Ensure all sub-files have complete frontmatter (all 101 sub-files have impact, impactDescription, tags)
 - [x] Audit naming consistency across all skills (all kebab-case, consistent)
 - [x] Review cross-references (all verified, no broken refs)
-- [ ] Run snyk/agent-scan against existing skills (needs uvx/uv -- install first)
+- [ ] Run snyk/agent-scan against existing skills (uv + snyk installed, auth done, analysis server returning 503 -- retry later)
 
 ### Phase 2: Quick Skill Extractions
 
@@ -48,12 +61,12 @@ Multi-platform activity digest. Our version of [last30days-skill](https://github
 **Core idea:** Topic in -> synthesized brief out, weighted by credibility signals. Differential by default -- highlights what changed, not just what exists.
 
 - [x] Scaffold agent structure (agents/digest/, pyproject.toml, typer CLI)
-- [ ] Platform adapters (common interface, one module per source)
+- [x] Platform adapters (common interface, one module per source)
   - [x] Hacker News (Algolia API, no auth) -- live tested
   - [x] GitHub (gh CLI, repos + issues) -- live tested
-  - [ ] Reddit (API, oauth)
-  - [ ] X (vendored client or nitter scrape)
-  - [ ] YouTube (yt-dlp for transcripts)
+  - [x] Reddit (public search JSON API, no OAuth) -- unit tested
+  - [ ] X (deferred: free API tier eliminated, nitter dead, Basic tier $100/mo)
+  - [x] YouTube (yt-dlp flat-playlist search, no API key) -- unit tested
 - [x] Query expansion -- static rules in expansion.py, substring matching, platform-specific `hn_terms`, GitHub `org:`/`repo:`/`topic:` qualifiers routed to `gh` CLI flags. LLM-based expansion deferred as future extension.
 - [x] Ranking algorithm: log-weighted engagement + recency decay, per-platform weights
 - [x] Cross-platform deduplication (URL normalization + title similarity via SequenceMatcher)
@@ -65,11 +78,11 @@ Multi-platform activity digest. Our version of [last30days-skill](https://github
 
 Bigger extractions needing adaptation/merging. Interleaved with digest polish.
 
-- [ ] `tdd` -- merge mattpocock (workflow + companion files: mocking, refactoring, deep-modules, interface-design) + alirezarezvani `tdd-guide` (mutation testing, Go/Pytest/Jest). Anti-horizontal-slice philosophy. Adapt for polyglot stack (Elixir ExUnit, Go table-driven, Rust, Python pytest)
-- [ ] `code-review` -- merge alirezarezvani `pr-review-expert` (blast radius analysis, security scan, 30+ item checklist, polyglot) + `code-reviewer` (SOLID violation detection, quality scoring)
-- [ ] `mcp-server-builder` -- OpenAPI -> MCP server scaffolding. Directly useful for our MCP-heavy setup ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-- [ ] `prd-to-plan` -- PRD -> phased "tracer bullet" vertical slices. Each phase = narrow complete path through all layers ([mattpocock/skills](https://github.com/mattpocock/skills))
-- [ ] `prd-to-issues` -- PRD -> GitHub issues with HITL/AFK distinction (human-in-the-loop vs autonomous). Issues in dependency order ([mattpocock/skills](https://github.com/mattpocock/skills))
+- [x] `tdd` -- merged mattpocock (workflow, vertical slices, deep-modules, interface-design) + alirezarezvani (mutation testing, polyglot). 7 files, Elixir/Go/Rust/Python/TS examples
+- [x] `code-review` -- merged pr-review-expert (blast radius, security, 40-item checklist) + code-reviewer (SOLID violations, quality scoring). 6 files
+- [x] `mcp-server-builder` -- OpenAPI -> MCP server scaffolding (Python FastMCP + TS). Auth/safety, validation, testing. 5 files
+- [x] `prd-to-plan` -- PRD -> phased tracer-bullet vertical slices. Plan file to `./plans/`. 3 files
+- [x] `prd-to-issues` -- PRD -> GitHub issues with HITL/AFK distinction, dependency ordering. 3 files
 
 ### Phase 5: Recall Agent + Digest Phase 2
 
@@ -79,122 +92,78 @@ Knowledge capture and retrieval. Our version of [paperclip](https://github.com/p
 
 **Key insight:** recall captures _after_ sessions, prepper (Phase 7) prepares _before_. Together they close the knowledge loop.
 
-- [ ] **Recall agent MVP**
-  - [ ] Define knowledge schema (what gets captured: decisions, patterns, gotchas, links)
-  - [ ] Storage backend: local sqlite with FTS5 for search
-  - [ ] Capture interface: CLI `recall add "insight"` or hook into Claude Code post-session
-  - [ ] Query interface: `recall search "topic"` with relevance ranking
-  - [ ] Auto-extraction: parse Claude Code conversation logs for key decisions
-  - [ ] Tag/categorize by project, topic, date
-  - [ ] Integration: Claude Code skill that queries recall DB for relevant context
-  - [ ] Prune/decay: surface stale entries for review
-- [ ] **Digest Phase 2: Web3-native sources**
-  - [ ] Farcaster (Neynar API or hub direct)
-  - [ ] ethresear.ch (forum scrape or RSS)
-  - [ ] Snapshot/Tally governance proposals for watched DAOs
-  - [ ] Blockscout MCP -- on-chain activity for watched addresses
-  - [ ] Prediction markets: Polymarket, Kalshi odds as credibility signal
-  - [ ] Package registries: hex.pm, crates.io, npm new releases for watched deps
-- [ ] Wire `/digest` slash command skill
-- [ ] Wire recall context skill (auto-inject relevant knowledge)
+- [x] **Recall agent MVP**
+  - [x] Define knowledge schema (5 types: decision, pattern, gotcha, link, insight)
+  - [x] Storage backend: local SQLite with FTS5 (porter stemming, WAL mode, trigger-synced index)
+  - [x] Capture interface: CLI `recall add "insight" --type gotcha --project X --tags a,b`
+  - [x] Query interface: `recall search "topic"` with FTS5 ranking, project/type/tag filters
+  - [x] Auto-extraction: parse `~/.claude/history.jsonl` for decision-indicating patterns, classify by type, extract tags, CLI `recall extract --days 30 --dry-run`
+  - [x] Tag/categorize by project, topic, date
+  - [x] Integration: FastMCP server with 8 tools (add, search, list, get, delete, stats, stale, extract)
+  - [x] Prune/decay: `recall stale --days 90` surfaces entries not accessed recently
+- [x] **Digest Phase 2: Web3-native sources**
+  - [ ] Farcaster (deferred: Neynar API requires paid subscription, no free tier)
+  - [x] ethresear.ch (Discourse search JSON API, no auth) -- engagement: views + likes*5 + posts*3
+  - [x] Snapshot governance (GraphQL API, no auth) -- engagement: votes + scores_total, space: qualifiers
+  - [ ] Blockscout MCP -- on-chain activity for watched addresses (deferred, needs MCP client integration)
+  - [x] Prediction markets: Polymarket Gamma API (no auth) -- engagement: volume traded
+  - [x] Package registries: hex.pm + crates.io + npm (all no auth) -- engagement: recent downloads
+- [x] Wire `/digest` slash command skill (skills/digest/SKILL.md)
+- [x] Wire recall context skill (skills/recall/SKILL.md)
 
 ### Phase 6: Remaining Extractions + Distribution
 
-- [ ] **Remaining skill extractions (Tier 1)**
-  - [ ] `design-an-interface` -- Spawns 3+ parallel sub-agents with different constraints ("Design It Twice" from Ousterhout). Deep modules principle ([mattpocock/skills](https://github.com/mattpocock/skills))
-  - [ ] `triage-issue` -- Bug investigation -> GitHub issue with TDD fix plan. Describes behaviors/contracts, not file paths ([mattpocock/skills](https://github.com/mattpocock/skills))
-  - [ ] `dependency-auditor` -- Multi-language (JS, Python, Go, Rust, Ruby, Java) vuln scanning + license compliance ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-  - [ ] `ci-cd-pipeline-builder` -- Stack detection -> GitHub Actions/GitLab CI generation ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-  - [ ] `tech-debt-tracker` -- Automated debt scanning, cost-of-delay prioritization, trend dashboards ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-  - [ ] `release` -- Merge `release-manager` (changelog gen, semver bumping, readiness checks) + `changelog-generator` (conventional commit parsing) ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-  - [ ] `observability-designer` -- SLO/SLI design, alert optimization, dashboard generation ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-  - [ ] `agent-designer` -- Multi-agent orchestration patterns, tool schemas ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-- [ ] **Tier 2 extractions** (adapt as needed)
-  - [ ] `ubiquitous-language` -- DDD glossary extraction from conversations ([mattpocock/skills](https://github.com/mattpocock/skills))
-  - [ ] `architect` -- Merge `improve-codebase-architecture` (identifies shallow modules, dependency classification: in-process, local-sub, remote-owned, true-external) + `senior-architect` (ADR workflows, dependency analysis, diagram generation)
-  - [ ] `qa` -- Interactive QA with background explorer agent running in parallel ([mattpocock/skills](https://github.com/mattpocock/skills))
-  - [ ] `focused-fix` -- Structured 5-phase bug fix methodology with root cause verification ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-  - [ ] `git-worktree-manager` -- Parallel dev with port isolation. Useful for multi-agent workflows ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-  - [ ] `database-designer` -- Schema analysis, ERD generation, index optimization ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-  - [ ] `performance-profiler` -- Node/Python/Go profiling. Missing Elixir/Rust but adaptable ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-  - [ ] `codebase-onboarding` -- Auto-generate onboarding docs from codebase analysis ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-  - [ ] `adversarial-reviewer` -- Devil's advocate review that challenges assumptions ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-  - [ ] `self-improving-agent` -- Auto-memory curation, pattern promotion ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-  - [ ] `rag-architect` -- RAG pipeline design for AI/LLM applications ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-  - [ ] `llm-cost-optimizer` -- LLM API cost optimization strategies ([alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills))
-- [ ] **Distribution**
-  - [ ] Add `.claude-plugin/marketplace.json` + `plugin.json`
-  - [ ] Keep chezmoi `.chezmoiexternal.toml` method as primary install
-  - [ ] Support `npx skills@latest add` method
-  - [ ] Document both installation paths in README
+- [x] **Remaining skill extractions (Tier 1)**
+  - [x] `design-an-interface` -- "Design It Twice" (Ousterhout), parallel sub-agents with divergent constraints. 3 files.
+  - [x] `triage-issue` -- Bug investigation -> GitHub issue with TDD fix plan, durability rules. 2 files.
+  - [x] `dependency-auditor` -- Multi-language vuln scanning + license compliance (JS/Python/Go/Rust/Ruby/Elixir/Java). 3 files.
+  - [x] `ci-cd-pipeline-builder` -- Stack detection -> GitHub Actions/GitLab CI generation. 3 files.
+  - [x] `tech-debt-tracker` -- Debt scanning, cost-of-delay prioritization, trend dashboards. 3 files.
+  - [x] `release` -- Merged release-manager + changelog-generator. Conventional commits, semver, readiness checks. 4 files.
+  - [x] `observability-designer` -- SLO/SLI design, burn rate alerting, dashboard generation. 4 files.
+  - [x] `agent-designer` -- Multi-agent architecture patterns, tool schemas, guardrails. 4 files.
+- [x] **Tier 2 extractions**
+  - [x] `ubiquitous-language` -- DDD glossary extraction, canonical terms, UBIQUITOUS_LANGUAGE.md output. 1 file.
+  - [x] `architect` -- Merged senior-architect + improve-codebase-architecture. ADR workflows, dependency classification, pattern detection. 3 files.
+  - [x] `qa` -- Interactive QA with background explorer agent, scope assessment, issue filing. 1 file.
+  - [x] `focused-fix` -- 5-phase bug fix (SCOPE->TRACE->DIAGNOSE->FIX->VERIFY), 3-strike architecture check. 2 files.
+  - [x] `git-worktree-manager` -- Parallel dev with deterministic port allocation. 2 files.
+  - [x] `database-designer` -- Schema analysis, ERD generation, index optimization, migration safety. 4 files.
+  - [x] `performance-profiler` -- Polyglot profiling (Node/Python/Go/Elixir/Rust), optimization checklist. 3 files.
+  - [x] `codebase-onboarding` -- Auto-generate onboarding docs, audience-aware (junior/senior/contractor). 1 file.
+  - [x] `adversarial-reviewer` -- Three personas (Saboteur/New Hire/Security Auditor), mandatory findings. 2 files.
+  - [x] `self-improving-agent` -- Auto-memory curation, pattern promotion lifecycle. 2 files.
+  - [x] `rag-architect` -- RAG pipeline design, chunking/embedding/retrieval/evaluation. 3 files.
+  - [x] `llm-cost-optimizer` -- 6 optimization techniques in priority order, proactive triggers. 2 files.
+- [x] **Distribution**
+  - [x] Add `.claude-plugin/marketplace.json` + `plugin.json` (self-listing pattern)
+  - [x] Keep chezmoi `.chezmoiexternal.toml` method (updated to main branch, 168h refresh)
+  - [x] Support `npx skills@latest add DROOdotFOO/agent-skills` method
+  - [x] Document all installation paths in README (plugin, npx, chezmoi, manual)
 
 ### Phase 7: Advanced Agents
 
-- [ ] **Autoresearch** -- Autonomous ML experiment runner. Our version of [karpathy/autoresearch](https://github.com/karpathy/autoresearch). Deploy to mini-axol, overnight batch mode.
+- [x] **Autoresearch** -- Domain-agnostic autonomous experiment runner. Generalizes beyond ML to Noir circuits, Solidity gas, compiler passes.
+  - [x] Domain-agnostic harness: configurable verify command + metric pattern + mutable files
+  - [x] Single optimization metric per experiment with direction (lower/higher)
+  - [x] Fixed time budget per run (default 5 min, tunable via --budget)
+  - [x] JSONL experiment tracker: config + run results (metric, status, commit, duration)
+  - [x] Agent prompt design: objective + current best + results history + mutable file contents -> ONE focused change
+  - [x] Guard command support (optional safety check, e.g. `cargo test`)
+  - [x] Results dashboard: markdown table with deltas from baseline
+  - [x] Git-as-memory: branch per experiment, keep/discard via commit/revert
+  - [ ] Safety: sandbox execution, resource limits, no network during training (deferred)
+  - [ ] mini-axol deployment: systemd service or cron, overnight batch mode (deferred)
 
-  **Core idea:** Define research objective in markdown, agent modifies code, trains, evaluates, iterates.
+  **Tech:** Python (typer, pydantic, anthropic). 30 tests, all passing.
 
-  **Key insight from karpathy:** Keep scope minimal. One mutable file, one metric, fixed time budget. Complexity kills autonomous experimentation.
+- [x] **Watchdog** -- Continuous repo health monitor. 6 checks (stale PRs, CI status, issue age, TODO-closed-refs, lockfile audit, security advisories). TOML config, markdown reports, continuous watch mode. 18 tests.
 
-  **Beyond ML:** The pattern (objective + mutable code + fixed budget + iteration) generalizes to: Noir circuit constraint minimization, Solidity gas optimization, compiler pass tuning. Consider making the harness domain-agnostic.
+- [x] **Prepper** -- Pre-session context builder. 5 gatherers (git activity, GitHub state, dependency status, recall integration, CI status). Generates markdown briefing sorted by priority. `inject` command writes to `.claude/prepper-briefing.md`. 9 tests.
 
-  - [ ] Define experiment harness: fixed `prepare.py` + mutable `train.py` pattern
-  - [ ] Single optimization metric per experiment (validation loss, accuracy, etc.)
-  - [ ] Fixed time budget per run (5 min like autoresearch, tunable)
-  - [ ] Experiment tracker: log each run's config, metric, diff
-  - [ ] Agent prompt design: objective + current best + code -> proposed change
-  - [ ] Safety: sandbox execution, resource limits, no network during training
-  - [ ] Results dashboard: compare runs, show progression
-  - [ ] mini-axol deployment: systemd service or cron, overnight batch mode
+- [x] **Sentinel** -- On-chain contract monitor. 4 alert rules (large transfers, ownership changes, unusual methods, selfdestruct). Blockscout API v2 integration, 8 chains supported, TOML watchlist config, JSONL alert log. 34 tests.
 
-  **Tech:** Python + PyTorch. Claude API for the agent loop. Runs on mini-axol (NVIDIA GPU).
-
-- [ ] **Watchdog** -- Continuous repo health monitor. Scans repos on a cron for stale PRs, failing CI, dependency vulns, unfixed security advisories, TODOs referencing closed issues.
-  - [ ] Multi-repo config: list of repos to watch
-  - [ ] Health checks: open PRs age, CI status, lockfile audit (npm/pip/cargo/mix/go)
-  - [ ] TODO scanner: find TODOs referencing closed issues or merged PRs
-  - [ ] Security advisory check per ecosystem (gh api, cargo-audit, mix_audit, pip-audit)
-  - [ ] Weekly digest output (markdown, could feed into digest agent)
-  - [ ] Cron deployment (mini-axol or local launchd)
-
-  **Tech:** Python (typer, gh CLI, language-specific lockfile parsers). Mostly glue.
-
-- [ ] **Prepper** -- Pre-session context builder. Generates a briefing before starting work on a project.
-
-  **Key insight:** recall captures _after_ sessions, prepper prepares _before_. Together they close the knowledge loop.
-
-  - [ ] Git activity: recent commits, active branches, uncommitted changes
-  - [ ] GitHub state: open PRs, assigned issues, failing checks
-  - [ ] Dependency status: outdated packages, known vulns
-  - [ ] Recall integration: surface relevant knowledge entries for the project
-  - [ ] CI status: last run result, flaky test history
-  - [ ] Output: markdown briefing injected into Claude Code session context
-  - [ ] Hook: Claude Code SessionStart or manual `/prepper` invocation
-
-  **Tech:** Python (typer, gh CLI, sqlite3 for recall DB). Could also be a Claude Code hook.
-
-- [ ] **Sentinel** -- On-chain contract monitor. Watches deployed contracts via Blockscout MCP for anomalous transactions, large transfers, governance proposals, known attack patterns.
-  - [ ] Contract watchlist config (address, chain, alert thresholds)
-  - [ ] Blockscout MCP integration for transaction monitoring
-  - [ ] Alert rules: large transfers, unusual function calls, ownership changes
-  - [ ] Known attack pattern matching (from solidity-audit vulnerability taxonomy)
-  - [ ] Notification: terminal, webhook, or email
-  - [ ] Continuous mode: poll interval or event-driven
-
-  **Tech:** Python (httpx, pydantic). Blockscout MCP for data. Runs on mini-axol.
-
-- [ ] **Patchbot** -- Automated dependency updater across polyglot repos. Like Dependabot/Renovate but aware of the full stack.
-
-  **Differentiator from Dependabot/Renovate:** Polyglot-aware batching, runs your actual test suite, understands cross-repo dependencies.
-
-  - [ ] Lockfile parsing: mix.lock, Cargo.lock, package-lock.json, go.sum, requirements.txt
-  - [ ] Version bump detection per ecosystem
-  - [ ] Run test suite before opening PR (language-specific test commands)
-  - [ ] Batch related updates (e.g. all Elixir deps in one PR)
-  - [ ] Cross-repo awareness: same dep bumped across multiple repos
-  - [ ] PR creation via gh CLI with changelog summary
-
-  **Tech:** Python (typer, gh CLI). Wraps existing tools (mix deps.update, cargo update, npm update, go get -u).
+- [x] **Patchbot** -- Polyglot dependency updater. 5 ecosystems (Elixir, Rust, Node, Go, Python). Detects from lockfiles, runs outdated checks, updates + tests, creates PRs via gh CLI. 22 tests.
 
 ---
 
