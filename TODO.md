@@ -2,7 +2,7 @@
 
 ## Session log
 
-**2026-04-11** -- Integration sprint. 47 skills, 7 agents, 375 tests, 0 lint errors.
+**2026-04-11** -- Integration sprint. 47 skills, 7 agents, 399 tests, 0 lint errors.
 
 - CoinGecko MCP server documented (remote keyless + local stdio options)
 - CoinGecko digest adapter: trending tokens, gainers/losers, new listings (7 tests)
@@ -21,13 +21,16 @@
 - Structured output views: timeline, controversy map, tag trends, source breakdown (11 tests)
 - Test gap coverage: sentinel monitor, digest dedup, patchbot parser, prepper gatherers (44 tests)
 - All 7 agents pip-installed, ~/.mcp.json configured via chezmoi (7 agents + coingecko)
+- Source credibility tracking over time: per-source hit/miss across digests, 0.5-1.5 accuracy multiplier (14 tests)
+- Digest <-> recall bridge: store highlights as recall entries, fetch historical context for synthesis (10 tests)
+- Digest MCP tools now at 6 (added digest_recall_context, digest_store_to_recall)
 
 **2026-04-11** -- Agent <-> skill MCP integration. All 7 agents now expose MCP servers via `<agent> serve`. 45 skills, 7 agents, 253 tests, 0 lint errors.
 
 - All 7 agents now have `mcp_server.py` + `serve` CLI command (FastMCP, stdio transport)
 - 5 new agent skill stubs: autoresearch, watchdog, prepper, sentinel, patchbot
 - Updated digest skill with MCP section, recall already had it
-- 23 MCP tools total across all agents (8 recall + 3 digest + 3 autoresearch + 2 watchdog + 2 prepper + 2 sentinel + 3 patchbot)
+- 26 MCP tools total across all agents (8 recall + 6 digest + 3 autoresearch + 2 watchdog + 2 prepper + 2 sentinel + 3 patchbot)
 
 **2026-04-11** -- All phases (1-7) complete. 40 skills, 7 agents, 253 tests, 0 lint errors.
 
@@ -214,7 +217,7 @@ Knowledge capture and retrieval. Our version of [paperclip](https://github.com/p
 
 **Phase 5: Structured output + integrations**
 
-- [x] MCP server mode: `digest serve` with 4 tools (generate, list_platforms, expand_query, structured_view)
+- [x] MCP server mode: `digest serve` with 6 tools (generate, list_platforms, expand_query, structured_view, recall_context, store_to_recall)
 - [x] Structured output: controversy map, timeline view, tag trends, source breakdown (`--view` flag + MCP tool)
 - [x] prepper integration: prepper gathers digest history + sentinel alerts into briefings
 - [x] recall integration: digest <-> recall bridge (store highlights, fetch historical context for synthesis)
