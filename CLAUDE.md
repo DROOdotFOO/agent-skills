@@ -59,7 +59,7 @@ All agents expose MCP servers via `<agent> serve` (stdio transport). Configure i
 
 | Agent        | CLI            | Key commands                                                                              | MCP tools |
 | ------------ | -------------- | ----------------------------------------------------------------------------------------- | --------- |
-| digest       | `digest`       | `generate <topic> [-p hn,github,reddit,youtube,ethresearch,snapshot,polymarket,packages,coingecko,blockscout]` | 4 |
+| digest       | `digest`       | `generate <topic> [-p hn,github,reddit,youtube,ethresearch,snapshot,polymarket,packages,coingecko,blockscout]` | 6 |
 | recall       | `recall`       | `add`, `search`, `list`, `get`, `delete`, `stale`, `stats`, `extract`, `serve`            | 8 |
 | autoresearch | `autoresearch` | `init <name> --metric <m> --verify <cmd>`, `run`, `loop`, `dashboard`, `status`           | 3 |
 | watchdog     | `watchdog`     | `scan <repo>`, `report`, `watch --config watchdog.toml`                                   | 2 |
@@ -73,7 +73,7 @@ All agents expose MCP servers via `<agent> serve` (stdio transport). Configure i
 cd agents/<name> && python -m pytest tests/ -v
 ```
 
-375 tests total across all agents, 0 mocks.
+385 tests total across all agents, 0 mocks.
 
 ## Conventions
 

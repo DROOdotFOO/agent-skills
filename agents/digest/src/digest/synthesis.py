@@ -23,7 +23,12 @@ Write in plain prose, not bullet points. Be specific. Prefer concrete claims bac
 citations over generic summaries. Do not editorialize or recommend actions."""
 
 
-def synthesize(topic: str, days: int, items: list[Item]) -> str:
+def synthesize(
+    topic: str,
+    days: int,
+    items: list[Item],
+    recall_context: str = "",
+) -> str:
     """Call Claude to turn ranked items into a narrative brief."""
     client = Anthropic()
 
@@ -35,11 +40,17 @@ def synthesize(topic: str, days: int, items: list[Item]) -> str:
     )
 
     user_prompt = (
-        f"Topic: {topic}\n"
-        f"Window: last {days} days\n"
-        f"Items ({len(items)}):\n\n{items_md}\n\n"
-        f"Write the digest brief now."
+        f"Topic: {topic}\nWindow: last {days} days\nItems ({len(items)}):\n\n{items_md}\n\n"
     )
+
+    if recall_context:
+        user_prompt += (
+            f"{recall_context}\n\n"
+            "Use the historical context above to note trends, recurring themes, "
+            "or changes since previous digests.\n\n"
+        )
+
+    user_prompt += "Write the digest brief now."
 
     response = client.messages.create(
         model=MODEL,

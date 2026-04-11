@@ -217,7 +217,7 @@ Knowledge capture and retrieval. Our version of [paperclip](https://github.com/p
 - [x] MCP server mode: `digest serve` with 4 tools (generate, list_platforms, expand_query, structured_view)
 - [x] Structured output: controversy map, timeline view, tag trends, source breakdown (`--view` flag + MCP tool)
 - [x] prepper integration: prepper gathers digest history + sentinel alerts into briefings
-- [ ] recall integration: store past digests for trend queries ("how has sentiment on X changed?")
+- [x] recall integration: digest <-> recall bridge (store highlights, fetch historical context for synthesis)
 - [x] sentinel integration: on-chain events flow via blockscout digest adapter + prepper sentinel gatherer
 
 ### Agent security

@@ -79,7 +79,7 @@ Autonomous tools that run independently. Each agent lives in `agents/<name>/`. A
 
 | Agent          | Description                                                         | MCP tools | Status   |
 | -------------- | ------------------------------------------------------------------- | --------- | -------- |
-| `digest`       | Multi-platform activity digest (9 sources, differential, structured views) | 4   | MVP done |
+| `digest`       | Multi-platform activity digest (9 sources, differential, structured views) | 6   | MVP done |
 | `recall`       | Knowledge capture and retrieval (SQLite + FTS5 + MCP server)        | 8         | MVP done |
 | `autoresearch` | Domain-agnostic autonomous experiment runner (ML, Noir, Solidity)   | 3         | MVP done |
 | `watchdog`     | Continuous repo health monitor (PRs, CI, deps, advisories)          | 2         | MVP done |

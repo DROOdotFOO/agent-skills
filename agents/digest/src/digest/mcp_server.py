@@ -148,4 +148,52 @@ def create_server() -> FastMCP:
         result, _ = run(request, synthesize_narrative=False, use_expansion=True)
         return func(result)
 
+    @mcp.tool()
+    def digest_recall_context(topic: str, limit: int = 10) -> str:
+        """Fetch historical context from the recall knowledge base for a topic.
+
+        Args:
+            topic: The topic to search recall for
+            limit: Max recall entries to return (default 10)
+        """
+        from digest.recall_bridge import fetch_from_recall, format_recall_context
+
+        entries = fetch_from_recall(topic, limit=limit)
+        if not entries:
+            return f"No recall entries found for '{topic}'."
+        return format_recall_context(entries)
+
+    @mcp.tool()
+    def digest_store_to_recall(
+        topic: str,
+        days: int = 30,
+        platforms: str = "hn,github",
+        top_n: int = 5,
+    ) -> str:
+        """Generate a digest and store top items as recall entries for future reference.
+
+        Args:
+            topic: The topic to digest and store
+            days: Lookback window in days (default 30)
+            platforms: Comma-separated sources
+            top_n: Number of top items to store (default 5)
+        """
+        from digest.recall_bridge import recall_available, store_to_recall
+
+        if not recall_available():
+            return "Recall store not available. Install recall agent first."
+
+        platform_list = [p.strip() for p in platforms.split(",") if p.strip()]
+        request = DigestRequest(
+            topic=topic,
+            days=days,
+            platforms=platform_list,
+            max_items_per_platform=50,
+        )
+
+        result, _ = run(request, synthesize_narrative=False, use_expansion=True)
+        added = store_to_recall(result, top_n=top_n)
+        total = len(result.items)
+        return f"Stored {added} items from '{topic}' digest to recall (of {total} total)."
+
     return mcp

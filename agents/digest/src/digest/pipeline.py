@@ -31,8 +31,18 @@ def run(
 
     deduped = dedupe(raw_items)
     ranked = rank(deduped, limit=request.max_items_per_platform)
+    # Pull historical context from recall if available
+    recall_context = ""
+    try:
+        from digest.recall_bridge import fetch_from_recall, format_recall_context
+
+        entries = fetch_from_recall(request.topic)
+        recall_context = format_recall_context(entries)
+    except Exception:
+        pass
+
     narrative = (
-        synthesize(request.topic, request.days, ranked)
+        synthesize(request.topic, request.days, ranked, recall_context=recall_context)
         if synthesize_narrative
         else "_Synthesis skipped (--no-synthesis). Ranked items below._"
     )
@@ -50,5 +60,14 @@ def run(
         mem = FeedMemory()
         mem.store(result)
         mem.close()
+
+        # Also store highlights to recall
+        try:
+            from digest.recall_bridge import recall_available, store_to_recall
+
+            if recall_available():
+                store_to_recall(result)
+        except Exception:
+            pass
 
     return result, query
