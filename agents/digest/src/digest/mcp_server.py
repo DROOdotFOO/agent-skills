@@ -101,4 +101,51 @@ def create_server() -> FastMCP:
         lines.append(f"  Rules matched: {query.matched_rules}")
         return "\n".join(lines)
 
+    @mcp.tool()
+    def digest_structured_view(
+        topic: str,
+        view: str = "all",
+        days: int = 30,
+        platforms: str = "hn,github",
+        max_items: int = 50,
+    ) -> str:
+        """Generate a digest with structured output view.
+
+        Args:
+            topic: The topic to research
+            view: View type: timeline, controversy, tags, sources, or all
+            days: Lookback window in days (default 30)
+            platforms: Comma-separated sources
+            max_items: Max items per platform (default 50)
+        """
+        from digest.views import (
+            all_views,
+            controversy_view,
+            source_breakdown_view,
+            tag_trends_view,
+            timeline_view,
+        )
+
+        view_funcs = {
+            "timeline": timeline_view,
+            "controversy": controversy_view,
+            "tags": tag_trends_view,
+            "sources": source_breakdown_view,
+            "all": all_views,
+        }
+        func = view_funcs.get(view)
+        if func is None:
+            return f"Unknown view: {view}. Choose: {', '.join(view_funcs)}"
+
+        platform_list = [p.strip() for p in platforms.split(",") if p.strip()]
+        request = DigestRequest(
+            topic=topic,
+            days=days,
+            platforms=platform_list,
+            max_items_per_platform=max_items,
+        )
+
+        result, _ = run(request, synthesize_narrative=False, use_expansion=True)
+        return func(result)
+
     return mcp

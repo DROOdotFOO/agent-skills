@@ -12,6 +12,7 @@ EXPECTED_TOOLS = frozenset({
     "digest_generate",
     "digest_list_platforms",
     "digest_expand_query",
+    "digest_structured_view",
 })
 
 
@@ -29,4 +30,4 @@ class TestDigestMCPServer:
     def test_tool_count(self) -> None:
         server = create_server()
         tools = asyncio.run(server.list_tools())
-        assert len(tools) == 3
+        assert len(tools) == 4

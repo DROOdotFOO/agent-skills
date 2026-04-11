@@ -54,6 +54,13 @@ def generate(
         bool,
         typer.Option("--diff", help="Show differential: new/accelerating/ongoing/declining"),
     ] = False,
+    view: Annotated[
+        str | None,
+        typer.Option(
+            "--view",
+            help="Structured view: timeline, controversy, tags, sources, all",
+        ),
+    ] = None,
 ) -> None:
     """Generate a digest for TOPIC."""
     platform_list = [p.strip() for p in platforms.split(",") if p.strip()]
@@ -90,6 +97,37 @@ def generate(
             err.print(f"[dim]GitHub topics:[/dim] {query.github_topics}")
     elif not no_expansion:
         err.print(f"[dim]No expansion rules matched '{topic}' -- using literal search.[/dim]")
+
+    if view:
+        from digest.views import (
+            all_views,
+            controversy_view,
+            source_breakdown_view,
+            tag_trends_view,
+            timeline_view,
+        )
+
+        view_funcs = {
+            "timeline": timeline_view,
+            "controversy": controversy_view,
+            "tags": tag_trends_view,
+            "sources": source_breakdown_view,
+            "all": all_views,
+        }
+        func = view_funcs.get(view)
+        if func is None:
+            err.print(f"[red]Unknown view: {view}[/red] (choose: {', '.join(view_funcs)})")
+            raise typer.Exit(1)
+
+        view_text = func(result)
+        if output:
+            output.write_text(view_text)
+            err.print(f"[green]Wrote {view} view to[/green] {output}")
+        else:
+            from rich.markdown import Markdown
+
+            console.print(Markdown(view_text))
+        return
 
     if diff:
         from digest.diff import classify_items, format_differential
