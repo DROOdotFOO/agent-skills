@@ -2,7 +2,7 @@
 
 ## Session log
 
-**2026-04-11** -- Integration sprint. 47 skills, 7 agents, 302 tests, 0 lint errors.
+**2026-04-11** -- Integration sprint. 47 skills, 7 agents, 375 tests, 0 lint errors.
 
 - CoinGecko MCP server documented (remote keyless + local stdio options)
 - CoinGecko digest adapter: trending tokens, gainers/losers, new listings (7 tests)
@@ -17,6 +17,10 @@
 - New skills: `coingecko` (4 ref files), `blockscout` (16-tool reference)
 - Sentinel expanded: +3 chains (Celo, Mode, Neon EVM/Solana)
 - Solana/Tron support via CoinGecko platform IDs + Neon EVM bridge
+- Source credibility scoring: 3-tier model (verified/deliberate/passive), per-item bonuses (18 tests)
+- Structured output views: timeline, controversy map, tag trends, source breakdown (11 tests)
+- Test gap coverage: sentinel monitor, digest dedup, patchbot parser, prepper gatherers (44 tests)
+- All 7 agents pip-installed, ~/.mcp.json configured via chezmoi (7 agents + coingecko)
 
 **2026-04-11** -- Agent <-> skill MCP integration. All 7 agents now expose MCP servers via `<agent> serve`. 45 skills, 7 agents, 253 tests, 0 lint errors.
 
@@ -128,7 +132,7 @@ Knowledge capture and retrieval. Our version of [paperclip](https://github.com/p
   - [ ] Farcaster (deferred: Neynar API requires paid subscription, no free tier)
   - [x] ethresear.ch (Discourse search JSON API, no auth) -- engagement: views + likes*5 + posts*3
   - [x] Snapshot governance (GraphQL API, no auth) -- engagement: votes + scores_total, space: qualifiers
-  - [ ] Blockscout MCP -- on-chain activity for watched addresses (deferred, needs MCP client integration)
+  - [x] Blockscout -- on-chain activity digest adapter (Blockscout API v2, token transfers + address txs)
   - [x] Prediction markets: Polymarket Gamma API (no auth) -- engagement: volume traded
   - [x] Package registries: hex.pm + crates.io + npm (all no auth) -- engagement: recent downloads
 - [x] Wire `/digest` slash command skill (skills/digest/SKILL.md)
@@ -178,15 +182,15 @@ Knowledge capture and retrieval. Our version of [paperclip](https://github.com/p
   - [ ] Safety: sandbox execution, resource limits, no network during training (deferred)
   - [ ] mini-axol deployment: systemd service or cron, overnight batch mode (deferred)
 
-  **Tech:** Python (typer, pydantic, anthropic). 30 tests, all passing.
+  **Tech:** Python (typer, pydantic, anthropic). 33 tests, all passing.
 
-- [x] **Watchdog** -- Continuous repo health monitor. 6 checks (stale PRs, CI status, issue age, TODO-closed-refs, lockfile audit, security advisories). TOML config, markdown reports, continuous watch mode. 18 tests.
+- [x] **Watchdog** -- Continuous repo health monitor. 6 checks (stale PRs, CI status, issue age, TODO-closed-refs, lockfile audit, security advisories). TOML config, markdown reports, continuous watch mode. 21 tests.
 
-- [x] **Prepper** -- Pre-session context builder. 5 gatherers (git activity, GitHub state, dependency status, recall integration, CI status). Generates markdown briefing sorted by priority. `inject` command writes to `.claude/prepper-briefing.md`. 9 tests.
+- [x] **Prepper** -- Pre-session context builder. 7 gatherers (git activity, GitHub state, dependency status, recall, CI status, sentinel alerts, digest history). SessionStart hook. 17 tests.
 
-- [x] **Sentinel** -- On-chain contract monitor. 4 alert rules (large transfers, ownership changes, unusual methods, selfdestruct). Blockscout API v2 integration, 8 chains supported, TOML watchlist config, JSONL alert log. 34 tests.
+- [x] **Sentinel** -- On-chain contract monitor. 4 alert rules (large transfers, ownership changes, unusual methods, selfdestruct). Blockscout API v2, 11 chains supported, TOML watchlist config, JSONL alert log. 51 tests.
 
-- [x] **Patchbot** -- Polyglot dependency updater. 5 ecosystems (Elixir, Rust, Node, Go, Python). Detects from lockfiles, runs outdated checks, updates + tests, creates PRs via gh CLI. 22 tests.
+- [x] **Patchbot** -- Polyglot dependency updater. 5 ecosystems (Elixir, Rust, Node, Go, Python). Detects from lockfiles, runs outdated checks, updates + tests, creates PRs via gh CLI. 33 tests.
 
 ---
 
@@ -196,10 +200,10 @@ Knowledge capture and retrieval. Our version of [paperclip](https://github.com/p
 
 **Phase 3: Differential digests + feed memory**
 
-- [ ] Feed memory (sqlite): store past digests, track narrative arcs over time
-- [ ] Differential mode: "new since last digest" vs "ongoing, declining" vs "new and accelerating"
+- [x] Feed memory (sqlite): store past digests, track narrative arcs over time
+- [x] Differential mode: "new since last digest" vs "ongoing, declining" vs "new and accelerating"
 - [ ] Source credibility scoring: track which sources were later proven wrong, downweight hype over time
-- [ ] Credibility layering: prediction market odds > engagement metrics > raw volume
+- [x] Credibility layering: prediction market odds > engagement metrics > raw volume (3-tier model)
 
 **Phase 4: Proactive mode**
 
@@ -210,11 +214,11 @@ Knowledge capture and retrieval. Our version of [paperclip](https://github.com/p
 
 **Phase 5: Structured output + integrations**
 
-- [ ] MCP server mode: run as MCP server so Claude Code sessions can query inline
-- [ ] Structured output: controversy map, timeline view, sentiment shifts, emerging vs declining tags
-- [ ] prepper integration: feed "relevant industry context" into pre-session briefings
+- [x] MCP server mode: `digest serve` with 4 tools (generate, list_platforms, expand_query, structured_view)
+- [x] Structured output: controversy map, timeline view, tag trends, source breakdown (`--view` flag + MCP tool)
+- [x] prepper integration: prepper gathers digest history + sentinel alerts into briefings
 - [ ] recall integration: store past digests for trend queries ("how has sentiment on X changed?")
-- [ ] sentinel integration: on-chain events flow into web3 digest context
+- [x] sentinel integration: on-chain events flow via blockscout digest adapter + prepper sentinel gatherer
 
 ### Agent security
 
@@ -244,7 +248,7 @@ Skills that invoke or surface agent capabilities inside Claude Code sessions:
 - [x] 5 new agent skill stubs (autoresearch, watchdog, prepper, sentinel, patchbot)
 - [x] Updated digest skill with MCP config section
 - [x] recall already had MCP server + skill docs
-- [ ] `prepper` hook -- auto-inject briefing on SessionStart (needs Claude Code hook support)
+- [x] `prepper` SessionStart hook (scripts/hooks/prepper-session-start.sh + settings.json docs)
 - [ ] Design proactive triggers: sentinel alerts, watchdog degradation -> session notification
 
 ### Skills structural patterns (apply as we go)
@@ -260,9 +264,10 @@ Lessons from [mattpocock/skills](https://github.com/mattpocock/skills) and [slav
 
 ### Testing strategy
 
-- [ ] Define how to test skills beyond linting (trigger accuracy, output quality)
-- [ ] Consider snapshot testing: known input -> expected skill activation
-- [ ] Evaluate snyk/agent-scan as a safety gate
+- [x] Skill trigger accuracy harness: `scripts/skill-triggers-test.py` (37 snapshot tests)
+- [x] MCP server factory tests: 21 tests across all 7 agents
+- [x] Test gap coverage: sentinel monitor, digest dedup, patchbot parser, prepper gatherers
+- [ ] Evaluate snyk/agent-scan as a safety gate (blocked: snyk maintenance)
 
 ### Research backlog
 
