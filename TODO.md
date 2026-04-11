@@ -202,7 +202,7 @@ Knowledge capture and retrieval. Our version of [paperclip](https://github.com/p
 
 - [x] Feed memory (sqlite): store past digests, track narrative arcs over time
 - [x] Differential mode: "new since last digest" vs "ongoing, declining" vs "new and accelerating"
-- [ ] Source credibility scoring: track which sources were later proven wrong, downweight hype over time
+- [x] Source credibility tracking: per-source hit/miss tracking across digests, accuracy multiplier (0.5-1.5)
 - [x] Credibility layering: prediction market odds > engagement metrics > raw volume (3-tier model)
 
 **Phase 4: Proactive mode**

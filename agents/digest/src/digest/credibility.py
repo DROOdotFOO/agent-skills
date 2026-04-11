@@ -47,11 +47,17 @@ def source_tier(source: str) -> Tier:
     return SOURCE_TIERS.get(source, Tier.PASSIVE)
 
 
-def credibility_multiplier(item: Item) -> float:
+def credibility_multiplier(
+    item: Item,
+    historical_accuracy: float = 1.0,
+) -> float:
     """Compute a credibility multiplier for an item.
 
-    Starts with the source tier multiplier, then adjusts based on
-    per-item signals in raw data:
+    Three factors:
+    1. Source tier (verified/deliberate/passive)
+    2. Per-item signals from raw data
+    3. Historical accuracy from source_tracker (how well this source's
+       items held up in past digests -- 0.5 to 1.5, default 1.0)
 
     - Polymarket: higher liquidity = more credible odds
     - Snapshot: more votes = stronger governance signal
@@ -63,11 +69,9 @@ def credibility_multiplier(item: Item) -> float:
     base = TIER_MULTIPLIERS[tier]
 
     raw = item.raw
-    if not raw:
-        return base
+    bonus = _per_item_bonus(item.source, raw) if raw else 0.0
 
-    bonus = _per_item_bonus(item.source, raw)
-    return base + bonus
+    return (base + bonus) * historical_accuracy
 
 
 def _per_item_bonus(source: str, raw: dict) -> float:

@@ -31,12 +31,18 @@ PLATFORM_WEIGHTS: dict[str, float] = {
 }
 
 
+# Module-level cache for historical accuracy scores per topic.
+# Set by rank() when source_tracker data is available, read by score().
+_historical_accuracy: dict[str, float] = {}
+
+
 def score(item: Item, now: datetime | None = None) -> float:
     """Score an item by engagement * recency * credibility.
 
     Engagement is log-scaled so a 1000-point story doesn't drown a 50-point one.
     Recency decays linearly over 30 days.
-    Credibility adjusts based on signal quality (verified > deliberate > passive).
+    Credibility adjusts based on signal quality (verified > deliberate > passive),
+    modified by historical source accuracy when available.
     """
     now = now or datetime.now(timezone.utc)
     weight = PLATFORM_WEIGHTS.get(item.source, 1.0)
@@ -45,12 +51,37 @@ def score(item: Item, now: datetime | None = None) -> float:
     age_days = max((now - item.timestamp).total_seconds() / 86400, 0)
     recency = max(1.0 - age_days / 30, 0.1)
 
-    cred = credibility_multiplier(item)
+    accuracy = _historical_accuracy.get(item.source, 1.0)
+    cred = credibility_multiplier(item, historical_accuracy=accuracy)
 
     return engagement_score * (0.7 + 0.3 * recency) * cred
 
 
-def rank(items: list[Item], limit: int | None = None) -> list[Item]:
-    """Return items sorted by score descending, optionally truncated."""
+def rank(
+    items: list[Item],
+    limit: int | None = None,
+    topic: str | None = None,
+) -> list[Item]:
+    """Return items sorted by score descending, optionally truncated.
+
+    When topic is provided, loads historical source accuracy from the
+    source_tracker to adjust credibility scores.
+    """
+    global _historical_accuracy
+
+    if topic:
+        try:
+            from digest.source_tracker import SourceTracker
+
+            tracker = SourceTracker()
+            scores = tracker.get_all_scores(topic)
+            _historical_accuracy = {s: d["accuracy"] for s, d in scores.items()}
+            tracker.close()
+        except Exception:
+            _historical_accuracy = {}
+    else:
+        _historical_accuracy = {}
+
     ranked = sorted(items, key=score, reverse=True)
+    _historical_accuracy = {}  # clean up after ranking
     return ranked[:limit] if limit else ranked

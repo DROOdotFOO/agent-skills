@@ -30,7 +30,7 @@ def run(
         raw_items.extend(adapter.fetch(query, request.days, request.max_items_per_platform))
 
     deduped = dedupe(raw_items)
-    ranked = rank(deduped, limit=request.max_items_per_platform)
+    ranked = rank(deduped, limit=request.max_items_per_platform, topic=request.topic)
     # Pull historical context from recall if available
     recall_context = ""
     try:
@@ -60,6 +60,16 @@ def run(
         mem = FeedMemory()
         mem.store(result)
         mem.close()
+
+        # Update source credibility scores based on item persistence
+        try:
+            from digest.source_tracker import SourceTracker
+
+            tracker = SourceTracker()
+            tracker.update_scores(request.topic)
+            tracker.close()
+        except Exception:
+            pass
 
         # Also store highlights to recall
         try:
