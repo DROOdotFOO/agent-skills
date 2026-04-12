@@ -7,6 +7,7 @@ from pathlib import Path
 import typer
 from rich.console import Console
 from rich.markdown import Markdown
+from rich.table import Table
 
 from prepper.briefing import format_briefing, generate_briefing
 
@@ -65,6 +66,73 @@ def inject(
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(md)
     console.print(f"Briefing injected to {target}")
+
+
+@app.command()
+def watch(
+    config: Path | None = typer.Option(None, "--config", "-c", help="Path to prepper-watch.toml"),
+    interval: int = typer.Option(5, "--interval", "-i", help="Poll interval in minutes"),
+    once: bool = typer.Option(False, "--once", help="Run one cycle and exit"),
+) -> None:
+    """Monitor cross-agent alert logs and dispatch notifications."""
+    from prepper.watcher import PrepperWatchConfig, watch_loop, watch_once
+
+    if config and config.exists():
+        cfg = PrepperWatchConfig.from_toml(config)
+    else:
+        cfg = PrepperWatchConfig(poll_interval_minutes=interval)
+
+    console.print(
+        f"Watching {len(cfg.agent_logs)} agent log(s), "
+        f"polling every {cfg.poll_interval_minutes} minutes."
+    )
+
+    if once:
+        new = watch_once(cfg)
+        console.print(f"{len(new)} new alert(s) found.")
+    else:
+        try:
+            watch_loop(cfg, console_print=console.print)
+        except KeyboardInterrupt:
+            console.print("Stopped.")
+
+
+@app.command()
+def alerts(
+    limit: int = typer.Option(20, "--limit", "-n", help="Max alerts to show"),
+    agent: str | None = typer.Option(None, "--agent", "-a", help="Filter by agent name"),
+) -> None:
+    """Show recent unified alerts from all agents."""
+    from prepper.watcher import read_unified_log
+
+    entries = read_unified_log(limit=limit, agent_filter=agent)
+    if not entries:
+        console.print("[dim]No alerts found.[/dim]")
+        return
+
+    table = Table(title="Cross-Agent Alerts")
+    table.add_column("Agent", style="cyan")
+    table.add_column("Severity", style="bold")
+    table.add_column("Rule")
+    table.add_column("Message")
+    table.add_column("Time")
+
+    severity_styles = {"critical": "red bold", "high": "red", "medium": "yellow", "low": "blue"}
+
+    for entry in entries:
+        severity = entry.get("severity", "info")
+        style = severity_styles.get(severity, "dim")
+        rule = entry.get("rule_name") or entry.get("rule") or entry.get("check_name", "")
+        ts = entry.get("timestamp", "")[:16].replace("T", " ")
+        table.add_row(
+            entry.get("_agent", "?"),
+            f"[{style}]{severity.upper()}[/{style}]",
+            rule,
+            entry.get("message", ""),
+            ts,
+        )
+
+    console.print(table)
 
 
 @app.command()

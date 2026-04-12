@@ -13,6 +13,7 @@ from prepper.gatherers import (
     gather_github_state,
     gather_recall_context,
     gather_sentinel_alerts,
+    gather_watchdog_alerts,
     gather_watchdog_health,
 )
 from prepper.models import Briefing, BriefingSection, Priority
@@ -64,6 +65,10 @@ def generate_briefing(
     sentinel_section = gather_sentinel_alerts()
     if sentinel_section:
         sections.append(sentinel_section)
+
+    watchdog_alerts_section = gather_watchdog_alerts()
+    if watchdog_alerts_section:
+        sections.append(watchdog_alerts_section)
 
     digest_section = gather_digest_summary(project_name)
     if digest_section:

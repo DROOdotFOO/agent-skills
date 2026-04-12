@@ -72,4 +72,36 @@ def create_server() -> FastMCP:
 
         return f"Briefing written to {target}"
 
+    @mcp.tool()
+    def prepper_alerts(
+        limit: int = 20,
+        agent: str | None = None,
+    ) -> str:
+        """Read the unified cross-agent alert log.
+
+        Aggregates alerts from digest, sentinel, and watchdog into a single view.
+        Falls back to individual agent logs if the unified log has not been populated
+        by ``prepper watch``.
+
+        Args:
+            limit: Max alerts to return (default 20)
+            agent: Filter by agent name (digest, sentinel, watchdog). None = all.
+        """
+        from prepper.watcher import read_unified_log
+
+        entries = read_unified_log(limit=limit, agent_filter=agent)
+        if not entries:
+            return "No cross-agent alerts found."
+
+        lines = [f"Cross-agent alerts ({len(entries)} shown):\n"]
+        for entry in entries:
+            agent_name = entry.get("_agent", "?")
+            severity = (entry.get("severity", "info")).upper()
+            rule = entry.get("rule_name") or entry.get("rule") or entry.get("check_name", "")
+            message = entry.get("message", "")
+            ts = entry.get("timestamp", "")[:16]
+            lines.append(f"[{agent_name}] [{severity}] {rule}: {message} ({ts})")
+
+        return "\n".join(lines)
+
     return mcp

@@ -212,20 +212,31 @@ def gather_dependency_status(repo_path: str) -> BriefingSection | None:
 def gather_recall_context(project: str) -> BriefingSection | None:
     """Search recall store for recent entries about this project."""
     try:
-        from recall.store import RecallStore
+        from recall.store import Store
     except ImportError:
         return None
 
     try:
-        store = RecallStore()
-        entries = store.search(project, project=project, limit=10)
+        from prepper.hooks import is_auto_sourced, pre_memory_read
+
+        store = Store()
+        results = store.search(project, project=project, limit=10)
+        if not results:
+            return None
+
+        # Extract entries from SearchResult wrappers
+        entries = [r.entry for r in results]
+
+        # PreMemoryRead: strip entries with injection patterns
+        entries = pre_memory_read(entries)
         if not entries:
             return None
 
         lines: list[str] = []
         for entry in entries:
             entry_type = getattr(entry, "entry_type", "insight")
-            lines.append(f"- **[{entry_type}]** {entry.content[:120]}")
+            prefix = "[auto] " if is_auto_sourced(entry) else ""
+            lines.append(f"- **[{entry_type}]** {prefix}{entry.content[:120]}")
 
         return BriefingSection(
             title="Recall Context",
@@ -328,6 +339,40 @@ def gather_digest_alerts() -> BriefingSection | None:
 
         return BriefingSection(
             title="Digest Alerts",
+            content="\n".join(lines),
+            priority=Priority.HIGH,
+        )
+    except Exception:
+        return None
+
+
+def gather_watchdog_alerts() -> BriefingSection | None:
+    """Surface recent watchdog alerts from the JSONL log."""
+    from shared.paths import agent_alert_log
+
+    alerts_path = agent_alert_log("watchdog")
+    if not alerts_path.exists():
+        return None
+
+    try:
+        import json
+
+        lines_raw = alerts_path.read_text().strip().splitlines()
+        recent = lines_raw[-5:]
+        if not recent:
+            return None
+
+        lines: list[str] = []
+        for raw_line in reversed(recent):
+            data = json.loads(raw_line)
+            severity = data.get("severity", "").upper()
+            check = data.get("check_name", "")
+            repo_name = data.get("repo", "")
+            message = data.get("message", "")
+            lines.append(f"- **[{severity}]** {check} ({repo_name}): {message}")
+
+        return BriefingSection(
+            title="Watchdog Alerts",
             content="\n".join(lines),
             priority=Priority.HIGH,
         )

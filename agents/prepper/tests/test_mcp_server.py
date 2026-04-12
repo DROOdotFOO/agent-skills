@@ -12,6 +12,7 @@ EXPECTED_TOOLS = frozenset(
     {
         "prepper_brief",
         "prepper_inject",
+        "prepper_alerts",
     }
 )
 
@@ -30,4 +31,4 @@ class TestPrepperMCPServer:
     def test_tool_count(self) -> None:
         server = create_server()
         tools = asyncio.run(server.list_tools())
-        assert len(tools) == 2
+        assert len(tools) == 3
