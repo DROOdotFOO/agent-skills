@@ -4,7 +4,7 @@ import subprocess
 from datetime import datetime, timezone
 
 from patchbot.detector import get_outdated_command
-from patchbot.hooks import Verdict, pre_tool_use
+from patchbot.hooks import Verdict, log_hook_result, pre_tool_use
 from patchbot.models import Dependency, Ecosystem, UpdatePlan, UpdateResult
 
 
@@ -21,6 +21,7 @@ def scan_outdated(repo_path: str, ecosystem: Ecosystem) -> list[Dependency]:
     hook = pre_tool_use(cmd)
     if hook.verdict == Verdict.DENY:
         return []
+    log_hook_result(hook)
 
     try:
         result = subprocess.run(
@@ -80,6 +81,7 @@ def run_update(repo_path: str, plan: UpdatePlan, dry_run: bool = False) -> Updat
     hook = pre_tool_use(plan.update_command)
     if hook.verdict == Verdict.DENY:
         return UpdateResult(plan=plan, success=False, test_passed=False)
+    log_hook_result(hook)
 
     update_result = subprocess.run(
         plan.update_command,
@@ -95,6 +97,7 @@ def run_update(repo_path: str, plan: UpdatePlan, dry_run: bool = False) -> Updat
     test_hook = pre_tool_use(plan.test_command)
     if test_hook.verdict == Verdict.DENY:
         return UpdateResult(plan=plan, success=True, test_passed=False)
+    log_hook_result(test_hook)
 
     test_result = subprocess.run(
         plan.test_command,
@@ -145,6 +148,7 @@ def create_pr(
         cmd_hook = pre_tool_use(cmd)
         if cmd_hook.verdict == Verdict.DENY:
             return None
+        log_hook_result(cmd_hook)
 
         proc = subprocess.run(
             cmd,

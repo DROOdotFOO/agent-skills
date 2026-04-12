@@ -11,9 +11,11 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from shared.paths import agent_alert_log
+
 from digest.alerts import DigestAlert
 
-DEFAULT_LOG_PATH = Path.home() / ".local" / "share" / "digest" / "alerts.jsonl"
+DEFAULT_LOG_PATH = agent_alert_log("digest")
 
 
 def append_to_log(alerts: list[DigestAlert], log_path: Path | None = None) -> None:

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 
@@ -50,6 +50,28 @@ class RepoHealth(BaseModel):
         if any(c.status == Status.WARN for c in self.checks):
             return Status.WARN
         return Status.PASS
+
+
+class AlertSeverity(str, Enum):
+    """Severity levels for watchdog alerts (aligned with sentinel/digest)."""
+
+    CRITICAL = "critical"
+    HIGH = "high"
+    MEDIUM = "medium"
+    LOW = "low"
+    INFO = "info"
+
+
+class WatchdogAlert(BaseModel):
+    """A persisted alert derived from a WARN or FAIL check result."""
+
+    repo: str
+    check_name: str
+    status: Status
+    severity: AlertSeverity
+    message: str
+    details: str = ""
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class RepoConfig(BaseModel):

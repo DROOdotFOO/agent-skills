@@ -12,7 +12,7 @@ from watchdog.checks import (
     check_stale_prs,
     check_todo_closed_refs,
 )
-from watchdog.models import RepoHealth, Status, WatchConfig
+from watchdog.models import AlertSeverity, RepoHealth, Status, WatchConfig, WatchdogAlert
 
 
 def scan_repo(
@@ -50,6 +50,29 @@ def scan_all(config: WatchConfig) -> list[RepoHealth]:
         )
         results.append(health)
     return results
+
+
+def alerts_from_health(health: RepoHealth) -> list[WatchdogAlert]:
+    """Convert WARN/FAIL check results to persistable WatchdogAlerts."""
+    alerts: list[WatchdogAlert] = []
+    for check in health.checks:
+        if check.status == Status.FAIL:
+            severity = AlertSeverity.HIGH
+        elif check.status == Status.WARN:
+            severity = AlertSeverity.MEDIUM
+        else:
+            continue
+        alerts.append(
+            WatchdogAlert(
+                repo=health.repo,
+                check_name=check.check_name,
+                status=check.status,
+                severity=severity,
+                message=check.message,
+                details=check.details,
+            )
+        )
+    return alerts
 
 
 def format_report(results: list[RepoHealth]) -> str:

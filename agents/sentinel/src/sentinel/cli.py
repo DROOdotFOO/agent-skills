@@ -9,6 +9,8 @@ from pathlib import Path
 import typer
 from rich.console import Console
 from rich.table import Table
+from shared.notify import append_to_log, notify_macos
+from shared.paths import agent_alert_log
 
 from sentinel.models import ContractWatch, WatchConfig
 from sentinel.monitor import evaluate_alerts, fetch_transactions
@@ -17,7 +19,7 @@ from sentinel.rules import ALL_RULES
 app = typer.Typer(help="Sentinel: on-chain contract monitor for anomalous transactions.")
 console = Console()
 
-ALERTS_LOG = Path("alerts.jsonl")
+ALERTS_LOG = agent_alert_log("sentinel")
 
 
 def _load_config(config_path: Path) -> WatchConfig:
@@ -41,11 +43,14 @@ def _load_config(config_path: Path) -> WatchConfig:
     )
 
 
-def _append_alerts(alerts: list, log_path: Path) -> None:
-    """Append alerts to a JSONL log file."""
-    with log_path.open("a") as f:
-        for alert in alerts:
-            f.write(alert.model_dump_json() + "\n")
+def _notify_alerts(alerts: list, label: str) -> None:
+    """Send macOS notifications for alerts."""
+    for alert in alerts:
+        notify_macos(
+            title=f"Sentinel: {label}",
+            body=f"[{alert.severity.value.upper()}] {alert.rule_name}: {alert.message}",
+            group=f"sentinel-{alert.contract.address[:10]}",
+        )
 
 
 @app.command()
@@ -54,6 +59,7 @@ def check(
     chain: int = typer.Option(1, "--chain", "-c", help="Chain ID (default: 1 = Ethereum)"),
     since_block: int | None = typer.Option(None, "--since-block", "-s", help="Start block"),
     output: Path = typer.Option(ALERTS_LOG, "--output", "-o", help="Alerts log file"),
+    notify: bool = typer.Option(False, "--notify", help="Send macOS notifications"),
 ) -> None:
     """One-shot check of a contract address for anomalous transactions."""
     watch = ContractWatch(address=address, chain_id=chain, name=address[:10])
@@ -64,7 +70,9 @@ def check(
 
     alerts = evaluate_alerts(txs, watch, ALL_RULES)
     if alerts:
-        _append_alerts(alerts, output)
+        append_to_log(alerts, output)
+        if notify:
+            _notify_alerts(alerts, watch.name or address[:10])
         for alert in alerts:
             console.print(
                 f"[bold red][{alert.severity.value.upper()}][/bold red] "
@@ -79,6 +87,7 @@ def check(
 def watch(
     config: Path = typer.Option(Path("sentinel.toml"), "--config", "-f", help="Config file path"),
     output: Path = typer.Option(ALERTS_LOG, "--output", "-o", help="Alerts log file"),
+    notify: bool = typer.Option(False, "--notify", help="Send macOS notifications"),
 ) -> None:
     """Continuous monitoring loop reading from sentinel.toml."""
     import time
@@ -99,7 +108,9 @@ def watch(
                 txs = fetch_transactions(contract.address, chain_id=contract.chain_id)
                 alerts = evaluate_alerts(txs, contract, ALL_RULES)
                 if alerts:
-                    _append_alerts(alerts, output)
+                    append_to_log(alerts, output)
+                    if notify:
+                        _notify_alerts(alerts, label)
                     for alert in alerts:
                         console.print(
                             f"[{label}] [{alert.severity.value.upper()}] "

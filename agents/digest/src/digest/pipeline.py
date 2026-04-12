@@ -5,6 +5,7 @@ from __future__ import annotations
 from digest.adapters import get_adapter
 from digest.dedup import dedupe
 from digest.expansion import ExpandedQuery, expand, literal
+from digest.hooks import post_tool_use, sanitize_context
 from digest.models import DigestRequest, DigestResult, Item
 from digest.ranking import rank
 from digest.synthesis import synthesize
@@ -29,6 +30,9 @@ def run(
         adapter = get_adapter(platform)
         raw_items.extend(adapter.fetch(query, request.days, request.max_items_per_platform))
 
+    # PostToolUse: strip items with injection patterns before synthesis
+    raw_items = post_tool_use(raw_items)
+
     deduped = dedupe(raw_items)
     ranked = rank(deduped, limit=request.max_items_per_platform, topic=request.topic)
     # Pull historical context from recall if available
@@ -37,7 +41,7 @@ def run(
         from digest.recall_bridge import fetch_from_recall, format_recall_context
 
         entries = fetch_from_recall(request.topic)
-        recall_context = format_recall_context(entries)
+        recall_context = sanitize_context(format_recall_context(entries))
     except Exception:
         pass
 

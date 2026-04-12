@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 from fastmcp import FastMCP
+from shared.paths import agent_alert_log
 
 from sentinel.models import ContractWatch
 from sentinel.monitor import evaluate_alerts, fetch_transactions
@@ -64,7 +65,7 @@ def create_server() -> FastMCP:
 
     @mcp.tool()
     def sentinel_alerts(
-        log_file: str = "alerts.jsonl",
+        log_file: str = str(agent_alert_log("sentinel")),
         limit: int = 20,
     ) -> str:
         """Show recent alerts from the local alerts.jsonl log.
