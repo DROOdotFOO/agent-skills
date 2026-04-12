@@ -7,6 +7,7 @@ before allowing persistence to the FTS5 store.
 from __future__ import annotations
 
 import re
+import sys
 from enum import Enum
 
 from pydantic import BaseModel
@@ -85,3 +86,13 @@ def pre_memory_write(content: str) -> HookResult:
         hook="PreMemoryWrite",
         reason="content passed safety checks",
     )
+
+
+def log_hook_result(result: HookResult) -> None:
+    """Log ASK verdicts to stderr so they're visible in non-interactive contexts."""
+    if result.verdict == Verdict.ASK:
+        print(
+            f"[HOOK] {result.hook}: {result.reason} "
+            "-- proceeding (ASK verdict, no interactive prompt available)",
+            file=sys.stderr,
+        )

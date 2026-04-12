@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import base64
 
-from recall.hooks import HookResult, Verdict, pre_memory_write
+from recall.hooks import HookResult, Verdict, log_hook_result, pre_memory_write
 
 
 def _d(b64: str) -> str:
@@ -132,3 +132,51 @@ class TestPreMemoryWriteEdgeCases:
         assert result.hook == "PreMemoryWrite"
         assert isinstance(result, HookResult)
         assert result.reason != ""
+
+
+class TestLogHookResult:
+    """ASK verdict logging."""
+
+    def test_ask_logs_to_stderr(self) -> None:
+        import sys
+        from io import StringIO
+
+        capture = StringIO()
+        old_stderr = sys.stderr
+        sys.stderr = capture
+        try:
+            result = HookResult(verdict=Verdict.ASK, hook="PreMemoryWrite", reason="test reason")
+            log_hook_result(result)
+        finally:
+            sys.stderr = old_stderr
+        output = capture.getvalue()
+        assert "[HOOK] PreMemoryWrite:" in output
+        assert "ASK verdict" in output
+
+    def test_allow_no_log(self) -> None:
+        import sys
+        from io import StringIO
+
+        capture = StringIO()
+        old_stderr = sys.stderr
+        sys.stderr = capture
+        try:
+            result = HookResult(verdict=Verdict.ALLOW, hook="PreMemoryWrite", reason="ok")
+            log_hook_result(result)
+        finally:
+            sys.stderr = old_stderr
+        assert capture.getvalue() == ""
+
+    def test_deny_no_log(self) -> None:
+        import sys
+        from io import StringIO
+
+        capture = StringIO()
+        old_stderr = sys.stderr
+        sys.stderr = capture
+        try:
+            result = HookResult(verdict=Verdict.DENY, hook="PreMemoryWrite", reason="bad")
+            log_hook_result(result)
+        finally:
+            sys.stderr = old_stderr
+        assert capture.getvalue() == ""

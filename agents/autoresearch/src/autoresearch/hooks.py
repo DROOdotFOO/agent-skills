@@ -1,11 +1,14 @@
-"""AARTS Level 1 hooks for autoresearch.
+"""AARTS Level 1+2 hooks for autoresearch.
 
 PreToolUse: validates shell commands (verify, guard) against allowlists.
+PreSubAgentSpawn: validates file changes from the agent loop against
+mutable_files and dangerous content patterns.
 """
 
 from __future__ import annotations
 
 import re
+import sys
 from enum import Enum
 
 from pydantic import BaseModel
@@ -103,4 +106,70 @@ def pre_tool_use(command: str) -> HookResult:
         verdict=Verdict.ASK,
         hook="PreToolUse",
         reason=f"command not in allowlist: {cmd[:80]}",
+    )
+
+
+def log_hook_result(result: HookResult) -> None:
+    """Log ASK verdicts to stderr so they're visible in non-interactive contexts."""
+    if result.verdict == Verdict.ASK:
+        print(
+            f"[HOOK] {result.hook}: {result.reason} "
+            "-- proceeding (ASK verdict, no interactive prompt available)",
+            file=sys.stderr,
+        )
+
+
+# Patterns in file content that suggest shell injection via agent-proposed code.
+CONTENT_DENY_PATTERNS: list[tuple[str, str]] = [
+    (r"\bos\.system\s*\(", "os.system() call"),
+    (r"\bsubprocess\.\w+\s*\(", "subprocess call"),
+    (r"\beval\s*\(", "eval() call"),
+    (r"\bexec\s*\(", "exec() call"),
+    (r"\b__import__\s*\(", "__import__() call"),
+    (r"\bopen\s*\([^)]*['\"](?:/etc/|/proc/|/dev/)", "suspicious file path"),
+]
+
+
+def pre_sub_agent_spawn(
+    file_changes: dict[str, str],
+    mutable_files: list[str],
+) -> HookResult:
+    """Validate file changes proposed by the agent loop.
+
+    Checks:
+    1. All filenames in file_changes are in mutable_files
+    2. File content doesn't contain dangerous patterns (shell injection via code)
+
+    Returns ALLOW if all changes are safe, DENY otherwise.
+    """
+    if not file_changes:
+        return HookResult(
+            verdict=Verdict.ALLOW,
+            hook="PreSubAgentSpawn",
+            reason="no file changes proposed",
+        )
+
+    # Check filenames against mutable list
+    for filename in file_changes:
+        if filename not in mutable_files:
+            return HookResult(
+                verdict=Verdict.DENY,
+                hook="PreSubAgentSpawn",
+                reason=f"file not in mutable_files: {filename}",
+            )
+
+    # Check content for dangerous patterns
+    for filename, content in file_changes.items():
+        for pattern, description in CONTENT_DENY_PATTERNS:
+            if re.search(pattern, content):
+                return HookResult(
+                    verdict=Verdict.DENY,
+                    hook="PreSubAgentSpawn",
+                    reason=f"{description} in {filename}",
+                )
+
+    return HookResult(
+        verdict=Verdict.ALLOW,
+        hook="PreSubAgentSpawn",
+        reason="all file changes validated",
     )

@@ -7,7 +7,7 @@ import statistics
 from datetime import datetime, timezone
 from pathlib import Path
 
-from recall.hooks import Verdict, pre_memory_write
+from recall.hooks import Verdict, log_hook_result, pre_memory_write
 from recall.models import Entry, EntryType, SearchResult
 
 DEFAULT_DB_PATH = Path.home() / ".local" / "share" / "recall" / "recall.db"
@@ -89,6 +89,7 @@ class Store:
         hook = pre_memory_write(entry.content)
         if hook.verdict == Verdict.DENY:
             raise ValueError(f"PreMemoryWrite denied: {hook.reason}")
+        log_hook_result(hook)
 
         now = self._now()
         cursor = self.conn.execute(

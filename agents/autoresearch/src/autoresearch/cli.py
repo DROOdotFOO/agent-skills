@@ -167,13 +167,18 @@ def loop(
 
         console.print(f"Hypothesis: {description}")
 
+        # PreSubAgentSpawn: validate file changes before applying
+        from autoresearch.hooks import Verdict, pre_sub_agent_spawn
+
+        spawn_hook = pre_sub_agent_spawn(file_changes, state.config.mutable_files)
+        if spawn_hook.verdict == Verdict.DENY:
+            err.print(f"  [red]DENIED by PreSubAgentSpawn: {spawn_hook.reason}[/red]")
+            continue
+
         # Apply changes
         for filename, content in file_changes.items():
-            if filename in state.config.mutable_files:
-                (work_dir / filename).write_text(content)
-                console.print(f"  Modified: {filename}")
-            else:
-                err.print(f"  [yellow]Skipped {filename} (not in mutable files)[/yellow]")
+            (work_dir / filename).write_text(content)
+            console.print(f"  Modified: {filename}")
 
         # Execute run
         result = execute_run(state, description, work_dir, state_path)

@@ -7,6 +7,7 @@ and safe git/gh operations.
 from __future__ import annotations
 
 import re
+import sys
 from enum import Enum
 
 from pydantic import BaseModel
@@ -102,3 +103,13 @@ def pre_tool_use(command: str) -> HookResult:
         hook="PreToolUse",
         reason=f"command not in allowlist: {cmd[:80]}",
     )
+
+
+def log_hook_result(result: HookResult) -> None:
+    """Log ASK verdicts to stderr so they're visible in non-interactive contexts."""
+    if result.verdict == Verdict.ASK:
+        print(
+            f"[HOOK] {result.hook}: {result.reason} "
+            "-- proceeding (ASK verdict, no interactive prompt available)",
+            file=sys.stderr,
+        )

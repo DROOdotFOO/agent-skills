@@ -2,7 +2,13 @@
 
 from __future__ import annotations
 
-from autoresearch.hooks import HookResult, Verdict, pre_tool_use
+from autoresearch.hooks import (
+    HookResult,
+    Verdict,
+    log_hook_result,
+    pre_sub_agent_spawn,
+    pre_tool_use,
+)
 
 
 class TestPreToolUse:
@@ -104,3 +110,116 @@ class TestPreToolUse:
         assert result.hook == "PreToolUse"
         assert isinstance(result, HookResult)
         assert result.reason != ""
+
+
+class TestPreSubAgentSpawn:
+    """PreSubAgentSpawn hook for agent loop file changes."""
+
+    MUTABLE = ["src/main.nr", "src/lib.nr"]
+
+    def test_allow_mutable_file(self) -> None:
+        changes = {"src/main.nr": "fn main() {}"}
+        result = pre_sub_agent_spawn(changes, self.MUTABLE)
+        assert result.verdict == Verdict.ALLOW
+
+    def test_allow_multiple_mutable_files(self) -> None:
+        changes = {"src/main.nr": "fn main() {}", "src/lib.nr": "mod utils;"}
+        result = pre_sub_agent_spawn(changes, self.MUTABLE)
+        assert result.verdict == Verdict.ALLOW
+
+    def test_allow_empty_changes(self) -> None:
+        result = pre_sub_agent_spawn({}, self.MUTABLE)
+        assert result.verdict == Verdict.ALLOW
+
+    def test_deny_non_mutable_file(self) -> None:
+        changes = {"Cargo.toml": '[package]\nname = "exploit"'}
+        result = pre_sub_agent_spawn(changes, self.MUTABLE)
+        assert result.verdict == Verdict.DENY
+        assert "not in mutable_files" in result.reason
+
+    def test_deny_mixed_mutable_and_non(self) -> None:
+        changes = {"src/main.nr": "ok", "README.md": "injected"}
+        result = pre_sub_agent_spawn(changes, self.MUTABLE)
+        assert result.verdict == Verdict.DENY
+
+    def test_deny_os_system_in_content(self) -> None:
+        changes = {"src/main.nr": 'import os\nos.system("rm -rf /")'}
+        result = pre_sub_agent_spawn(changes, self.MUTABLE)
+        assert result.verdict == Verdict.DENY
+        assert "os.system()" in result.reason
+
+    def test_deny_subprocess_in_content(self) -> None:
+        changes = {"src/main.nr": 'import subprocess\nsubprocess.run(["ls"])'}
+        result = pre_sub_agent_spawn(changes, self.MUTABLE)
+        assert result.verdict == Verdict.DENY
+        assert "subprocess" in result.reason
+
+    def test_deny_eval_in_content(self) -> None:
+        changes = {"src/main.nr": 'eval("malicious code")'}
+        result = pre_sub_agent_spawn(changes, self.MUTABLE)
+        assert result.verdict == Verdict.DENY
+
+    def test_deny_exec_in_content(self) -> None:
+        changes = {"src/main.nr": 'exec("import os")'}
+        result = pre_sub_agent_spawn(changes, self.MUTABLE)
+        assert result.verdict == Verdict.DENY
+
+    def test_deny_dunder_import(self) -> None:
+        changes = {"src/main.nr": '__import__("os").system("ls")'}
+        result = pre_sub_agent_spawn(changes, self.MUTABLE)
+        assert result.verdict == Verdict.DENY
+
+    def test_allow_safe_code_content(self) -> None:
+        changes = {"src/main.nr": "fn add(a: u32, b: u32) -> u32 { a + b }"}
+        result = pre_sub_agent_spawn(changes, self.MUTABLE)
+        assert result.verdict == Verdict.ALLOW
+
+    def test_hook_result_fields(self) -> None:
+        result = pre_sub_agent_spawn({"src/main.nr": "ok"}, self.MUTABLE)
+        assert result.hook == "PreSubAgentSpawn"
+        assert isinstance(result, HookResult)
+
+
+class TestLogHookResult:
+    """ASK verdict logging."""
+
+    def test_ask_logs_to_stderr(self) -> None:
+        import sys
+        from io import StringIO
+
+        capture = StringIO()
+        old_stderr = sys.stderr
+        sys.stderr = capture
+        try:
+            result = HookResult(verdict=Verdict.ASK, hook="PreToolUse", reason="test reason")
+            log_hook_result(result)
+        finally:
+            sys.stderr = old_stderr
+        assert "[HOOK] PreToolUse:" in capture.getvalue()
+        assert "ASK verdict" in capture.getvalue()
+
+    def test_allow_no_log(self) -> None:
+        import sys
+        from io import StringIO
+
+        capture = StringIO()
+        old_stderr = sys.stderr
+        sys.stderr = capture
+        try:
+            log_hook_result(HookResult(verdict=Verdict.ALLOW, hook="PreToolUse", reason="ok"))
+        finally:
+            sys.stderr = old_stderr
+        assert capture.getvalue() == ""
+
+    def test_deny_no_log(self) -> None:
+        import sys
+        from io import StringIO
+
+        capture = StringIO()
+        old_stderr = sys.stderr
+        sys.stderr = capture
+        try:
+            log_hook_result(HookResult(verdict=Verdict.DENY, hook="PreToolUse", reason="bad"))
+        finally:
+            sys.stderr = old_stderr
+        assert capture.getvalue() == ""

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from patchbot.hooks import HookResult, Verdict, pre_tool_use
+from patchbot.hooks import HookResult, Verdict, log_hook_result, pre_tool_use
 
 
 class TestPreToolUse:
@@ -136,3 +136,48 @@ class TestPreToolUse:
         result = pre_tool_use("cargo test")
         assert result.hook == "PreToolUse"
         assert isinstance(result, HookResult)
+
+
+class TestLogHookResult:
+    """ASK verdict logging."""
+
+    def test_ask_logs_to_stderr(self) -> None:
+        import sys
+        from io import StringIO
+
+        capture = StringIO()
+        old_stderr = sys.stderr
+        sys.stderr = capture
+        try:
+            result = HookResult(verdict=Verdict.ASK, hook="PreToolUse", reason="test reason")
+            log_hook_result(result)
+        finally:
+            sys.stderr = old_stderr
+        assert "[HOOK] PreToolUse:" in capture.getvalue()
+        assert "ASK verdict" in capture.getvalue()
+
+    def test_allow_no_log(self) -> None:
+        import sys
+        from io import StringIO
+
+        capture = StringIO()
+        old_stderr = sys.stderr
+        sys.stderr = capture
+        try:
+            log_hook_result(HookResult(verdict=Verdict.ALLOW, hook="PreToolUse", reason="ok"))
+        finally:
+            sys.stderr = old_stderr
+        assert capture.getvalue() == ""
+
+    def test_deny_no_log(self) -> None:
+        import sys
+        from io import StringIO
+
+        capture = StringIO()
+        old_stderr = sys.stderr
+        sys.stderr = capture
+        try:
+            log_hook_result(HookResult(verdict=Verdict.DENY, hook="PreToolUse", reason="bad"))
+        finally:
+            sys.stderr = old_stderr
+        assert capture.getvalue() == ""
