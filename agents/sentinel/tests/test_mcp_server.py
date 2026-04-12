@@ -8,10 +8,12 @@ from fastmcp import FastMCP
 
 from sentinel.mcp_server import create_server
 
-EXPECTED_TOOLS = frozenset({
-    "sentinel_check",
-    "sentinel_alerts",
-})
+EXPECTED_TOOLS = frozenset(
+    {
+        "sentinel_check",
+        "sentinel_alerts",
+    }
+)
 
 
 class TestSentinelMCPServer:

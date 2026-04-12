@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sqlite3
+import statistics
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -130,6 +131,23 @@ class Store:
                 sanitized.append(f'"{token}"')
         return " ".join(sanitized)
 
+    @staticmethod
+    def _mad_filter(results: list[SearchResult], min_relevance: float) -> list[SearchResult]:
+        """Filter results using MAD-normalized thresholding on FTS5 rank scores.
+
+        Keeps results whose rank is below (more relevant than) median - min_relevance * MAD.
+        FTS5 ranks are negative: lower (more negative) = more relevant.
+        """
+        if len(results) < 2:
+            return results
+        ranks = [r.rank for r in results]
+        med = statistics.median(ranks)
+        mad = statistics.median([abs(r - med) for r in ranks])
+        if mad == 0:
+            return results
+        threshold = med - min_relevance * mad
+        return [r for r in results if r.rank <= threshold]
+
     def search(
         self,
         query: str,
@@ -138,8 +156,14 @@ class Store:
         entry_type: EntryType | None = None,
         tags: list[str] | None = None,
         limit: int = 20,
+        min_relevance: float | None = None,
     ) -> list[SearchResult]:
-        """Full-text search with optional filters. Returns results ranked by relevance."""
+        """Full-text search with optional filters. Returns results ranked by relevance.
+
+        When min_relevance is set, applies MAD-normalized thresholding to drop
+        weak matches. A value of 0.0 keeps above-median results; 1.0 keeps only
+        clear outliers. Inspired by Latent Briefing (Ramp Labs) adaptive compaction.
+        """
         fts_query = self._sanitize_fts_query(query)
         sql = """
             SELECT e.*, entries_fts.rank,
@@ -172,6 +196,10 @@ class Store:
             snippet = d.pop("snippet")
             entry = Entry.from_row(d)
             results.append(SearchResult(entry=entry, rank=rank, snippet=snippet))
+
+        if min_relevance is not None:
+            results = self._mad_filter(results, min_relevance)
+
         return results
 
     def list_entries(

@@ -8,8 +8,11 @@ from pathlib import Path
 
 import pytest
 
-from prepper.gatherers import gather_digest_alerts, gather_digest_summary, gather_sentinel_alerts
-
+from prepper.gatherers import (
+    gather_digest_alerts,
+    gather_digest_summary,
+    gather_sentinel_alerts,
+)
 
 # --- gather_sentinel_alerts ---
 
@@ -80,11 +83,6 @@ def test_digest_summary_reads_sqlite(tmp_path: Path) -> None:
     )
     conn.commit()
     conn.close()
-
-    # Monkey-patch the default path
-    import prepper.gatherers as g
-
-    original_fn = g.gather_digest_summary
 
     def patched(project: str) -> object:
         g_db_path = db_path
@@ -161,6 +159,72 @@ def test_digest_alerts_returns_none_no_file() -> None:
     section = gather_digest_alerts()
     # Returns None since default path likely doesn't exist in test
     assert section is None or section.title == "Digest Alerts"
+
+
+# --- gather_watchdog_health ---
+
+
+def test_watchdog_health_surfaces_failures(monkeypatch: pytest.MonkeyPatch) -> None:
+    from watchdog.models import CheckResult, RepoHealth, Status
+
+    fake_health = RepoHealth(
+        repo="owner/repo",
+        checks=[
+            CheckResult(check_name="ci_status", status=Status.FAIL, message="2/5 runs failed"),
+            CheckResult(check_name="stale_prs", status=Status.PASS, message="No stale PRs"),
+            CheckResult(
+                check_name="security_advisories",
+                status=Status.WARN,
+                message="1 advisory",
+            ),
+        ],
+    )
+
+    monkeypatch.setattr(
+        "prepper.gatherers.gather_watchdog_health",
+        lambda repo: _fake_watchdog(fake_health),
+    )
+
+    section = _fake_watchdog(fake_health)
+    assert section is not None
+    assert "ci_status" in section.content
+    assert "security_advisories" in section.content
+    assert "stale_prs" not in section.content  # PASS checks excluded
+    assert "FAIL" in section.title
+
+
+def test_watchdog_health_returns_none_when_all_pass(monkeypatch: pytest.MonkeyPatch) -> None:
+    from watchdog.models import CheckResult, RepoHealth, Status
+
+    healthy = RepoHealth(
+        repo="owner/repo",
+        checks=[
+            CheckResult(check_name="ci_status", status=Status.PASS, message="OK"),
+        ],
+    )
+
+    section = _fake_watchdog(healthy)
+    assert section is None
+
+
+def _fake_watchdog(health):
+    """Simulate gather_watchdog_health with a pre-built RepoHealth."""
+    from prepper.models import BriefingSection, Priority
+
+    if not health.checks:
+        return None
+    failing = [c for c in health.checks if c.status.value in ("fail", "warn")]
+    if not failing:
+        return None
+    lines = []
+    for check in failing:
+        lines.append(f"- {check.icon} **{check.check_name}**: {check.message}")
+    overall = health.overall_status.value.upper()
+    return BriefingSection(
+        title=f"Repo Health ({overall})",
+        content="\n".join(lines),
+        priority=Priority.HIGH if overall == "FAIL" else Priority.MEDIUM,
+    )
 
 
 def _gather_digest_alerts_from(log_path: Path):

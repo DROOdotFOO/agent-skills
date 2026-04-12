@@ -5,7 +5,6 @@ from __future__ import annotations
 from patchbot.models import Ecosystem
 from patchbot.updater import _parse_outdated
 
-
 # --- npm outdated ---
 
 

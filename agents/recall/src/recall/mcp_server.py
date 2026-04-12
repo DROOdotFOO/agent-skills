@@ -59,6 +59,7 @@ def create_server(db_path: Path | None = None) -> FastMCP:
         entry_type: str | None = None,
         tags: str | None = None,
         limit: int = 10,
+        min_relevance: float | None = None,
     ) -> str:
         """Search the recall knowledge base using full-text search.
 
@@ -68,10 +69,20 @@ def create_server(db_path: Path | None = None) -> FastMCP:
             entry_type: Filter by type: decision, pattern, gotcha, link, insight (optional)
             tags: Comma-separated tags to filter by (optional)
             limit: Max results to return (default 10)
+            min_relevance: MAD-normalized relevance floor. Drops weak matches using adaptive
+                thresholding. 0.0 keeps above-median results, 1.0 keeps only clear outliers.
+                Omit to return all results up to limit. (optional)
         """
         et = EntryType(entry_type) if entry_type else None
         tag_list = [t.strip() for t in (tags or "").split(",") if t.strip()] or None
-        results = store.search(query, project=project, entry_type=et, tags=tag_list, limit=limit)
+        results = store.search(
+            query,
+            project=project,
+            entry_type=et,
+            tags=tag_list,
+            limit=limit,
+            min_relevance=min_relevance,
+        )
 
         if not results:
             return "No results found."

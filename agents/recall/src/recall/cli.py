@@ -55,13 +55,25 @@ def search(
     entry_type: Annotated[EntryType | None, typer.Option("--type", "-t")] = None,
     tags: Annotated[str | None, typer.Option("--tags")] = None,
     limit: Annotated[int, typer.Option("--limit", "-n")] = 20,
+    min_relevance: Annotated[
+        float | None,
+        typer.Option(
+            "--min-relevance",
+            help="MAD-normalized relevance floor (0.0=median, 1.0=outliers only)",
+        ),
+    ] = None,
     db: Annotated[Path | None, typer.Option("--db", hidden=True)] = None,
 ) -> None:
     """Search entries by full-text query."""
     tag_list = [t.strip() for t in (tags or "").split(",") if t.strip()] or None
     store = _store(db)
     results = store.search(
-        query, project=project, entry_type=entry_type, tags=tag_list, limit=limit
+        query,
+        project=project,
+        entry_type=entry_type,
+        tags=tag_list,
+        limit=limit,
+        min_relevance=min_relevance,
     )
     store.close()
 

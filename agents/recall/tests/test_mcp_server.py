@@ -10,16 +10,18 @@ from fastmcp import FastMCP
 
 from recall.mcp_server import create_server
 
-EXPECTED_TOOLS = frozenset({
-    "recall_add",
-    "recall_search",
-    "recall_list",
-    "recall_get",
-    "recall_delete",
-    "recall_stats",
-    "recall_extract",
-    "recall_stale",
-})
+EXPECTED_TOOLS = frozenset(
+    {
+        "recall_add",
+        "recall_search",
+        "recall_list",
+        "recall_get",
+        "recall_delete",
+        "recall_stats",
+        "recall_extract",
+        "recall_stale",
+    }
+)
 
 
 @pytest.fixture()

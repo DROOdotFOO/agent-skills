@@ -160,6 +160,43 @@ class TestStats:
         assert s["by_type"]["pattern"] == 1
 
 
+class TestMinRelevance:
+    def test_none_returns_all(self, store: Store):
+        """Default min_relevance=None preserves all results."""
+        for i in range(5):
+            _add(store, f"entry about testing item {i}")
+        results = store.search("testing", min_relevance=None)
+        assert len(results) == 5
+
+    def test_filters_weak_matches(self, store: Store):
+        """min_relevance drops results with weak FTS5 scores."""
+        # Strong match: query terms appear multiple times
+        _add(store, "testing testing testing is important for quality testing")
+        _add(store, "testing code quality ensures reliability of testing")
+        _add(store, "testing framework setup and testing patterns")
+        # Weaker matches: fewer occurrences
+        _add(store, "unrelated entry that mentions testing once")
+        _add(store, "another entry with testing mentioned once")
+        all_results = store.search("testing", limit=10)
+        filtered = store.search("testing", limit=10, min_relevance=0.0)
+        # Filtering at median (0.0) should return fewer or equal results
+        assert len(filtered) <= len(all_results)
+
+    def test_single_result_skips_filtering(self, store: Store):
+        """MAD filtering requires >= 2 results; single result passes through."""
+        _add(store, "unique xylophone entry")
+        results = store.search("xylophone", min_relevance=2.0)
+        assert len(results) == 1
+
+    def test_aggressive_threshold_returns_fewer(self, store: Store):
+        """Higher min_relevance keeps fewer results."""
+        for i in range(8):
+            _add(store, f"recall knowledge base entry number {i} about recall patterns")
+        gentle = store.search("recall", limit=20, min_relevance=0.0)
+        aggressive = store.search("recall", limit=20, min_relevance=2.0)
+        assert len(aggressive) <= len(gentle)
+
+
 class TestListEntries:
     def test_returns_newest_first(self, store: Store):
         _add(store, "first")

@@ -9,7 +9,6 @@ import pytest
 from sentinel.models import Alert, AlertSeverity, ContractWatch, Transaction
 from sentinel.monitor import _parse_transaction, evaluate_alerts, get_blockscout_url
 
-
 # --- get_blockscout_url ---
 
 

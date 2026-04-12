@@ -60,10 +60,10 @@ All agents expose MCP servers via `<agent> serve` (stdio transport). Configure i
 | Agent        | CLI            | Key commands                                                                              | MCP tools |
 | ------------ | -------------- | ----------------------------------------------------------------------------------------- | --------- |
 | digest       | `digest`       | `generate <topic> [-p hn,github,reddit,youtube,ethresearch,snapshot,polymarket,packages,coingecko,blockscout]` | 6 |
-| recall       | `recall`       | `add`, `search`, `list`, `get`, `delete`, `stale`, `stats`, `extract`, `serve`            | 8 |
+| recall       | `recall`       | `add`, `search [--min-relevance]`, `list`, `get`, `delete`, `stale`, `stats`, `extract`, `serve` | 8 |
 | autoresearch | `autoresearch` | `init <name> --metric <m> --verify <cmd>`, `run`, `loop`, `dashboard`, `status`           | 3 |
 | watchdog     | `watchdog`     | `scan <repo>`, `report`, `watch --config watchdog.toml`                                   | 2 |
-| prepper      | `prepper`      | `brief`, `inject` (writes to .claude/prepper-briefing.md)                                 | 2 |
+| prepper      | `prepper`      | `brief [--budget N] [--task HINT]`, `inject`, `serve`                                     | 2 |
 | sentinel     | `sentinel`     | `check --address 0x...`, `watch --config sentinel.toml`, `alerts`                         | 2 |
 | patchbot     | `patchbot`     | `scan`, `update`, `pr`                                                                    | 3 |
 
@@ -73,7 +73,7 @@ All agents expose MCP servers via `<agent> serve` (stdio transport). Configure i
 cd agents/<name> && python -m pytest tests/ -v
 ```
 
-399 tests total across all agents, 0 mocks.
+447 tests total across all agents, 0 mocks.
 
 ## Conventions
 

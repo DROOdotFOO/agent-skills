@@ -54,8 +54,18 @@ def test_format_empty():
 
 def test_format_with_entries():
     entries = [
-        {"content": "We decided to use WAL mode", "type": "decision", "tags": "sqlite", "project": "recall"},
-        {"content": "Noir circuits need fewer constraints", "type": "insight", "tags": "noir,zk", "project": "noir"},
+        {
+            "content": "We decided to use WAL mode",
+            "type": "decision",
+            "tags": "sqlite",
+            "project": "recall",
+        },
+        {
+            "content": "Noir circuits need fewer constraints",
+            "type": "insight",
+            "tags": "noir,zk",
+            "project": "noir",
+        },
     ]
     text = format_recall_context(entries)
     assert "Historical context" in text

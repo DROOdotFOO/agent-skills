@@ -8,11 +8,13 @@ from fastmcp import FastMCP
 
 from patchbot.mcp_server import create_server
 
-EXPECTED_TOOLS = frozenset({
-    "patchbot_scan",
-    "patchbot_outdated",
-    "patchbot_update",
-})
+EXPECTED_TOOLS = frozenset(
+    {
+        "patchbot_scan",
+        "patchbot_outdated",
+        "patchbot_update",
+    }
+)
 
 
 class TestPatchbotMCPServer:

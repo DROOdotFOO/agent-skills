@@ -64,7 +64,7 @@ Context-injection skills for Claude Code sessions. Each skill lives in `skills/<
 | `self-improving-agent` | Auto-memory curation, pattern promotion lifecycle                     |
 | `codebase-onboarding`  | Auto-generate onboarding docs, audience-aware                         |
 | `rag-architect`        | RAG pipeline design: chunking, embedding, retrieval, evaluation       |
-| `llm-cost-optimizer`   | 6 optimization techniques in priority order                           |
+| `llm-cost-optimizer`   | 7 optimization techniques in priority order                           |
 | `digest`               | Multi-platform activity digest (9 sources + differential mode)        |
 | `recall`               | Knowledge base: query past decisions, patterns, gotchas               |
 | `autoresearch`         | Check experiment status, run iterations, view dashboards              |

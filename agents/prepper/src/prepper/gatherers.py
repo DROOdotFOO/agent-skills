@@ -335,6 +335,36 @@ def gather_digest_alerts() -> BriefingSection | None:
         return None
 
 
+def gather_watchdog_health(repo: str) -> BriefingSection | None:
+    """Run watchdog health checks and surface failures/warnings."""
+    try:
+        from watchdog.scanner import scan_repo
+    except ImportError:
+        return None
+
+    try:
+        health = scan_repo(repo)
+        if not health.checks:
+            return None
+
+        failing = [c for c in health.checks if c.status.value in ("fail", "warn")]
+        if not failing:
+            return None
+
+        lines: list[str] = []
+        for check in failing:
+            lines.append(f"- {check.icon} **{check.check_name}**: {check.message}")
+
+        overall = health.overall_status.value.upper()
+        return BriefingSection(
+            title=f"Repo Health ({overall})",
+            content="\n".join(lines),
+            priority=Priority.HIGH if overall == "FAIL" else Priority.MEDIUM,
+        )
+    except Exception:
+        return None
+
+
 def gather_ci_status(repo: str) -> BriefingSection | None:
     """Last CI run result."""
     if not which("gh"):

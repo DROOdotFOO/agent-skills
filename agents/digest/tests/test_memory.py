@@ -73,14 +73,24 @@ def test_url_appearances_zero_for_unknown(mem: FeedMemory) -> None:
 
 
 def test_engagement_trend(mem: FeedMemory) -> None:
-    items1 = [Item(
-        source="hn", title="T", url="https://example.com/1",
-        timestamp=datetime.now(timezone.utc), engagement=50,
-    )]
-    items2 = [Item(
-        source="hn", title="T", url="https://example.com/1",
-        timestamp=datetime.now(timezone.utc), engagement=150,
-    )]
+    items1 = [
+        Item(
+            source="hn",
+            title="T",
+            url="https://example.com/1",
+            timestamp=datetime.now(timezone.utc),
+            engagement=50,
+        )
+    ]
+    items2 = [
+        Item(
+            source="hn",
+            title="T",
+            url="https://example.com/1",
+            timestamp=datetime.now(timezone.utc),
+            engagement=150,
+        )
+    ]
     mem.store(_make_result(items=items1))
     mem.store(_make_result(items=items2))
 

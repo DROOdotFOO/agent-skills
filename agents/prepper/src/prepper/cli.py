@@ -21,11 +21,17 @@ def brief(
     project: str | None = typer.Option(None, "--project", "-p", help="Project name for recall"),
     output: str | None = typer.Option(None, "--output", "-o", help="Write briefing to file"),
     raw: bool = typer.Option(False, "--raw", help="Print raw markdown instead of rendered"),
+    budget: int | None = typer.Option(
+        None, "--budget", "-b", help="Token budget (drops low-priority sections to fit)"
+    ),
+    task: str | None = typer.Option(
+        None, "--task", "-t", help="Task hint (boosts relevant sections)"
+    ),
 ) -> None:
     """Generate and display a project briefing."""
     repo_path = str(Path(path).resolve())
     briefing = generate_briefing(repo_path=repo_path, repo=repo, project=project)
-    md = format_briefing(briefing)
+    md = format_briefing(briefing, token_budget=budget, task_hint=task)
 
     if output:
         out_path = Path(output)
@@ -43,11 +49,17 @@ def inject(
     path: str = typer.Argument(default=".", help="Path to the repository"),
     repo: str | None = typer.Option(None, "--repo", "-r", help="GitHub owner/repo"),
     project: str | None = typer.Option(None, "--project", "-p", help="Project name for recall"),
+    budget: int | None = typer.Option(
+        None, "--budget", "-b", help="Token budget (drops low-priority sections to fit)"
+    ),
+    task: str | None = typer.Option(
+        None, "--task", "-t", help="Task hint (boosts relevant sections)"
+    ),
 ) -> None:
     """Generate briefing and write to .claude/prepper-briefing.md for session context."""
     repo_path = Path(path).resolve()
     briefing = generate_briefing(repo_path=str(repo_path), repo=repo, project=project)
-    md = format_briefing(briefing)
+    md = format_briefing(briefing, token_budget=budget, task_hint=task)
 
     target = repo_path / ".claude" / "prepper-briefing.md"
     target.parent.mkdir(parents=True, exist_ok=True)

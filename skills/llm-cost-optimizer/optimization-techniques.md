@@ -122,6 +122,32 @@ Batch multiple requests into single API calls.
 - Bulk classification or extraction
 - Any workflow where latency tolerance > minutes
 
+## 7. Cross-Agent Context Management (20-50% reduction)
+
+Manage how much context flows between agents in multi-step pipelines. In hierarchical architectures (orchestrator + workers), token usage compounds across calls as context gets passed repeatedly.
+
+**Relevance-floor filtering:**
+- Don't return all results up to a fixed `limit`. Apply a relevance floor that adapts to the score distribution.
+- Use MAD-normalized thresholding: keep items where `score > median + threshold * MAD` (median absolute deviation). This adapts to each query's score distribution automatically.
+- threshold=0.0 keeps above-median items. threshold=1.0 keeps only clear outliers. Tune per use case.
+
+**Task-guided selection:**
+- Before assembling context for a downstream agent, score each context item against the consumer's task description.
+- Simple approach: count term overlap between task description and context items, boost matches.
+- Advanced approach (requires model access): use attention patterns between task query and context to select relevant positions (see Latent Briefing, Ramp Labs).
+
+**Adaptive budget by task type:**
+- Focused tasks (bug fix, specific question) need less context -- aggressive filtering improves signal-to-noise.
+- Broad tasks (architecture review, onboarding) need more context -- light filtering preserves coverage.
+- Set token budgets per task type: bug fix ~1500 tokens, feature work ~3000, architecture review ~5000+.
+
+**Implementation priority:**
+1. Add relevance floors to existing search/retrieval (quick win, no new infrastructure)
+2. Add token budgets to context assembly functions
+3. Add task-hint parameters for consumer-aware filtering
+
+**Reference:** Latent Briefing (Ramp Labs, 2026) demonstrates these patterns at the representation level using KV cache compaction, achieving 42-57% token reduction with +3pp accuracy on LongBench v2.
+
 # Proactive Triggers
 
 Surface these optimizations proactively when you observe these patterns (do not wait to be asked):
@@ -132,6 +158,7 @@ Surface these optimizations proactively when you observe these patterns (do not 
 4. **Repeated similar queries in logs** -> Suggest semantic caching
 5. **Batch processing done sequentially** -> Suggest request batching API
 6. **No cost tracking or observability** -> Suggest instrumentation first
+7. **Context assembled for multi-agent pipeline without relevance filtering** -> Suggest cross-agent context management
 
 # Anti-Patterns
 
@@ -144,3 +171,4 @@ Surface these optimizations proactively when you observe these patterns (do not 
 | Ignoring output tokens | Output often costs 3-5x more per token | Control output length explicitly |
 | Building custom cache before trying provider caching | Unnecessary complexity | Use Anthropic prompt caching first |
 | Retrying on larger model without logging | Hidden cost multiplier | Log escalations, track escalation rate |
+| Passing all context between agents | Token explosion, accuracy dilution | Filter by relevance floor + task budget |

@@ -8,10 +8,12 @@ from fastmcp import FastMCP
 
 from watchdog.mcp_server import create_server
 
-EXPECTED_TOOLS = frozenset({
-    "watchdog_scan",
-    "watchdog_scan_local",
-})
+EXPECTED_TOOLS = frozenset(
+    {
+        "watchdog_scan",
+        "watchdog_scan_local",
+    }
+)
 
 
 class TestWatchdogMCPServer:

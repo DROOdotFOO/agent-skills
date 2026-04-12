@@ -124,14 +124,22 @@ def test_update_miss_when_url_disappears(db_path: Path, mem: FeedMemory):
 
 def test_update_mixed_sources(db_path: Path, mem: FeedMemory):
     """Different sources get separate tracking."""
-    mem.store(_result([
-        _item(source="hn", url="https://a.com"),
-        _item(source="reddit", url="https://b.com"),
-    ]))
-    mem.store(_result([
-        _item(source="hn", url="https://a.com"),  # hn persists
-        _item(source="github", url="https://c.com"),  # reddit gone
-    ]))
+    mem.store(
+        _result(
+            [
+                _item(source="hn", url="https://a.com"),
+                _item(source="reddit", url="https://b.com"),
+            ]
+        )
+    )
+    mem.store(
+        _result(
+            [
+                _item(source="hn", url="https://a.com"),  # hn persists
+                _item(source="github", url="https://c.com"),  # reddit gone
+            ]
+        )
+    )
     mem.close()
 
     tracker = SourceTracker(db_path=db_path)
@@ -165,7 +173,7 @@ def test_scores_accumulate(db_path: Path, mem: FeedMemory):
 def test_get_accuracy_with_enough_samples(db_path: Path, mem: FeedMemory):
     """Accuracy moves off neutral once there are 5+ samples."""
     # Store 6 pairs where hn always persists
-    for i in range(6):
+    for _i in range(6):
         mem.store(_result([_item(source="hn", url="https://a.com")]))
     mem.close()
 

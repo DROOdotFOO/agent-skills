@@ -8,10 +8,12 @@ from fastmcp import FastMCP
 
 from prepper.mcp_server import create_server
 
-EXPECTED_TOOLS = frozenset({
-    "prepper_brief",
-    "prepper_inject",
-})
+EXPECTED_TOOLS = frozenset(
+    {
+        "prepper_brief",
+        "prepper_inject",
+    }
+)
 
 
 class TestPrepperMCPServer:

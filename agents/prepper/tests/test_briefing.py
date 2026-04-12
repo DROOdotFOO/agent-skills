@@ -51,3 +51,78 @@ def test_format_briefing_contains_timestamp():
     md = format_briefing(briefing)
     assert "Generated:" in md
     assert "UTC" in md
+
+
+class TestTokenBudget:
+    def test_no_budget_includes_all(self):
+        sections = [
+            BriefingSection(title="High", content="important" * 100, priority=Priority.HIGH),
+            BriefingSection(title="Med", content="medium" * 100, priority=Priority.MEDIUM),
+            BriefingSection(title="Low", content="extra" * 100, priority=Priority.LOW),
+        ]
+        briefing = Briefing(project_name="test", sections=sections)
+        md = format_briefing(briefing)
+        assert "## High" in md
+        assert "## Med" in md
+        assert "## Low" in md
+
+    def test_budget_drops_low_first(self):
+        sections = [
+            BriefingSection(title="High", content="important", priority=Priority.HIGH),
+            BriefingSection(title="Med", content="medium info", priority=Priority.MEDIUM),
+            BriefingSection(title="Low", content="extra" * 200, priority=Priority.LOW),
+        ]
+        briefing = Briefing(project_name="test", sections=sections)
+        # Small budget should drop the large LOW section
+        md = format_briefing(briefing, token_budget=50)
+        assert "## High" in md
+        assert "## Low" not in md
+
+    def test_budget_never_drops_high(self):
+        sections = [
+            BriefingSection(title="High", content="critical" * 200, priority=Priority.HIGH),
+        ]
+        briefing = Briefing(project_name="test", sections=sections)
+        # Even with tiny budget, HIGH survives
+        md = format_briefing(briefing, token_budget=10)
+        assert "## High" in md
+
+    def test_budget_truncates_medium(self):
+        sections = [
+            BriefingSection(title="High", content="hi", priority=Priority.HIGH),
+            BriefingSection(title="Med", content="x" * 2000, priority=Priority.MEDIUM),
+        ]
+        briefing = Briefing(project_name="test", sections=sections)
+        md = format_briefing(briefing, token_budget=100)
+        assert "## Med" in md
+        assert "[truncated]" in md
+
+
+class TestTaskHint:
+    def test_task_hint_boosts_matching_medium(self):
+        sections = [
+            BriefingSection(
+                title="Dependencies", content="npm audit found 0 issues", priority=Priority.MEDIUM
+            ),
+            BriefingSection(
+                title="Recall", content="auth bug in login flow noted", priority=Priority.MEDIUM
+            ),
+        ]
+        briefing = Briefing(project_name="test", sections=sections)
+        md = format_briefing(briefing, task_hint="auth login bug")
+        # Recall section should appear before Dependencies because it matches task hint
+        recall_pos = md.index("## Recall")
+        deps_pos = md.index("## Dependencies")
+        assert recall_pos < deps_pos
+
+    def test_task_hint_does_not_affect_priority_order(self):
+        sections = [
+            BriefingSection(title="Low", content="auth related low", priority=Priority.LOW),
+            BriefingSection(title="High", content="git status", priority=Priority.HIGH),
+        ]
+        briefing = Briefing(project_name="test", sections=sections)
+        md = format_briefing(briefing, task_hint="auth")
+        # HIGH still before LOW regardless of task match
+        high_pos = md.index("## High")
+        low_pos = md.index("## Low")
+        assert high_pos < low_pos

@@ -9,11 +9,13 @@ from fastmcp import FastMCP
 
 from autoresearch.mcp_server import create_server
 
-EXPECTED_TOOLS = frozenset({
-    "autoresearch_status",
-    "autoresearch_dashboard",
-    "autoresearch_run",
-})
+EXPECTED_TOOLS = frozenset(
+    {
+        "autoresearch_status",
+        "autoresearch_dashboard",
+        "autoresearch_run",
+    }
+)
 
 
 class TestAutoresearchMCPServer:
