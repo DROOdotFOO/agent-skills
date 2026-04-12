@@ -2,12 +2,12 @@
 
 ## Project Overview
 
-Agent-skills: 50 Claude Code skills and 7 autonomous agents for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
+Agent-skills: 51 Claude Code skills and 7 autonomous agents for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
 
 ## Structure
 
 ```
-skills/                   # 50 Claude Code skills (context-injection via SKILL.md)
+skills/                   # 51 Claude Code skills (context-injection via SKILL.md)
   <name>/SKILL.md         # Entry point per skill, with frontmatter + trigger clauses
 agents/                   # 7 autonomous agents (standalone tools)
   digest/                 # Multi-platform activity digest (9 sources)
@@ -23,9 +23,9 @@ scripts/                  # Repo tooling (skills-lint.sh)
 
 ## Skills
 
-50 skills across 4 categories. Each lives in `skills/<name>/` with a `SKILL.md` entry point. Sub-files use YAML frontmatter with `impact`, `impactDescription`, and `tags` fields.
+51 skills across 4 categories. Each lives in `skills/<name>/` with a `SKILL.md` entry point. Sub-files use YAML frontmatter with `impact`, `impactDescription`, and `tags` fields.
 
-**Domain** (11): claude-api, droo-stack, raxol, noir, solidity-audit, ethskills, design-ux, nix, native-code, blockscout, coingecko
+**Domain** (12): claude-api, droo-stack, raxol, noir, solidity-audit, ethskills, design-ux, nix, native-code, blockscout, coingecko, web-asset-generator
 
 **Workflow** (12): tdd, code-review, prd-to-plan, prd-to-issues, triage-issue, focused-fix, release, qa, design-an-interface, ubiquitous-language, grill-me, playwright
 

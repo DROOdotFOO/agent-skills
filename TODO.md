@@ -4,8 +4,12 @@
 
 **2026-04-12** -- Skill extraction sprint. 51 skills, 7 agents, 520 tests, 0 lint errors.
 
-- Scraped travisvn/awesome-claude-skills for gap analysis (28 skills catalogued)
-- New skills: playwright (browser automation + testing, Python + TS), security-audit (OWASP, variant analysis, static analysis, supply chain), skill-creator (interactive scaffolding + templates + quality checklist), web-asset-generator (favicons, app icons, devicons, OG images, optimization)
+- Scraped travisvn/awesome-claude-skills for gap analysis (28 community skills catalogued)
+- 4 new skills from gap analysis:
+  - playwright: browser automation + testing (Python + TS), selectors, waiting, accessibility, automation recipes
+  - security-audit: OWASP Top 10, variant analysis (Trail of Bits), static analysis (semgrep), supply chain
+  - skill-creator: interactive scaffolding, frontmatter templates, quality checklist + anti-patterns
+  - web-asset-generator: favicons, app icons (iOS/Android/PWA), devicons, OG/social images, image optimization
 - Prepper: gather_watchdog_health() surfaces repo failures/warnings in briefings
 - Recall: MAD-normalized relevance floor, adaptive search filtering
 - Prepper: token budget + task-hint for briefing assembly
