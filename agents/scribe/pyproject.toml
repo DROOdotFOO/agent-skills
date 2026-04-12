@@ -1,0 +1,46 @@
+[project]
+name = "scribe"
+version = "0.1.0"
+description = "Session insight extractor that watches Claude Code sessions and writes to recall"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "droo" }]
+dependencies = [
+    "typer>=0.12.0",
+    "pydantic>=2.6.0",
+    "rich>=13.7.0",
+    "fastmcp>=2.0.0",
+    "tomli>=2.0.0;python_version<'3.11'",
+    "agent-shared",
+    "recall",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.4.0",
+]
+
+[project.scripts]
+scribe = "scribe.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/scribe"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/scribe/cli.py" = ["B008"]  # Typer requires function calls in argument defaults
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
