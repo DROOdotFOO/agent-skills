@@ -7,6 +7,7 @@ import statistics
 from datetime import datetime, timezone
 from pathlib import Path
 
+from recall.hooks import Verdict, pre_memory_write
 from recall.models import Entry, EntryType, SearchResult
 
 DEFAULT_DB_PATH = Path.home() / ".local" / "share" / "recall" / "recall.db"
@@ -81,7 +82,14 @@ class Store:
         return datetime.now(timezone.utc).isoformat()
 
     def add(self, entry: Entry) -> Entry:
-        """Insert a new entry and return it with its ID."""
+        """Insert a new entry and return it with its ID.
+
+        Raises ValueError if content is denied by PreMemoryWrite hook.
+        """
+        hook = pre_memory_write(entry.content)
+        if hook.verdict == Verdict.DENY:
+            raise ValueError(f"PreMemoryWrite denied: {hook.reason}")
+
         now = self._now()
         cursor = self.conn.execute(
             "INSERT INTO entries"

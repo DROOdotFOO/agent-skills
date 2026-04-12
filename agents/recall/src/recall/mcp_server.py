@@ -49,7 +49,10 @@ def create_server(db_path: Path | None = None) -> FastMCP:
             tags=tag_list,
             source=source,
         )
-        result = store.add(entry)
+        try:
+            result = store.add(entry)
+        except ValueError as exc:
+            return f"Blocked by safety hook: {exc}"
         return f"Added entry #{result.id} ({entry_type})"
 
     @mcp.tool()
@@ -233,8 +236,11 @@ def create_server(db_path: Path | None = None) -> FastMCP:
             if existing and existing[0].entry.content == entry.content:
                 skipped += 1
                 continue
-            store.add(entry)
-            added += 1
+            try:
+                store.add(entry)
+                added += 1
+            except ValueError:
+                skipped += 1
 
         lines.insert(0, f"Added {added}, skipped {skipped} duplicates:\n")
         return "\n".join(lines)

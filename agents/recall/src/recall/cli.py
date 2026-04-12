@@ -43,7 +43,12 @@ def add(
         content=content, entry_type=entry_type, project=project, tags=tag_list, source=source
     )
     store = _store(db)
-    result = store.add(entry)
+    try:
+        result = store.add(entry)
+    except ValueError as exc:
+        store.close()
+        err.print(f"[red]Blocked: {exc}[/red]")
+        raise typer.Exit(1) from None
     store.close()
     console.print(f"Added entry #{result.id} ({entry_type.value})")
 
@@ -293,8 +298,11 @@ def extract(
         if existing and existing[0].entry.content == entry.content:
             skipped += 1
             continue
-        store.add(entry)
-        added += 1
+        try:
+            store.add(entry)
+            added += 1
+        except ValueError:
+            skipped += 1
     store.close()
 
     console.print(f"Added {added} entries, skipped {skipped} duplicates.")

@@ -73,7 +73,7 @@ All agents expose MCP servers via `<agent> serve` (stdio transport). Configure i
 cd agents/<name> && python -m pytest tests/ -v
 ```
 
-447 tests total across all agents, 0 mocks.
+520 tests total across all agents, 0 mocks.
 
 ## Conventions
 

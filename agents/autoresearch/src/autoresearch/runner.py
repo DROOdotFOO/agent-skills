@@ -7,6 +7,7 @@ import subprocess
 import time
 from pathlib import Path
 
+from autoresearch.hooks import Verdict, pre_tool_use
 from autoresearch.models import (
     Direction,
     ExperimentConfig,
@@ -24,6 +25,10 @@ def run_verify(
 
     Returns (primary_metric, all_metrics, output_tail, duration_seconds).
     """
+    hook = pre_tool_use(config.verify_command)
+    if hook.verdict == Verdict.DENY:
+        return None, {}, f"DENIED by PreToolUse hook: {hook.reason}", 0.0
+
     log_path = run_dir / "run.log"
     start = time.monotonic()
 
@@ -72,6 +77,11 @@ def run_guard(config: ExperimentConfig, run_dir: Path) -> bool:
     """Run the guard command if configured. Returns True if it passes."""
     if not config.guard_command:
         return True
+
+    hook = pre_tool_use(config.guard_command)
+    if hook.verdict == Verdict.DENY:
+        return False
+
     try:
         proc = subprocess.run(
             ["bash", "-c", config.guard_command],

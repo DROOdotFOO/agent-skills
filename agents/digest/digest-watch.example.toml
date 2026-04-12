@@ -1,0 +1,60 @@
+# Digest watch configuration example
+#
+# Usage: digest watch --config digest-watch.toml
+#        digest watch --config digest-watch.toml --once
+#
+# Copy this file, edit topics to match your interests, and run.
+
+poll_interval_minutes = 60
+synthesize = false  # set true to run Claude synthesis on each cycle (costs tokens)
+
+[notifications]
+macos = true
+osascript = true
+log_file = "~/.local/share/digest/alerts.jsonl"
+
+# -- Topics ----------------------------------------------------------------
+# Each [[topics]] block defines one thing to watch. Fields:
+#   name       (required) -- search query
+#   platforms  -- comma-separated list (default: "hn,github")
+#                options: hn, github, reddit, youtube, ethresearch,
+#                         snapshot, polymarket, packages, coingecko, blockscout
+#   days       -- lookback window in days (default: 7)
+
+# Example: watch Noir ZK ecosystem across dev + research sources
+[[topics]]
+name = "noir zero knowledge"
+platforms = "hn,github,ethresearch"
+days = 7
+
+[topics.thresholds]
+min_engagement = 50      # alert when an item crosses 50 engagement score
+min_new_items = 3        # alert when 3+ new items appear since last cycle
+accelerating_count = 0   # 0 = disabled
+credibility_floor = ""   # "" = any tier; "verified", "deliberate", or "passive"
+
+[topics.triggers]
+new_governance_proposal = false
+dependency_spike_factor = 0.0  # 0 = disabled; 2.0 = alert on 2x engagement spike
+
+# Example: watch Rust ecosystem packages for engagement spikes
+[[topics]]
+name = "rust"
+platforms = "github,packages"
+days = 14
+
+[topics.thresholds]
+min_engagement = 100
+min_new_items = 5
+
+[topics.triggers]
+dependency_spike_factor = 2.0
+
+# Example: watch Snapshot governance proposals
+[[topics]]
+name = "uniswap"
+platforms = "snapshot"
+days = 7
+
+[topics.triggers]
+new_governance_proposal = true

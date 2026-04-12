@@ -2,6 +2,28 @@
 
 ## Session log
 
+**2026-04-12** -- Skill extraction sprint. 51 skills, 7 agents, 520 tests, 0 lint errors.
+
+- Scraped travisvn/awesome-claude-skills for gap analysis (28 skills catalogued)
+- New skills: playwright (browser automation + testing, Python + TS), security-audit (OWASP, variant analysis, static analysis, supply chain), skill-creator (interactive scaffolding + templates + quality checklist), web-asset-generator (favicons, app icons, devicons, OG images, optimization)
+- Prepper: gather_watchdog_health() surfaces repo failures/warnings in briefings
+- Recall: MAD-normalized relevance floor, adaptive search filtering
+- Prepper: token budget + task-hint for briefing assembly
+- LLM cost optimizer: cross-agent context management technique
+- Lint/format fixes across all 7 agents
+- Sage statusline integration (suppress nag, preserve custom statusline)
+
+**2026-04-12** -- AARTS Phase 1 hooks. 47 skills, 7 agents, 520 tests, 0 lint errors.
+
+- AARTS Level 1 hooks: PreToolUse (autoresearch, patchbot), PreMemoryWrite (recall)
+- autoresearch hooks.py: verify/guard command allowlist (cargo test, pytest, nargo, mix, go, make, just) + denylist (curl, wget, ssh, sudo, eval, pip/npm/cargo install)
+- patchbot hooks.py: allowlist derived from detector.py commands (outdated/update/test per ecosystem) + git/gh for PR creation, denylist (force push, reset --hard, curl, sudo)
+- recall hooks.py: injection pattern scanning (XML tags, instruction delimiters, role reassignment, override attempts) + credential detection (API keys, tokens, AWS keys, private keys, bearer tokens)
+- Hooks wired into enforcement points: runner.py (autoresearch), updater.py (patchbot), store.py (recall)
+- Shared HookResult model (verdict: allow/deny/ask, hook name, reason) -- same pattern across all 3 agents
+- Digest watch TOML example config shipped (digest-watch.example.toml)
+- 73 new hook tests (21 autoresearch + 29 patchbot + 23 recall), all passing, 0 mocks
+
 **2026-04-12** -- Digest proactive mode. 47 skills, 7 agents, 448 tests, 0 lint errors.
 
 - Digest alert thresholds: engagement floor, credibility tier filter, new items count, accelerating count (19 tests)
@@ -268,6 +290,14 @@ Knowledge capture and retrieval. Our version of [paperclip](https://github.com/p
   - Covers PreToolUse (shell/file/URL) but MCP tool interception (`mcp__*`) NOT yet implemented
   - Privacy: file content stays local, only URL/package hashes sent to Gen Digital APIs (can disable for offline)
   - Verdict: install now for shell/URL/supply-chain coverage; wait for MCP interception before relying on it for our MCP agents
+- [x] AARTS Phase 1 (Level 1) implementation: PreToolUse + PreMemoryWrite hooks
+  - autoresearch: PreToolUse validates verify/guard commands against allowlist (73 tests)
+  - patchbot: PreToolUse validates outdated/update/test/git/gh commands against allowlist
+  - recall: PreMemoryWrite scans for injection patterns + credential strings before SQLite INSERT
+  - Shared HookResult model (verdict: allow/deny/ask) -- same interface across all 3 agents
+  - Hooks enforced at subprocess call sites (runner.py, updater.py, store.py)
+  - Digest watch TOML example config shipped (digest-watch.example.toml)
+- [ ] AARTS Phase 2 (Level 2): PostToolUse (digest adapters), PreSubAgentSpawn (autoresearch), PreMemoryRead (prepper)
 - [ ] Evaluate Skill IDs ([github.com/gendigitalinc/skill-id-standard](https://github.com/gendigitalinc/skill-id-standard)) for skill integrity verification between chezmoi apply runs
 
 **Note:** AARTS is v0.1 draft, Sage is v0.8.0, Skill ID signing is a proposal. Early but worth tracking.
