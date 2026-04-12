@@ -56,10 +56,10 @@ Add to `~/.mcp.json`:
 
 ### MCP Tools
 
-| Tool | Description |
-|------|-------------|
-| `prepper_brief` | Generate a project briefing (git, GitHub, CI, deps, recall) |
-| `prepper_inject` | Generate and write briefing to .claude/prepper-briefing.md |
+| Tool             | Description                                                 |
+| ---------------- | ----------------------------------------------------------- |
+| `prepper_brief`  | Generate a project briefing (git, GitHub, CI, deps, recall) |
+| `prepper_inject` | Generate and write briefing to .claude/prepper-briefing.md  |
 
 ## Auto-inject on SessionStart
 
@@ -68,14 +68,18 @@ Add to your project's `.claude/settings.json`:
 ```json
 {
   "hooks": {
-    "SessionStart": [{
-      "matcher": "startup",
-      "hooks": [{
-        "type": "command",
-        "command": "prepper brief --raw",
-        "timeout": 30
-      }]
-    }]
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "prepper brief --raw",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
   }
 }
 ```

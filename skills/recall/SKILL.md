@@ -45,13 +45,13 @@ recall stats
 
 ## Entry Types
 
-| Type | Use for |
-|------|---------|
+| Type       | Use for                                          |
+| ---------- | ------------------------------------------------ |
 | `decision` | Architectural or design decisions with rationale |
-| `pattern` | Reusable approaches or techniques |
-| `gotcha` | Non-obvious pitfalls or footguns |
-| `link` | External resources worth remembering |
-| `insight` | General observations or learnings (default) |
+| `pattern`  | Reusable approaches or techniques                |
+| `gotcha`   | Non-obvious pitfalls or footguns                 |
+| `link`     | External resources worth remembering             |
+| `insight`  | General observations or learnings (default)      |
 
 ## MCP Server
 
@@ -78,15 +78,15 @@ Add to `~/.mcp.json`:
 
 ### MCP Tools
 
-| Tool | Description |
-|------|-------------|
+| Tool            | Description                                         |
+| --------------- | --------------------------------------------------- |
 | `recall_search` | Full-text search with filters (project, type, tags) |
-| `recall_add` | Add a knowledge entry |
-| `recall_list` | List recent entries |
-| `recall_get` | Get a single entry by ID |
-| `recall_delete` | Delete an entry |
-| `recall_stats` | Store statistics |
-| `recall_stale` | Find entries not accessed recently |
+| `recall_add`    | Add a knowledge entry                               |
+| `recall_list`   | List recent entries                                 |
+| `recall_get`    | Get a single entry by ID                            |
+| `recall_delete` | Delete an entry                                     |
+| `recall_stats`  | Store statistics                                    |
+| `recall_stale`  | Find entries not accessed recently                  |
 
 ## Storage
 

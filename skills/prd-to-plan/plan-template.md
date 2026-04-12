@@ -40,6 +40,7 @@ Durable decisions that guide all phases. These are commitments, not suggestions.
 phase delivers. Focus on what changes from the user's perspective.>
 
 **Acceptance criteria**:
+
 - [ ] <Observable behavior or artifact, not an implementation step>
 - [ ] <Another criterion>
 - [ ] <Keep to 3-5 per phase>
@@ -53,6 +54,7 @@ phase delivers. Focus on what changes from the user's perspective.>
 **What to build**: ...
 
 **Acceptance criteria**:
+
 - [ ] ...
 
 ---
@@ -87,5 +89,6 @@ phase delivers. Focus on what changes from the user's perspective.>
 ### Naming the File
 
 Use lowercase kebab-case derived from the feature name:
+
 - "User Invoice Management" -> `plans/user-invoice-management.md`
 - "OAuth2 Login Flow" -> `plans/oauth2-login-flow.md`

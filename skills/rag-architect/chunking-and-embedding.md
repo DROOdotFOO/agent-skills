@@ -64,12 +64,12 @@ Parse document structure (headings, sections, tables) and chunk by structural un
 
 ## Dimension Considerations
 
-| Dimensions | Tradeoff |
-|-----------|----------|
-| 128-256 | Fast, low storage. Good for simple similarity. Loses nuance. |
-| 384-768 | Balanced. Good for most production use cases. |
-| 1024-1536 | High quality. Better for complex queries. Higher cost/latency. |
-| 2048+ | Diminishing returns for most tasks. Only for specialized domains. |
+| Dimensions | Tradeoff                                                          |
+| ---------- | ----------------------------------------------------------------- |
+| 128-256    | Fast, low storage. Good for simple similarity. Loses nuance.      |
+| 384-768    | Balanced. Good for most production use cases.                     |
+| 1024-1536  | High quality. Better for complex queries. Higher cost/latency.    |
+| 2048+      | Diminishing returns for most tasks. Only for specialized domains. |
 
 Rule of thumb: start with 768 dimensions. Only go higher if evaluation shows quality gaps.
 

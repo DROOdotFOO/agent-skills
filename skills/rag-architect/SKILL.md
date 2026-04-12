@@ -25,20 +25,20 @@ Design retrieval-augmented generation pipelines with the right tradeoffs at each
 
 ## Reading Guide
 
-| Decision | File |
-|----------|------|
-| Chunking strategies + embedding models | [chunking-and-embedding.md](./chunking-and-embedding.md) |
+| Decision                                       | File                                                         |
+| ---------------------------------------------- | ------------------------------------------------------------ |
+| Chunking strategies + embedding models         | [chunking-and-embedding.md](./chunking-and-embedding.md)     |
 | Retrieval strategies + vector DBs + evaluation | [retrieval-and-evaluation.md](./retrieval-and-evaluation.md) |
 
 ## Quick Decision Matrix
 
-| Document type | Chunking | Embedding | Retrieval |
-|---------------|----------|-----------|-----------|
-| Code | Semantic (AST-aware) | Code-specialized | Hybrid + rerank |
-| Legal/medical | Document-aware (sections) | Domain-specific | Dense + rerank |
-| Chat logs | Sentence | General-purpose | Dense |
-| Technical docs | Recursive | General-purpose | Hybrid |
-| Mixed/unknown | Recursive (fallback) | General-purpose | Hybrid + rerank |
+| Document type  | Chunking                  | Embedding        | Retrieval       |
+| -------------- | ------------------------- | ---------------- | --------------- |
+| Code           | Semantic (AST-aware)      | Code-specialized | Hybrid + rerank |
+| Legal/medical  | Document-aware (sections) | Domain-specific  | Dense + rerank  |
+| Chat logs      | Sentence                  | General-purpose  | Dense           |
+| Technical docs | Recursive                 | General-purpose  | Hybrid          |
+| Mixed/unknown  | Recursive (fallback)      | General-purpose  | Hybrid + rerank |
 
 ## Rules
 

@@ -38,8 +38,8 @@ Group terms into multiple tables by domain area (not one giant table).
 ```markdown
 ## [Domain Area Name]
 
-| Term | Definition | Aliases to avoid |
-|------|-----------|-----------------|
+| Term   | Definition                                | Aliases to avoid      |
+| ------ | ----------------------------------------- | --------------------- |
 | Ledger | Append-only record of all balance changes | log, journal, history |
 
 ### Relationships

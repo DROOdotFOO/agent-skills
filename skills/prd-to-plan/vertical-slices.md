@@ -68,6 +68,7 @@ Phase 5: Add error handling
 ```
 
 Problems:
+
 - Nothing is demoable until Phase 4.
 - Integration bugs hide until late.
 - Each phase is large and hard to review.
@@ -84,6 +85,7 @@ Phase 5: User can filter and search past invoices
 ```
 
 Properties:
+
 - Every phase is demoable from Phase 1.
 - Integration with external services happens incrementally.
 - Each phase is small enough to review in one sitting.

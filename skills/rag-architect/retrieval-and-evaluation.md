@@ -63,15 +63,16 @@ Abstract the query to a higher-level question first, retrieve for both.
 
 # Vector DB Selection
 
-| DB | Best For | Hosting | Key Features |
-|----|----------|---------|-------------|
-| **Pinecone** | Managed, zero-ops | Cloud only | Serverless tier, metadata filtering, namespaces |
-| **Weaviate** | Hybrid search | Cloud + self-host | Built-in BM25 + vector, GraphQL API, modules |
-| **Qdrant** | Performance, filtering | Cloud + self-host | Rich filtering, quantization, gRPC, Rust-based |
-| **Chroma** | Prototyping, local dev | Embedded + cloud | Simple API, Python-native, lightweight |
+| DB           | Best For                | Hosting               | Key Features                                    |
+| ------------ | ----------------------- | --------------------- | ----------------------------------------------- |
+| **Pinecone** | Managed, zero-ops       | Cloud only            | Serverless tier, metadata filtering, namespaces |
+| **Weaviate** | Hybrid search           | Cloud + self-host     | Built-in BM25 + vector, GraphQL API, modules    |
+| **Qdrant**   | Performance, filtering  | Cloud + self-host     | Rich filtering, quantization, gRPC, Rust-based  |
+| **Chroma**   | Prototyping, local dev  | Embedded + cloud      | Simple API, Python-native, lightweight          |
 | **pgvector** | Existing Postgres users | Self-host (extension) | SQL interface, ACID, joins with relational data |
 
 Decision factors:
+
 - **Scale:** < 1M vectors -> any DB works. > 10M -> Pinecone, Qdrant, or Weaviate.
 - **Filtering:** Complex metadata filters -> Qdrant or Weaviate. Simple -> any.
 - **Ops budget:** Zero -> Pinecone serverless or Chroma cloud. Have infra team -> self-host Qdrant.
@@ -81,16 +82,17 @@ Decision factors:
 
 ## Core Metrics
 
-| Metric | Target | Measures |
-|--------|--------|----------|
-| **Faithfulness** | > 90% | Are generated answers grounded in retrieved context? |
-| **Answer Relevance** | > 0.85 | Does the answer address the question? |
+| Metric                | Target | Measures                                                |
+| --------------------- | ------ | ------------------------------------------------------- |
+| **Faithfulness**      | > 90%  | Are generated answers grounded in retrieved context?    |
+| **Answer Relevance**  | > 0.85 | Does the answer address the question?                   |
 | **Context Precision** | > 0.80 | Are relevant chunks ranked higher than irrelevant ones? |
-| **Context Recall** | > 0.75 | Are all necessary chunks retrieved? |
+| **Context Recall**    | > 0.75 | Are all necessary chunks retrieved?                     |
 
 ## RAGAS Framework
 
 Use RAGAS for automated RAG evaluation:
+
 - Faithfulness: LLM judges if each claim in the answer is supported by context
 - Answer relevance: LLM generates questions from the answer, measures similarity to original
 - Context precision/recall: Compare retrieved chunks against ground-truth relevant chunks
@@ -98,6 +100,7 @@ Use RAGAS for automated RAG evaluation:
 ## Evaluation Dataset
 
 Minimum 50-100 question-answer pairs with ground-truth context. Include:
+
 - Simple factual questions (baseline)
 - Multi-hop questions (tests chunk linking)
 - Questions with no answer in corpus (tests abstention)
@@ -117,6 +120,7 @@ Stream the LLM response while retrieval runs. Show "searching..." indicator, the
 ## Fallback
 
 When retrieval returns low-confidence results (similarity < threshold):
+
 1. Try query expansion (multi-query)
 2. Fall back to broader search (remove filters)
 3. Respond with "I don't have enough information" rather than hallucinating
