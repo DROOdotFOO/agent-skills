@@ -2,6 +2,46 @@
 
 ## Session log
 
+**2026-04-12** -- Scribe agent. 51 skills, 8 agents + shared, 733 tests, 0 lint errors.
+
+- New agent: scribe -- session insight extractor that closes the knowledge loop
+- Two-phase watch: tails ~/.claude/history.jsonl for session discovery, reads full session JSONL (~/.claude/projects/{key}/{sid}.jsonl) for rich data (tool calls, file edits, bash commands)
+- Session analysis: tool usage profiling, files touched, commands run, correction detection, preference detection
+- Enhanced classification beyond recall extract: correction (user correcting Claude), preference ("I prefer X"), decision, gotcha + tool usage patterns (edits without tests, exploration sessions)
+- Deduplication: FTS5 search + Jaccard token overlap against existing recall entries before writing
+- AARTS hooks: PreScribeWrite (min length, noise filtering) + recall's PreMemoryWrite (injection/credential scanning via Store.add)
+- Idle detection: sessions with no new messages for N minutes get analyzed
+- CLI: watch (--once, --idle-minutes), analyze (--dry-run), stats, recent, serve
+- MCP: 3 tools (scribe_status, scribe_stats, scribe_recent)
+- Activity log at ~/.local/share/scribe/activity.jsonl
+- 114 tests, 0 mocks, 0 lint errors
+- Live verified on real sessions: correctly extracts corrections, decisions, gotchas from natural language; produces 0 noise from clean coding sessions
+
+**2026-04-12** -- Proactive trigger wiring. 51 skills, 7 agents + shared, 619 tests, 0 lint errors.
+
+- Created agents/shared/ package: paths.py (XDG alert log paths), notify.py (generic JSONL append + macOS notifications), 11 tests
+- Sentinel: standardized alert log to ~/.local/share/sentinel/alerts.jsonl (was CWD-relative), added --notify flag to check/watch commands
+- Watchdog: WatchdogAlert model, alerts_from_health() converts WARN/FAIL checks, JSONL persistence to ~/.local/share/watchdog/alerts.jsonl, `alerts` CLI command, --notify flag, 8 new tests
+- Digest: notifier.py uses shared paths (same value, consistent import)
+- Prepper watch: cross-agent alert poller with byte-offset tracking, TOML config, macOS notification dispatch, unified log at ~/.local/share/prepper/alerts.jsonl, 17 new tests
+- Prepper CLI: `watch` command (--config, --interval, --once), `alerts` command (--agent filter, rich table)
+- prepper_alerts MCP tool: unified cross-agent alert view with agent filter, fallback to individual logs
+- gather_watchdog_alerts() gatherer wired into briefing assembly
+- Prepper MCP tools: 3 (was 2, added prepper_alerts)
+- All 5 agents use shared.paths for standard XDG alert locations
+- Data flow: sentinel/watchdog/digest -> JSONL logs -> prepper watch -> unified log + macOS notifications
+
+**2026-04-12** -- AARTS Phase 2 hooks. 51 skills, 7 agents, 583 tests, 0 lint errors.
+
+- AARTS Level 2 hooks: PostToolUse (digest), PreMemoryRead (prepper), PreSubAgentSpawn (autoresearch)
+- digest hooks.py: scan adapter response items (title, url, raw dict) for injection patterns before synthesis; sanitize recall_context strings; strip poisoned items, log removals
+- prepper hooks.py: scan recall entries before briefing injection, strip entries with injection patterns, flag auto-sourced entries (digest:/extract:) with [auto] provenance prefix
+- autoresearch hooks.py: pre_sub_agent_spawn validates file changes against mutable_files + scans content for dangerous patterns (os.system, subprocess, eval, exec, __import__); replaces silent skip with formal DENY
+- ASK verdict enforcement: log_hook_result() added to all 5 agents (recall, autoresearch, patchbot, digest, prepper); ASK verdicts now log warning to stderr instead of passing silently
+- Fixed prepper gatherers.py: RecallStore -> Store import, added SearchResult unwrapping
+- Hooks wired into enforcement points: pipeline.py (digest), gatherers.py (prepper), cli.py (autoresearch), store.py (recall), runner.py (autoresearch), updater.py (patchbot)
+- 63 new hook tests (25 digest + 17 prepper + 15 autoresearch + 3 patchbot + 3 recall), all passing, 0 mocks
+
 **2026-04-12** -- Skill extraction sprint. 51 skills, 7 agents, 520 tests, 0 lint errors.
 
 - Scraped travisvn/awesome-claude-skills for gap analysis (28 community skills catalogued)
@@ -301,7 +341,7 @@ Knowledge capture and retrieval. Our version of [paperclip](https://github.com/p
   - Shared HookResult model (verdict: allow/deny/ask) -- same interface across all 3 agents
   - Hooks enforced at subprocess call sites (runner.py, updater.py, store.py)
   - Digest watch TOML example config shipped (digest-watch.example.toml)
-- [ ] AARTS Phase 2 (Level 2): PostToolUse (digest adapters), PreSubAgentSpawn (autoresearch), PreMemoryRead (prepper)
+- [x] AARTS Phase 2 (Level 2): PostToolUse (digest adapters), PreSubAgentSpawn (autoresearch), PreMemoryRead (prepper)
 - [ ] Evaluate Skill IDs ([github.com/gendigitalinc/skill-id-standard](https://github.com/gendigitalinc/skill-id-standard)) for skill integrity verification between chezmoi apply runs
 
 **Note:** AARTS is v0.1 draft, Sage is v0.8.0, Skill ID signing is a proposal. Early but worth tracking.
@@ -315,7 +355,7 @@ Skills that invoke or surface agent capabilities inside Claude Code sessions:
 - [x] Updated digest skill with MCP config section
 - [x] recall already had MCP server + skill docs
 - [x] `prepper` SessionStart hook (scripts/hooks/prepper-session-start.sh + settings.json docs)
-- [ ] Design proactive triggers: sentinel alerts, watchdog degradation -> session notification
+- [x] Proactive triggers: sentinel alerts + watchdog degradation -> prepper watch -> macOS notifications + unified alert log
 
 ### Skills structural patterns (apply as we go)
 
