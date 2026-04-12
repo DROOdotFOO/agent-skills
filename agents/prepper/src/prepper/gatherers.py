@@ -303,6 +303,38 @@ def gather_digest_summary(project: str) -> BriefingSection | None:
         return None
 
 
+def gather_digest_alerts() -> BriefingSection | None:
+    """Surface recent digest watch alerts."""
+    alerts_path = Path.home() / ".local" / "share" / "digest" / "alerts.jsonl"
+    if not alerts_path.exists():
+        return None
+
+    try:
+        import json
+
+        lines_raw = alerts_path.read_text().strip().splitlines()
+        recent = lines_raw[-5:]
+        if not recent:
+            return None
+
+        lines: list[str] = []
+        for raw_line in reversed(recent):
+            data = json.loads(raw_line)
+            severity = data.get("severity", "").upper()
+            rule = data.get("rule", "")
+            topic = data.get("topic", "")
+            message = data.get("message", "")
+            lines.append(f"- **[{severity}]** {rule} ({topic}): {message}")
+
+        return BriefingSection(
+            title="Digest Alerts",
+            content="\n".join(lines),
+            priority=Priority.HIGH,
+        )
+    except Exception:
+        return None
+
+
 def gather_ci_status(repo: str) -> BriefingSection | None:
     """Last CI run result."""
     if not which("gh"):

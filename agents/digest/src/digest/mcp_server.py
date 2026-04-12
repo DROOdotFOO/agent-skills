@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastmcp import FastMCP
 
 from digest.adapters import ADAPTERS
@@ -18,7 +20,8 @@ def create_server() -> FastMCP:
         instructions=(
             "Multi-platform activity digest. Use digest_generate to fetch and synthesize "
             "activity across HN, GitHub, Reddit, YouTube, ethresear.ch, Snapshot, Polymarket, "
-            "and package registries. Use digest_list_platforms to see available sources."
+            "and package registries. Use digest_list_platforms to see available sources. "
+            "Use digest_alerts to read alerts from the watch system."
         ),
     )
 
@@ -162,6 +165,30 @@ def create_server() -> FastMCP:
         if not entries:
             return f"No recall entries found for '{topic}'."
         return format_recall_context(entries)
+
+    @mcp.tool()
+    def digest_alerts(
+        log_file: str = "",
+        limit: int = 20,
+    ) -> str:
+        """Read recent digest watch alerts.
+
+        Args:
+            log_file: Path to alerts.jsonl (default: ~/.local/share/digest/alerts.jsonl)
+            limit: Max alerts to return (default 20)
+        """
+        from digest.notifier import DEFAULT_LOG_PATH, read_log
+
+        path = Path(log_file) if log_file else DEFAULT_LOG_PATH
+        alerts = read_log(path, limit=limit)
+        if not alerts:
+            return "No digest alerts found."
+
+        lines = [f"Recent digest alerts ({len(alerts)}):"]
+        for a in alerts:
+            ts = a.timestamp.strftime("%Y-%m-%d %H:%M")
+            lines.append(f"- [{a.severity.value.upper()}] {a.rule} ({a.topic}): {a.message} [{ts}]")
+        return "\n".join(lines)
 
     @mcp.tool()
     def digest_store_to_recall(

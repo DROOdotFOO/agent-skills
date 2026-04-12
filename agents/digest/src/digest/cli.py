@@ -163,6 +163,93 @@ def list_platforms() -> None:
 
 
 @app.command()
+def watch(
+    config: Annotated[
+        Path,
+        typer.Option("--config", "-f", help="TOML config file for watched topics"),
+    ] = Path("digest-watch.toml"),
+    once: Annotated[
+        bool,
+        typer.Option("--once", help="Run a single watch cycle then exit"),
+    ] = False,
+) -> None:
+    """Watch topics and alert on threshold crossings."""
+    from digest.watcher import WatchConfig, watch_loop, watch_once
+
+    if not config.exists():
+        err.print(f"[red]Config file not found:[/red] {config}")
+        raise typer.Exit(1)
+
+    cfg = WatchConfig.from_toml(config)
+    if not cfg.topics:
+        err.print("[red]No topics defined in config.[/red]")
+        raise typer.Exit(1)
+
+    err.print(
+        f"[bold]Watching {len(cfg.topics)} topic(s)[/bold] "
+        f"every {cfg.poll_interval_minutes}m "
+        f"(synthesis={'on' if cfg.synthesize else 'off'})"
+    )
+
+    if once:
+        watch_once(cfg, console_print=console.print)
+    else:
+        try:
+            watch_loop(cfg, console_print=console.print)
+        except KeyboardInterrupt:
+            err.print("\n[dim]Watch stopped.[/dim]")
+
+
+@app.command()
+def alerts(
+    log_file: Annotated[
+        Path | None,
+        typer.Option("--file", "-f", help="Alert log path"),
+    ] = None,
+    limit: Annotated[
+        int,
+        typer.Option("--limit", "-n", help="Max alerts to show"),
+    ] = 20,
+) -> None:
+    """Show recent digest alerts."""
+    from digest.notifier import read_log
+
+    recent = read_log(log_file, limit=limit)
+    if not recent:
+        console.print("[dim]No alerts found.[/dim]")
+        return
+
+    from rich.table import Table
+
+    table = Table(title=f"Recent Digest Alerts ({len(recent)})")
+    table.add_column("Severity", style="bold")
+    table.add_column("Topic")
+    table.add_column("Rule")
+    table.add_column("Message")
+    table.add_column("Time")
+
+    severity_colors = {
+        "critical": "red bold",
+        "high": "red",
+        "medium": "yellow",
+        "low": "blue",
+        "info": "dim",
+    }
+
+    for alert in recent:
+        color = severity_colors.get(alert.severity.value, "")
+        table.add_row(
+            f"[{color}]{alert.severity.value.upper()}[/{color}]",
+            alert.topic,
+            alert.rule,
+            alert.message,
+            alert.timestamp.strftime("%Y-%m-%d %H:%M"),
+        )
+
+    console.print(table)
+
+
+@app.command()
 def serve() -> None:
     """Start the MCP server (stdio transport)."""
     from digest.mcp_server import create_server

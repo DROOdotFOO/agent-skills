@@ -8,14 +8,17 @@ from fastmcp import FastMCP
 
 from digest.mcp_server import create_server
 
-EXPECTED_TOOLS = frozenset({
-    "digest_generate",
-    "digest_list_platforms",
-    "digest_expand_query",
-    "digest_structured_view",
-    "digest_recall_context",
-    "digest_store_to_recall",
-})
+EXPECTED_TOOLS = frozenset(
+    {
+        "digest_generate",
+        "digest_list_platforms",
+        "digest_expand_query",
+        "digest_structured_view",
+        "digest_recall_context",
+        "digest_store_to_recall",
+        "digest_alerts",
+    }
+)
 
 
 class TestDigestMCPServer:
@@ -32,4 +35,4 @@ class TestDigestMCPServer:
     def test_tool_count(self) -> None:
         server = create_server()
         tools = asyncio.run(server.list_tools())
-        assert len(tools) == 6
+        assert len(tools) == 7

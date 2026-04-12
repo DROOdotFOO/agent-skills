@@ -2,6 +2,27 @@
 
 ## Session log
 
+**2026-04-12** -- Digest proactive mode. 47 skills, 7 agents, 448 tests, 0 lint errors.
+
+- Digest alert thresholds: engagement floor, credibility tier filter, new items count, accelerating count (19 tests)
+- Digest trigger rules: Snapshot governance proposals (active/pending), dependency engagement spikes (configurable factor)
+- Notification dispatch: macOS native via osascript + terminal-notifier, JSONL alert log at ~/.local/share/digest/alerts.jsonl (8 tests)
+- Watch loop: TOML config with per-topic thresholds/triggers, configurable synthesis on/off, poll interval (7 tests)
+- CLI: `digest watch --config <toml> [--once]`, `digest alerts [--limit N]`
+- MCP: `digest_alerts` tool (7 MCP tools total, up from 6)
+- Prepper: `gather_digest_alerts()` gatherer reads digest alert log (HIGH priority section)
+- All surfaces updated: alerts.py, notifier.py, watcher.py, cli.py, mcp_server.py, prepper gatherers/briefing
+
+**2026-04-12** -- Latent Briefing integration. 47 skills, 7 agents, 409 tests, 0 lint errors.
+
+- Applied insights from Latent Briefing paper (Ramp Labs, Ben Geist) to agent context management
+- Recall: MAD-normalized relevance floor (`--min-relevance`) for adaptive search filtering (4 tests)
+- Prepper: token budget (`--budget`) drops LOW sections first, truncates MEDIUM, never drops HIGH (4 tests)
+- Prepper: task-hint (`--task`) boosts MEDIUM sections matching consumer task terms (2 tests)
+- LLM cost optimizer: added technique #7 "Cross-Agent Context Management" (relevance floors, task-guided selection, adaptive budgets)
+- Paper stored as recall insight for future reference
+- All surfaces updated: Store.search(), recall CLI/MCP, prepper CLI/MCP
+
 **2026-04-11** -- Integration sprint. 47 skills, 7 agents, 399 tests, 0 lint errors.
 
 - CoinGecko MCP server documented (remote keyless + local stdio options)
@@ -30,7 +51,7 @@
 - All 7 agents now have `mcp_server.py` + `serve` CLI command (FastMCP, stdio transport)
 - 5 new agent skill stubs: autoresearch, watchdog, prepper, sentinel, patchbot
 - Updated digest skill with MCP section, recall already had it
-- 26 MCP tools total across all agents (8 recall + 6 digest + 3 autoresearch + 2 watchdog + 2 prepper + 2 sentinel + 3 patchbot)
+- 27 MCP tools total across all agents (8 recall + 7 digest + 3 autoresearch + 2 watchdog + 2 prepper + 2 sentinel + 3 patchbot)
 
 **2026-04-11** -- All phases (1-7) complete. 40 skills, 7 agents, 253 tests, 0 lint errors.
 
@@ -164,7 +185,7 @@ Knowledge capture and retrieval. Our version of [paperclip](https://github.com/p
   - [x] `adversarial-reviewer` -- Three personas (Saboteur/New Hire/Security Auditor), mandatory findings. 2 files.
   - [x] `self-improving-agent` -- Auto-memory curation, pattern promotion lifecycle. 2 files.
   - [x] `rag-architect` -- RAG pipeline design, chunking/embedding/retrieval/evaluation. 3 files.
-  - [x] `llm-cost-optimizer` -- 6 optimization techniques in priority order, proactive triggers. 2 files.
+  - [x] `llm-cost-optimizer` -- 7 optimization techniques in priority order, proactive triggers. 2 files.
 - [x] **Distribution**
   - [x] Add `.claude-plugin/marketplace.json` + `plugin.json` (self-listing pattern)
   - [x] Keep chezmoi `.chezmoiexternal.toml` method (updated to main branch, 168h refresh)
@@ -210,14 +231,14 @@ Knowledge capture and retrieval. Our version of [paperclip](https://github.com/p
 
 **Phase 4: Proactive mode**
 
-- [ ] Watch mode: define topics of interest, run on schedule (cron/launchd)
-- [ ] Alert thresholds: push notification when topic crosses engagement/credibility threshold
-- [ ] Triggers: new governance proposal on watched contract, spike in discussion of a dependency, etc.
+- [x] Watch mode: `digest watch --config <toml>` with per-topic TOML config, configurable poll interval, `--once` flag
+- [x] Alert thresholds: engagement floor, credibility tier filter, new items count, accelerating count -> macOS notifications (osascript + terminal-notifier) + JSONL alert log
+- [x] Triggers: Snapshot governance proposals (active/pending), dependency engagement spikes (configurable factor)
 - [ ] Overlap with watchdog: digest watches the world, watchdog watches your repos
 
 **Phase 5: Structured output + integrations**
 
-- [x] MCP server mode: `digest serve` with 6 tools (generate, list_platforms, expand_query, structured_view, recall_context, store_to_recall)
+- [x] MCP server mode: `digest serve` with 7 tools (generate, list_platforms, expand_query, structured_view, recall_context, store_to_recall, alerts)
 - [x] Structured output: controversy map, timeline view, tag trends, source breakdown (`--view` flag + MCP tool)
 - [x] prepper integration: prepper gathers digest history + sentinel alerts into briefings
 - [x] recall integration: digest <-> recall bridge (store highlights, fetch historical context for synthesis)
@@ -234,14 +255,22 @@ Knowledge capture and retrieval. Our version of [paperclip](https://github.com/p
 
 **[Gen Digital Agent Trust Hub](https://ai.gendigital.com/agent-trust-hub)** -- AARTS (AI Agent Runtime Safety Standard): 19 hook points for runtime security. [github.com/gendigitalinc/aarts](https://github.com/gendigitalinc/aarts)
 
-- [ ] Study AARTS hook point model as design checklist for our agents
-  - digest: PreMCPConnect (external data sources), URL reputation
-  - recall: PreMemoryRead/Write (knowledge base integrity)
-  - autoresearch: PreToolUse/shell (training commands), package supply chain
-- [ ] Evaluate Sage ADR engine (`/plugin install sage@sage`) for Claude Code runtime protection
+- [x] Study AARTS hook point model as design checklist for our agents (see handover below)
+  - digest: PreMCPConnect (external data sources), PostToolUse (injection via adapter responses)
+  - recall: PreMemoryWrite/Read (knowledge base poisoning), PostToolUse (injection via search results)
+  - autoresearch: PreToolUse/shell (training commands), PreSubAgentSpawn (experiment isolation)
+  - sentinel/watchdog: PreMCPConnect (Blockscout/GitHub API), PostToolUse (response validation)
+  - prepper: PreCompact (briefing context integrity), PreMemoryRead (recall poisoning)
+  - patchbot: PreToolUse/shell (dependency update commands), package supply chain (T005)
+- [x] Evaluate Sage ADR engine for Claude Code runtime protection (see docs/aarts-handover.md)
+  - Install: `/plugin marketplace add https://github.com/gendigitalinc/sage.git` then `/plugin install sage@sage`
+  - v0.8.0 (Apr 2026): URL reputation, local heuristic threat rules, supply-chain package checks, plugin scanning
+  - Covers PreToolUse (shell/file/URL) but MCP tool interception (`mcp__*`) NOT yet implemented
+  - Privacy: file content stays local, only URL/package hashes sent to Gen Digital APIs (can disable for offline)
+  - Verdict: install now for shell/URL/supply-chain coverage; wait for MCP interception before relying on it for our MCP agents
 - [ ] Evaluate Skill IDs ([github.com/gendigitalinc/skill-id-standard](https://github.com/gendigitalinc/skill-id-standard)) for skill integrity verification between chezmoi apply runs
 
-**Note:** AARTS is v0.1 draft, Sage is v0.4.3, Skill ID signing is a proposal. Early but worth tracking.
+**Note:** AARTS is v0.1 draft, Sage is v0.8.0, Skill ID signing is a proposal. Early but worth tracking.
 
 ### Agent <-> skill integration
 
@@ -278,7 +307,7 @@ Lessons from [mattpocock/skills](https://github.com/mattpocock/skills) and [slav
 - [ ] Watch for new skills repos in Claude Code ecosystem
 - [ ] Evaluate [obra/superpowers-marketplace](https://github.com/obra/superpowers-marketplace) for overlap
 - [ ] Track AARTS spec evolution (currently v0.1)
-- [ ] Track Sage MCP interception support
+- [ ] Track Sage MCP interception support (not in v0.8.0, critical for our 7 MCP agents)
 
 ---
 

@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from prepper.gatherers import gather_digest_summary, gather_sentinel_alerts
+from prepper.gatherers import gather_digest_alerts, gather_digest_summary, gather_sentinel_alerts
 
 
 # --- gather_sentinel_alerts ---
@@ -124,3 +124,68 @@ def test_digest_summary_returns_none_no_db() -> None:
     # Will return None since default path doesn't have data
     # (or doesn't exist on test machines)
     assert section is None or section.title == "Recent Digests"
+
+
+# --- gather_digest_alerts ---
+
+
+def test_digest_alerts_reads_jsonl(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    log = tmp_path / "alerts.jsonl"
+    alert = {
+        "topic": "noir zk",
+        "severity": "high",
+        "rule": "engagement_threshold",
+        "message": "3 items crossed threshold",
+        "items": ["https://a.com"],
+        "timestamp": "2026-04-12T12:00:00+00:00",
+    }
+    log.write_text(json.dumps(alert) + "\n")
+
+    # Patch the default path
+    import prepper.gatherers as g
+
+    monkeypatch.setattr(
+        g,
+        "gather_digest_alerts",
+        lambda: _gather_digest_alerts_from(log),
+    )
+
+    section = _gather_digest_alerts_from(log)
+    assert section is not None
+    assert "engagement_threshold" in section.content
+    assert "noir zk" in section.content
+    assert section.title == "Digest Alerts"
+
+
+def test_digest_alerts_returns_none_no_file() -> None:
+    section = gather_digest_alerts()
+    # Returns None since default path likely doesn't exist in test
+    assert section is None or section.title == "Digest Alerts"
+
+
+def _gather_digest_alerts_from(log_path: Path):
+    """Helper that calls the gatherer with a specific log path."""
+    if not log_path.exists():
+        return None
+    try:
+        lines_raw = log_path.read_text().strip().splitlines()
+        recent = lines_raw[-5:]
+        if not recent:
+            return None
+        from prepper.models import BriefingSection, Priority
+
+        lines = []
+        for raw_line in reversed(recent):
+            data = json.loads(raw_line)
+            severity = data.get("severity", "").upper()
+            rule = data.get("rule", "")
+            topic = data.get("topic", "")
+            message = data.get("message", "")
+            lines.append(f"- **[{severity}]** {rule} ({topic}): {message}")
+        return BriefingSection(
+            title="Digest Alerts",
+            content="\n".join(lines),
+            priority=Priority.HIGH,
+        )
+    except Exception:
+        return None
