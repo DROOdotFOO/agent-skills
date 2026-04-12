@@ -2,12 +2,12 @@
 
 ## Project Overview
 
-Agent-skills: 47 Claude Code skills and 7 autonomous agents for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
+Agent-skills: 50 Claude Code skills and 7 autonomous agents for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
 
 ## Structure
 
 ```
-skills/                   # 47 Claude Code skills (context-injection via SKILL.md)
+skills/                   # 50 Claude Code skills (context-injection via SKILL.md)
   <name>/SKILL.md         # Entry point per skill, with frontmatter + trigger clauses
 agents/                   # 7 autonomous agents (standalone tools)
   digest/                 # Multi-platform activity digest (9 sources)
@@ -23,15 +23,15 @@ scripts/                  # Repo tooling (skills-lint.sh)
 
 ## Skills
 
-47 skills across 4 categories. Each lives in `skills/<name>/` with a `SKILL.md` entry point. Sub-files use YAML frontmatter with `impact`, `impactDescription`, and `tags` fields.
+50 skills across 4 categories. Each lives in `skills/<name>/` with a `SKILL.md` entry point. Sub-files use YAML frontmatter with `impact`, `impactDescription`, and `tags` fields.
 
 **Domain** (11): claude-api, droo-stack, raxol, noir, solidity-audit, ethskills, design-ux, nix, native-code, blockscout, coingecko
 
-**Workflow** (11): tdd, code-review, prd-to-plan, prd-to-issues, triage-issue, focused-fix, release, qa, design-an-interface, ubiquitous-language, grill-me
+**Workflow** (12): tdd, code-review, prd-to-plan, prd-to-issues, triage-issue, focused-fix, release, qa, design-an-interface, ubiquitous-language, grill-me, playwright
 
-**Infrastructure** (10): mcp-server-builder, ci-cd-pipeline-builder, dependency-auditor, observability-designer, database-designer, performance-profiler, git-guardrails, git-worktree-manager, env-secrets-manager, tech-debt-tracker
+**Infrastructure** (11): mcp-server-builder, ci-cd-pipeline-builder, dependency-auditor, observability-designer, database-designer, performance-profiler, git-guardrails, git-worktree-manager, env-secrets-manager, tech-debt-tracker, security-audit
 
-**Meta** (15): polymath, architect, agent-designer, adversarial-reviewer, self-improving-agent, codebase-onboarding, rag-architect, llm-cost-optimizer, digest, recall, autoresearch, watchdog, prepper, sentinel, patchbot
+**Meta** (16): polymath, architect, agent-designer, adversarial-reviewer, self-improving-agent, codebase-onboarding, rag-architect, llm-cost-optimizer, digest, recall, autoresearch, watchdog, prepper, sentinel, patchbot, skill-creator
 
 ### Lint
 
