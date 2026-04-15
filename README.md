@@ -1,30 +1,42 @@
 # agent-skills
 
-47 Claude Code skills and 7 autonomous agents for polyglot development, web3, ZK, UI/UX, and systems programming.
+53 Claude Code skills and 8 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming.
+
+## How skill loading works
+
+This is probably your first question, so let's get it out of the way.
+
+Skills are **lazy**. Claude Code reads the short trigger clause from each `SKILL.md` frontmatter -- _the first few lines per skill_ -- and only pulls in the full skill content when the trigger matches your conversation. The sub-files (examples, checklists, reference tables) stay out of context until they're actually needed.
+
+What's always present: ~2-4 lines of trigger description per skill. What's lazy: everything else. 53 skills at a few lines each is a small fraction of the context window. The heavy content -- sometimes hundreds of lines of domain-specific reference -- only loads when you're actually working in that domain.
+
+So no, installing all 53 won't bloat your sessions. I.E. the noir ZK skill isn't eating tokens while you're reviewing a PR.
 
 ## Skills
 
-Context-injection skills for Claude Code sessions. Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
+Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
 
-### Domain skills
+### Domain
 
-| Skill            | Description                                                                         |
-| ---------------- | ----------------------------------------------------------------------------------- |
-| `claude-api`     | Anthropic SDK reference (Python, TS, Go, Elixir, Rust, Lua, cURL)                   |
-| `droo-stack`     | Polyglot patterns (Elixir, TS, Go, Rust, C, Zig, Python, Lua, Shell, Noir, Chezmoi) |
-| `raxol`          | Elixir TUI/agent framework (TEA agents, MCP, headless sessions)                     |
-| `noir`           | ZK circuit design, Aztec contracts, constraint optimization                         |
-| `solidity-audit` | Solidity dev standards, vulnerability taxonomy, Foundry-first audit                 |
-| `ethskills`      | Ethereum tooling, framework selection, EIP/ERC standards                            |
-| `design-ux`      | UI/UX design patterns, design tokens, accessibility, TUI aesthetics                 |
-| `nix`            | Nix language, flakes, NixOS, Home Manager, packaging                                |
-| `native-code`    | NIF development (C/Rust/Rustler), SIMD (Zig), BEAM native boundary                  |
-| `coingecko`      | CoinGecko/GeckoTerminal API: prices, markets, DEX pools, trending tokens             |
-| `blockscout`     | Blockscout MCP tool reference: 16 tools for on-chain data across 8+ chains           |
+| Skill                                   | What it does                                                                             |
+| --------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `claude-api`                            | Anthropic SDK reference (Python, TS, Go, Elixir, Rust, Lua, cURL)                        |
+| `droo-stack`                            | Polyglot patterns (Elixir, TS, Go, Rust, C, Zig, Python, Lua, Shell, Noir, Chezmoi)      |
+| `raxol`                                 | Elixir TUI/agent framework (TEA agents, MCP, headless sessions)                          |
+| `noir`                                  | ZK circuit design, Aztec contracts, constraint optimization                              |
+| `solidity-audit`                        | Solidity dev standards, vulnerability taxonomy, Foundry-first audit                      |
+| `ethskills`                             | Ethereum tooling, framework selection, EIP/ERC standards                                 |
+| `design-ux`                             | UI/UX design patterns, design tokens, accessibility, TUI aesthetics                      |
+| `nix`                                   | Nix language, flakes, NixOS, Home Manager, packaging                                     |
+| `native-code`                           | NIF development (C/Rust/Rustler), SIMD (Zig), BEAM native boundary                       |
+| `coingecko`                             | CoinGecko/GeckoTerminal API: prices, markets, DEX pools, trending tokens                 |
+| `blockscout`                            | Blockscout MCP: 16 tools for on-chain data across 8+ chains                              |
+| `web-asset-generator`                   | Favicon, app icon, OG image, devicon generation and optimization                         |
+| `cancer-predisposition-variant-analyst` | Ultra-rare variant interpretation, mechanistic paradox resolution, ACMG/ClinGen evidence |
 
-### Workflow skills
+### Workflow
 
-| Skill                 | Description                                                             |
+| Skill                 | What it does                                                            |
 | --------------------- | ----------------------------------------------------------------------- |
 | `tdd`                 | Test-driven development: vertical slices, mutation testing, polyglot    |
 | `code-review`         | PR review: blast radius, security scan, SOLID checks, 40-item checklist |
@@ -37,10 +49,11 @@ Context-injection skills for Claude Code sessions. Each skill lives in `skills/<
 | `design-an-interface` | "Design It Twice" -- parallel sub-agents with divergent constraints     |
 | `ubiquitous-language` | DDD glossary extraction, canonical terms                                |
 | `grill-me`            | Stress-test designs via structured interrogation                        |
+| `playwright`          | Browser automation testing with Playwright                              |
 
-### Infrastructure skills
+### Infrastructure
 
-| Skill                    | Description                                                     |
+| Skill                    | What it does                                                    |
 | ------------------------ | --------------------------------------------------------------- |
 | `mcp-server-builder`     | OpenAPI -> MCP server scaffolding (Python FastMCP + TypeScript) |
 | `ci-cd-pipeline-builder` | Stack detection -> GitHub Actions/GitLab CI generation          |
@@ -52,79 +65,82 @@ Context-injection skills for Claude Code sessions. Each skill lives in `skills/<
 | `git-worktree-manager`   | Parallel dev with deterministic port allocation                 |
 | `env-secrets-manager`    | Leak detection, rotation, pre-commit setup                      |
 | `tech-debt-tracker`      | Debt scanning, cost-of-delay prioritization                     |
+| `security-audit`         | Security vulnerability scanning and compliance assessment       |
 
-### Meta skills
+### Meta
 
-| Skill                  | Description                                                           |
-| ---------------------- | --------------------------------------------------------------------- |
-| `polymath`             | Split-brain research: three-tier roster, polymath persona composition |
-| `architect`            | ADR workflows, dependency classification, pattern detection           |
-| `agent-designer`       | Multi-agent architecture patterns, tool schemas, guardrails           |
-| `adversarial-reviewer` | Three-persona devil's advocate review                                 |
-| `self-improving-agent` | Auto-memory curation, pattern promotion lifecycle                     |
-| `codebase-onboarding`  | Auto-generate onboarding docs, audience-aware                         |
-| `rag-architect`        | RAG pipeline design: chunking, embedding, retrieval, evaluation       |
-| `llm-cost-optimizer`   | 7 optimization techniques in priority order                           |
-| `digest`               | Multi-platform activity digest (9 sources + differential mode)        |
-| `recall`               | Knowledge base: query past decisions, patterns, gotchas               |
-| `autoresearch`         | Check experiment status, run iterations, view dashboards              |
-| `watchdog`             | Scan repos for stale PRs, failing CI, security advisories             |
-| `prepper`              | Generate pre-session project briefings                                |
-| `sentinel`             | Monitor on-chain contracts for anomalous transactions                 |
-| `patchbot`             | Scan and update outdated dependencies across ecosystems               |
+| Skill                  | What it does                                                           |
+| ---------------------- | ---------------------------------------------------------------------- |
+| `polymath`             | Split-brain research: three-tier roster, polymath persona composition  |
+| `architect`            | ADR workflows, dependency classification, pattern detection            |
+| `agent-designer`       | Multi-agent architecture patterns, tool schemas, guardrails            |
+| `adversarial-reviewer` | Three-persona devil's advocate review                                  |
+| `self-improving-agent` | Auto-memory curation, pattern promotion lifecycle                      |
+| `codebase-onboarding`  | Auto-generate onboarding docs, audience-aware                          |
+| `rag-architect`        | RAG pipeline design: chunking, embedding, retrieval, evaluation        |
+| `llm-cost-optimizer`   | 7 optimization techniques in priority order                            |
+| `digest`               | Multi-platform activity digest (9 sources + differential mode)         |
+| `recall`               | Knowledge base: query past decisions, patterns, gotchas                |
+| `autoresearch`         | Check experiment status, run iterations, view dashboards               |
+| `watchdog`             | Scan repos for stale PRs, failing CI, security advisories              |
+| `prepper`              | Generate pre-session project briefings                                 |
+| `sentinel`             | Monitor on-chain contracts for anomalous transactions                  |
+| `patchbot`             | Scan and update outdated dependencies across ecosystems                |
+| `voice`                | Writing voice calibration from studied authors, combinatorial blending |
+| `skill-creator`        | Scaffold new skills with frontmatter, triggers, and sub-files          |
 
 ## Agents
 
-Autonomous tools that run independently. Each agent lives in `agents/<name>/`. All agents expose MCP servers via `<agent> serve` (stdio transport) for direct Claude Code integration.
+Seven standalone tools, each with a Typer CLI, pydantic models, and a FastMCP server. They run independently of the skill system -- install them separately, talk to them over MCP.
 
-| Agent          | Description                                                         | MCP tools | Status   |
-| -------------- | ------------------------------------------------------------------- | --------- | -------- |
-| `digest`       | Multi-platform activity digest (9 sources, differential, structured views) | 6   | MVP done |
-| `recall`       | Knowledge capture and retrieval (SQLite + FTS5 + MCP server)        | 8         | MVP done |
-| `autoresearch` | Domain-agnostic autonomous experiment runner (ML, Noir, Solidity)   | 3         | MVP done |
-| `watchdog`     | Continuous repo health monitor (PRs, CI, deps, advisories)          | 2         | MVP done |
-| `prepper`      | Pre-session context builder (git, GitHub, deps, recall, sentinel, digest) | 2   | MVP done |
-| `sentinel`     | On-chain contract monitor via Blockscout API (11 chains)            | 2         | MVP done |
-| `patchbot`     | Polyglot dependency updater (Elixir, Rust, Node, Go, Python)        | 3         | MVP done |
+| Agent          | What it does                                                               | MCP tools |
+| -------------- | -------------------------------------------------------------------------- | --------- |
+| `digest`       | Multi-platform activity digest (9 sources, differential, structured views) | 6         |
+| `recall`       | Knowledge capture and retrieval (SQLite + FTS5)                            | 8         |
+| `autoresearch` | Autonomous experiment runner (ML, Noir, Solidity)                          | 3         |
+| `watchdog`     | Repo health monitor (PRs, CI, deps, advisories)                            | 2         |
+| `prepper`      | Pre-session context builder (git, GitHub, deps, recall, sentinel)          | 2         |
+| `sentinel`     | On-chain contract monitor via Blockscout (11 chains)                       | 2         |
+| `patchbot`     | Polyglot dependency updater (Elixir, Rust, Node, Go, Python)               | 3         |
 
 ### MCP integration
 
-Each agent can run as an MCP server for Claude Code. Add to `~/.mcp.json`:
+Each agent doubles as an MCP server. Add to `~/.mcp.json`:
 
 ```json
 {
   "mcpServers": {
-    "digest":       { "command": "digest",       "args": ["serve"] },
-    "recall":       { "command": "recall",       "args": ["serve"] },
+    "digest": { "command": "digest", "args": ["serve"] },
+    "recall": { "command": "recall", "args": ["serve"] },
     "autoresearch": { "command": "autoresearch", "args": ["serve"] },
-    "watchdog":     { "command": "watchdog",     "args": ["serve"] },
-    "prepper":      { "command": "prepper",      "args": ["serve"] },
-    "sentinel":     { "command": "sentinel",     "args": ["serve"] },
-    "patchbot":     { "command": "patchbot",     "args": ["serve"] },
-    "coingecko":    { "url": "https://mcp.api.coingecko.com/mcp" }
+    "watchdog": { "command": "watchdog", "args": ["serve"] },
+    "prepper": { "command": "prepper", "args": ["serve"] },
+    "sentinel": { "command": "sentinel", "args": ["serve"] },
+    "patchbot": { "command": "patchbot", "args": ["serve"] },
+    "coingecko": { "url": "https://mcp.api.coingecko.com/mcp" }
   }
 }
 ```
 
-See [TODO.md](TODO.md) for the full roadmap.
+See [TODO.md](TODO.md) for the roadmap.
 
-## Installation
+## Install
 
-### Claude Code plugin (recommended)
+### Claude Code plugin
 
 ```bash
 /plugin install agent-skills@DROOdotFOO/agent-skills
 ```
 
-Or add to your Claude Code marketplace:
+Or add the marketplace first:
 
 ```bash
 /plugin marketplace add DROOdotFOO/agent-skills
 ```
 
-### npx skills CLI
+### npx
 
-Install individual skills:
+Pick individual skills:
 
 ```bash
 npx skills@latest add DROOdotFOO/agent-skills/tdd
@@ -132,15 +148,15 @@ npx skills@latest add DROOdotFOO/agent-skills/code-review
 npx skills@latest add DROOdotFOO/agent-skills/polymath
 ```
 
-Or install all:
+Or grab everything:
 
 ```bash
 npx skills@latest add DROOdotFOO/agent-skills
 ```
 
-### With chezmoi
+### chezmoi
 
-Add to your `.chezmoiexternal.toml`:
+Add to `.chezmoiexternal.toml`:
 
 ```toml
 [".agents/skills"]
@@ -151,7 +167,7 @@ Add to your `.chezmoiexternal.toml`:
     refreshPeriod = "168h"
 ```
 
-Then symlink to Claude Code's skills directory:
+Then symlink into Claude Code:
 
 ```bash
 mkdir -p ~/.claude/skills
@@ -169,19 +185,19 @@ ln -s ~/.agents/skills-repo/skills ~/.agents/skills
 
 ### Agents
 
-Install each agent independently:
+Each agent installs independently:
 
 ```bash
 cd agents/<name> && pip install -e .
 ```
 
-## Linting
+## Lint
 
 ```bash
 ./scripts/skills-lint.sh
 ```
 
-Validates frontmatter, trigger clauses, file references, and cross-skill links.
+Checks frontmatter, trigger clauses, file references, and cross-skill links.
 
 ## License
 

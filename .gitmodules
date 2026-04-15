@@ -1,0 +1,3 @@
+[submodule "skills/cancer-predisposition-variant-analyst"]
+	path = skills/cancer-predisposition-variant-analyst
+	url = git@github.com:Bloomed-Health/cancer-predisposition-variant-analyst.git

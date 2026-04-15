@@ -62,7 +62,7 @@ for skill_dir in "${SKILLS_DIR}"/*/; do
         fi
 
         # Extract frontmatter (between first and second ---)
-        frontmatter=$(sed -n '1,/^---$/{ /^---$/d; p; }' "$md_file" | sed '1d')
+        frontmatter=$(sed -n '1,/^---$/{ /^---$/d; p; }' "$md_file")
 
         # Check for tags as YAML array (should be comma-separated string)
         if echo "$frontmatter" | grep -qE 'tags:\s*\['; then
