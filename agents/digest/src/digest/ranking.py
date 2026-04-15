@@ -21,7 +21,7 @@ PLATFORM_WEIGHTS: dict[str, float] = {
     "github": 1.0,
     "reddit": 1.5,
     "youtube": 0.5,
-    "x": 1.0,
+    "shodan": 1.2,  # security exposure data, real services
     "ethresearch": 2.5,  # High-signal research forum, sparse engagement
     "snapshot": 1.5,  # Governance votes are deliberate signals
     "polymarket": 0.8,  # Volume is noisy, but odds are credibility signals

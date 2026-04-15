@@ -79,7 +79,7 @@ Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
 | `codebase-onboarding`  | Auto-generate onboarding docs, audience-aware                          |
 | `rag-architect`        | RAG pipeline design: chunking, embedding, retrieval, evaluation        |
 | `llm-cost-optimizer`   | 7 optimization techniques in priority order                            |
-| `digest`               | Multi-platform activity digest (9 sources + differential mode)         |
+| `digest`               | Multi-platform activity digest (11 sources + differential mode)        |
 | `recall`               | Knowledge base: query past decisions, patterns, gotchas                |
 | `autoresearch`         | Check experiment status, run iterations, view dashboards               |
 | `watchdog`             | Scan repos for stale PRs, failing CI, security advisories              |
@@ -91,15 +91,16 @@ Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
 
 ## Agents
 
-Seven standalone tools, each with a Typer CLI, pydantic models, and a FastMCP server. They run independently of the skill system -- install them separately, talk to them over MCP.
+Eight standalone tools, each with a Typer CLI, pydantic models, and a FastMCP server. They run independently of the skill system -- install them separately, talk to them over MCP.
 
 | Agent          | What it does                                                               | MCP tools |
 | -------------- | -------------------------------------------------------------------------- | --------- |
-| `digest`       | Multi-platform activity digest (9 sources, differential, structured views) | 6         |
+| `digest`       | Multi-platform activity digest (11 sources, differential, structured views)| 7         |
 | `recall`       | Knowledge capture and retrieval (SQLite + FTS5)                            | 8         |
+| `scribe`       | Session insight extractor (writes to recall)                               | 3         |
 | `autoresearch` | Autonomous experiment runner (ML, Noir, Solidity)                          | 3         |
 | `watchdog`     | Repo health monitor (PRs, CI, deps, advisories)                            | 2         |
-| `prepper`      | Pre-session context builder (git, GitHub, deps, recall, sentinel)          | 2         |
+| `prepper`      | Pre-session context builder (git, GitHub, deps, recall, sentinel)          | 3         |
 | `sentinel`     | On-chain contract monitor via Blockscout (11 chains)                       | 2         |
 | `patchbot`     | Polyglot dependency updater (Elixir, Rust, Node, Go, Python)               | 3         |
 
@@ -112,6 +113,7 @@ Each agent doubles as an MCP server. Add to `~/.mcp.json`:
   "mcpServers": {
     "digest": { "command": "digest", "args": ["serve"] },
     "recall": { "command": "recall", "args": ["serve"] },
+    "scribe": { "command": "scribe", "args": ["serve"] },
     "autoresearch": { "command": "autoresearch", "args": ["serve"] },
     "watchdog": { "command": "watchdog", "args": ["serve"] },
     "prepper": { "command": "prepper", "args": ["serve"] },

@@ -32,6 +32,7 @@ SOURCE_TIERS: dict[str, Tier] = {
     "youtube": Tier.PASSIVE,  # views are passive consumption
     "packages": Tier.PASSIVE,  # downloads are CI/automation heavy
     "coingecko": Tier.PASSIVE,  # market cap is momentum, not conviction
+    "shodan": Tier.DELIBERATE,  # intentional exposure data, security research
 }
 
 # Base multiplier per tier
@@ -131,6 +132,15 @@ def _per_item_bonus(source: str, raw: dict) -> float:
         posts = raw.get("posts_count", 0)
         if likes > 20 or posts > 10:
             return 0.3
+        return 0.0
+
+    if source == "shodan":
+        vulns = raw.get("vulns", [])
+        tags = raw.get("tags", [])
+        if len(vulns) >= 5:
+            return 0.4
+        if len(vulns) >= 1 or len(tags) >= 3:
+            return 0.2
         return 0.0
 
     return 0.0

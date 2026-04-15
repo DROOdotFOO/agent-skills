@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Agent-skills: 53 Claude Code skills and 8 autonomous agents for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
+Agent-skills: 53 Claude Code skills and 8 autonomous agents (31 MCP tools, 741 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
 
 ## Structure
 
@@ -10,7 +10,7 @@ Agent-skills: 53 Claude Code skills and 8 autonomous agents for polyglot develop
 skills/                   # 53 Claude Code skills (context-injection via SKILL.md)
   <name>/SKILL.md         # Entry point per skill, with frontmatter + trigger clauses
 agents/                   # 8 autonomous agents (standalone tools)
-  digest/                 # Multi-platform activity digest (9 sources)
+  digest/                 # Multi-platform activity digest (11 sources)
   recall/                 # Knowledge capture + FTS5 search + MCP server
   scribe/                 # Session insight extractor (writes to recall)
   autoresearch/           # Domain-agnostic autonomous experiment runner
@@ -60,12 +60,12 @@ All agents expose MCP servers via `<agent> serve` (stdio transport). Configure i
 
 | Agent        | CLI            | Key commands                                                                                                   | MCP tools |
 | ------------ | -------------- | -------------------------------------------------------------------------------------------------------------- | --------- |
-| digest       | `digest`       | `generate <topic> [-p hn,github,reddit,youtube,ethresearch,snapshot,polymarket,packages,coingecko,blockscout]` | 6         |
+| digest       | `digest`       | `generate <topic> [-p hn,github,reddit,youtube,ethresearch,snapshot,polymarket,packages,coingecko,blockscout,shodan]` | 7         |
 | recall       | `recall`       | `add`, `search [--min-relevance]`, `list`, `get`, `delete`, `stale`, `stats`, `extract`, `serve`               | 8         |
 | scribe       | `scribe`       | `watch [--once] [--idle-minutes N]`, `analyze <sid> --project PATH`, `stats`, `recent`, `serve`                | 3         |
 | autoresearch | `autoresearch` | `init <name> --metric <m> --verify <cmd>`, `run`, `loop`, `dashboard`, `status`                                | 3         |
 | watchdog     | `watchdog`     | `scan <repo>`, `report`, `watch --config watchdog.toml`                                                        | 2         |
-| prepper      | `prepper`      | `brief [--budget N] [--task HINT]`, `inject`, `watch [--once]`, `alerts`, `serve`                              | 3         |
+| prepper      | `prepper`      | `brief [--budget N] [--task HINT]`, `inject`, `watch [--once]`, `alerts`, `serve`                                | 3         |
 | sentinel     | `sentinel`     | `check --address 0x...`, `watch --config sentinel.toml`, `alerts`                                              | 2         |
 | patchbot     | `patchbot`     | `scan`, `update`, `pr`                                                                                         | 3         |
 
@@ -75,7 +75,7 @@ All agents expose MCP servers via `<agent> serve` (stdio transport). Configure i
 cd agents/<name> && python -m pytest tests/ -v
 ```
 
-733 tests total across all agents + shared, 0 mocks.
+741 tests total across all agents + shared, 0 mocks.
 
 ## Conventions
 

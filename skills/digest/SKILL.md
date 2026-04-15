@@ -3,8 +3,9 @@ name: digest
 description: >
   Generate a multi-platform activity digest for a topic. Fetches and ranks
   items from HN, GitHub, Reddit, YouTube, ethresear.ch, Snapshot, Polymarket,
-  and package registries. TRIGGER when: user invokes "/digest" or asks for
-  a "digest", "what's happening with X", "activity summary for X", "news about X".
+  package registries, CoinGecko, Blockscout, and Shodan. TRIGGER when: user
+  invokes "/digest" or asks for a "digest", "what's happening with X",
+  "activity summary for X", "news about X".
   DO NOT TRIGGER when: user asks about digest agent code/implementation.
 metadata:
   author: DROOdotFOO
@@ -52,6 +53,7 @@ digest list-platforms
 | Package registries | `packages` | hex.pm + crates.io + npm (recent downloads) |
 | CoinGecko | `coingecko` | Trending tokens, top gainers/losers, new listings |
 | Blockscout | `blockscout` | On-chain token transfers and address activity (Ethereum) |
+| Shodan | `shodan` | Exposed hosts, services, CVEs (requires SHODAN_API_KEY) |
 
 ## Flags
 
@@ -119,6 +121,10 @@ Add to `~/.mcp.json`:
 | `digest_generate` | Generate a synthesized digest for a topic across platforms |
 | `digest_list_platforms` | List available platform adapters |
 | `digest_expand_query` | Preview query expansion for a topic |
+| `digest_structured_view` | Generate digest with structured view (timeline, controversy, tags, sources) |
+| `digest_recall_context` | Fetch historical context from recall knowledge base |
+| `digest_store_to_recall` | Store top digest items to recall for future reference |
+| `digest_alerts` | Read recent alerts from the digest watch system |
 
 ## Install
 

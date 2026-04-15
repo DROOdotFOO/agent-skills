@@ -7,7 +7,9 @@ from digest.adapters.ethresearch import EthResearchAdapter
 from digest.adapters.github import GitHubAdapter
 from digest.adapters.hackernews import HackerNewsAdapter
 from digest.adapters.packages import PackagesAdapter
+from digest.adapters.polymarket import PolymarketAdapter
 from digest.adapters.reddit import RedditAdapter
+from digest.adapters.shodan import ShodanAdapter
 from digest.adapters.snapshot import SnapshotAdapter
 from digest.adapters.youtube import YouTubeAdapter
 
@@ -18,9 +20,11 @@ ADAPTERS: dict[str, type[Adapter]] = {
     "youtube": YouTubeAdapter,
     "snapshot": SnapshotAdapter,
     "ethresearch": EthResearchAdapter,
+    "polymarket": PolymarketAdapter,
     "packages": PackagesAdapter,
     "coingecko": CoinGeckoAdapter,
     "blockscout": BlockscoutAdapter,
+    "shodan": ShodanAdapter,
 }
 
 

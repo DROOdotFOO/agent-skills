@@ -82,6 +82,7 @@ class GitHubAdapter:
             capture_output=True,
             text=True,
             check=False,
+            timeout=30,
         )
         if proc.returncode != 0:
             raise RuntimeError(f"gh failed: {proc.stderr.strip()}")

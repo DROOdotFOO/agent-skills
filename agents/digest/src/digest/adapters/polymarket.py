@@ -27,7 +27,9 @@ class PolymarketAdapter:
         Dedupes by question text (markets don't have a stable external ID).
         """
         terms = query.terms
-        markets = self._fetch_markets(limit=200)
+        # Fetch a larger pool to filter client-side, scaled to requested limit.
+        fetch_limit = min(max(limit * 4, 100), 200)
+        markets = self._fetch_markets(limit=fetch_limit)
 
         seen: dict[str, Item] = {}
         for market in markets:

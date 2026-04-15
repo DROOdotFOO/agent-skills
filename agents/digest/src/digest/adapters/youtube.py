@@ -56,7 +56,7 @@ class YouTubeAdapter:
             capture_output=True,
             text=True,
             check=False,
-            timeout=60,
+            timeout=30,
         )
         if proc.returncode != 0:
             return []

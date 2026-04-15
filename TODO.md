@@ -114,10 +114,10 @@
 
 **2026-04-11** -- Agent <-> skill MCP integration. All 7 agents now expose MCP servers via `<agent> serve`. 45 skills, 7 agents, 253 tests, 0 lint errors.
 
-- All 7 agents now have `mcp_server.py` + `serve` CLI command (FastMCP, stdio transport)
+- All 8 agents now have `mcp_server.py` + `serve` CLI command (FastMCP, stdio transport)
 - 5 new agent skill stubs: autoresearch, watchdog, prepper, sentinel, patchbot
 - Updated digest skill with MCP section, recall already had it
-- 27 MCP tools total across all agents (8 recall + 7 digest + 3 autoresearch + 2 watchdog + 2 prepper + 2 sentinel + 3 patchbot)
+- 31 MCP tools total across all agents (8 recall + 7 digest + 3 scribe + 3 autoresearch + 2 watchdog + 3 prepper + 2 sentinel + 3 patchbot)
 
 **2026-04-11** -- All phases (1-7) complete. 40 skills, 7 agents, 253 tests, 0 lint errors.
 
@@ -382,6 +382,58 @@ Lessons from [mattpocock/skills](https://github.com/mattpocock/skills) and [slav
 - [ ] Evaluate [obra/superpowers-marketplace](https://github.com/obra/superpowers-marketplace) for overlap
 - [ ] Track AARTS spec evolution (currently v0.1)
 - [ ] Track Sage MCP interception support (not in v0.8.0, critical for our 7 MCP agents)
+
+---
+
+### Digest: Research / Medical / Legal / Security adapters
+
+New platform adapters to expand digest beyond tech/crypto. Prioritized by API quality, signal richness, and breadth. Full API specs in `agents/digest/SPECS.md`.
+
+Each adapter touches 5 files: `adapters/{key}.py`, `adapters/__init__.py`, `credibility.py`, `ranking.py`, `tests/test_{key}.py`. Optionally `expansion.py` for domain-specific query fields.
+
+**Tier 1 -- High value, clean APIs (implement first)**
+
+- [ ] Semantic Scholar (`semanticscholar`) -- T1. JSON, 1 RPS. Best engagement signals: citationCount, influentialCitationCount, citationVelocity, TLDR summaries. Covers SSRN content via externalIds. Key optional (S2_API_KEY). Weight 2.5, DELIBERATE.
+- [ ] PubMed (`pubmed`) -- T1. JSON (esearch/esummary) + XML (efetch). Two-step: esearch for PMIDs, esummary for metadata. Enrich via iCite API for citation_count + relative_citation_ratio. Key optional (NCBI_API_KEY, 10 req/s). Pairs with cancer-predisposition skill. Weight 2.5, DELIBERATE.
+- [ ] Federal Register (`federalregister`) -- T1. JSON, keyless, generous limits. comment_count + significant flag for engagement. Easiest legal API. Weight 1.2, VERIFIED.
+- [ ] Shodan enhancements -- T1, low effort (existing adapter):
+  - [ ] InternetDB fallback (`https://internetdb.shodan.io/{ip}`) -- free, keyless, weekly-refresh port/vuln data
+  - [ ] Facets endpoint (`/shodan/host/count?facets=...`) -- free, unlimited, zero query credits
+  - [ ] Exploits API (`https://exploits.shodan.io/api/search`) -- separate base URL, CVE/ExploitDB/Metasploit
+
+**Tier 2 -- Good value, moderate complexity**
+
+- [ ] arXiv (`arxiv`) -- T2. Atom XML (needs xml.etree parser). **No engagement data** -- must composite with Semantic Scholar batch endpoint for citations. 1 req/3s rate limit (hard, must sleep). Keyless. Weight 2.0, DELIBERATE.
+- [ ] OpenAlex (`openalex`) -- T2. JSON, 470M+ works (broadest coverage). cited_by_count + fwci (field-weighted citation impact). Routes SSRN via title/DOI search. Requires email for polite pool (OPENALEX_EMAIL). 100k credits/day. Weight 2.0, DELIBERATE.
+- [ ] CourtListener (`courtlistener`) -- T2. JSON, clean API. citeCount for engagement, court hierarchy for credibility bonus. Free token required (COURTLISTENER_TOKEN). 5000 req/hr. Weight 2.0, DELIBERATE.
+- [ ] ClinicalTrials.gov (`clinicaltrials`) -- T2. JSON, deeply nested under `protocolSection`. enrollment + phase for engagement. VERIFIED tier (real enrolled patients). Keyless, ~50 req/min. Weight 1.5.
+- [ ] Congress.gov (`congress`) -- T2. JSON (append `&format=json`, default is XML!). Cosponsor count needs second API call per bill. Free key required (CONGRESS_API_KEY). 5000 req/hr. Weight 1.5, DELIBERATE.
+
+**Tier 3 -- Niche or complex**
+
+- [ ] Crossref (`crossref`) -- T3. JSON, is-referenced-by-count for citations. Secondary enrichment for DOI resolution, lower search quality than S2/OpenAlex. Polite pool via mailto (CROSSREF_EMAIL). Weight 1.5, DELIBERATE.
+- [ ] regulations.gov (`regulations`) -- T3. JSON:API format (data/attributes nesting). numberOfCommentsReceived needs second call. Free key required (REGULATIONS_GOV_KEY). 1000 req/hr. Weight 1.5, DELIBERATE.
+- [ ] openFDA (`openfda`) -- T3. JSON. Multiple sub-APIs (drug/event, drug/label, device/recall). Date format is YYYYMMDD not ISO. serious flag as quality signal. Key optional (OPENFDA_API_KEY). Weight 1.0, VERIFIED.
+- [ ] bioRxiv/medRxiv (`biorxiv`) -- T3. JSON. **No search endpoint** -- date-range only, filter client-side. Prefer Semantic Scholar `venue:bioRxiv` filter for search. Keep native adapter for broad date scans. Keyless. Weight 0.8, PASSIVE.
+
+**Tier 4 -- Complex format or low volume**
+
+- [ ] WHO DON (`who`) -- T4. JSON (OData-style). No keyword search, HTML embedded in content fields. Low volume (few dozen/month). Best for watch/alert mode. Keyless. Weight 1.0, VERIFIED.
+- [ ] CDC MMWR (`cdc`) -- T4. JSON + RSS. Irregular publication schedule. No engagement signals. Articles also indexed in PubMed (cross-adapter dedup). Keyless. Weight 0.8, VERIFIED.
+- [ ] EUR-Lex (`eurlex`) -- T4. SPARQL queries against CDM ontology. 60s timeout, complex query construction. Citation graph via `cdm:work_cited_by`. Keyless. Weight 1.0, VERIFIED.
+- [ ] UK Legislation (`uklegislation`) -- T4. Atom XML only (shares parser with arXiv). Effects count from `/changes/` sub-resource. Niche UK-focused. Keyless. Weight 0.8, VERIFIED.
+- SSRN -- **no adapter needed**. No API exists. Route through OpenAlex (title/DOI search) or Semantic Scholar (externalIds.SSRN).
+
+**Security**
+
+- [x] Shodan -- REST API (SHODAN_API_KEY). Exposed hosts, services, CVEs, banner data. Adapter shipped.
+
+**Shared infrastructure**
+
+- [ ] XML parsing utility -- shared by arXiv (Atom), PubMed efetch (NCBI XML), UK Legislation (Atom). Extract to `adapters/_xml.py`.
+- [ ] ExpandedQuery extensions -- add `arxiv_categories: list[str]`, `pubmed_mesh: list[str]`, `legal_jurisdiction: str` to `expansion.py`
+- [ ] Credibility module updates -- add all new sources to SOURCE_TIERS + _per_item_bonus cases
+- [ ] Ranking weights -- add all new adapter keys to PLATFORM_WEIGHTS
 
 ---
 
