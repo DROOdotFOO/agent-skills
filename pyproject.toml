@@ -1,0 +1,10 @@
+[tool.pytest.ini_options]
+addopts = "--import-mode=importlib"
+testpaths = ["agents"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM"]

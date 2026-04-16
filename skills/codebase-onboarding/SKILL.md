@@ -11,6 +11,7 @@ metadata:
   author: DROOdotFOO
   version: "1.0.0"
   tags: onboarding, documentation, architecture, codebase-analysis, team
+  argument-hint: "[junior|senior|contractor] [<path>]"
 ---
 
 # codebase-onboarding
@@ -31,12 +32,10 @@ output for junior developers, senior engineers, and contractors.
 1. **Analyze** -- Scan the codebase to discover stack, structure, and patterns
 2. **Capture signals** -- Identify entry points, config files, CI/CD, test
    patterns, dependency graph, domain terms
-3. **Fill template** -- Populate the output format sections below
+3. **Fill template** -- Populate the output format sections
 4. **Tailor** -- Adjust depth and emphasis for the target audience
 
 ## Analysis signals
-
-Scan for these to build the onboarding doc:
 
 | Signal             | Where to look                                      |
 | ------------------ | -------------------------------------------------- |
@@ -51,68 +50,6 @@ Scan for these to build the onboarding doc:
 | Dependencies       | Lock files, vendor/, package manifests             |
 | Dev setup          | Makefile, docker-compose.yml, devcontainer.json    |
 
-## Audience descriptions
-
-### Junior developer
-
-**Focus**: Setup, guardrails, where to look first.
-
-Include: step-by-step local setup, "your first task" walkthrough, which files
-NOT to touch, who to ask for help, common gotchas, link to style guide.
-Omit: architecture rationale, ops runbooks, deployment internals.
-
-### Senior engineer
-
-**Focus**: Architecture, operations, decision rationale.
-
-Include: system architecture diagram, data flow, tech debt inventory,
-performance characteristics, deployment pipeline, on-call procedures,
-ADRs (or why decisions were made if no ADRs exist).
-Omit: basic setup steps, language tutorials, tool installation.
-
-### Contractor
-
-**Focus**: Scoped ownership, boundaries, escalation paths.
-
-Include: which modules they own, integration boundaries (what they can
-and cannot change), PR review process, communication channels, access
-provisioning checklist, contract-relevant SLAs.
-Omit: long-term roadmap, internal politics, systems outside their scope.
-
-## Output format
-
-Generate a document with these sections (skip any that are not applicable):
-
-```markdown
-# [Project Name] Onboarding Guide
-> Audience: [Junior / Senior / Contractor]
-> Generated: [date]
-
-## Architecture overview
-[High-level diagram or description of major components and their relationships]
-
-## Key entry points
-[Where execution starts, main routes/handlers, CLI commands]
-
-## Local development setup
-[Prerequisites, clone, install, run, verify]
-
-## Testing strategy
-[How to run tests, what frameworks are used, coverage expectations]
-
-## Deployment process
-[How code gets to production, environments, rollback procedure]
-
-## Domain glossary
-[Project-specific terms and their definitions]
-
-## Common tasks
-[How to add a feature, fix a bug, update dependencies, run migrations]
-
-## Where to get help
-[Contacts, channels, documentation links]
-```
-
 ## Rules
 
 1. Derive everything from the actual codebase -- do not fabricate
@@ -120,3 +57,10 @@ Generate a document with these sections (skip any that are not applicable):
 3. Keep the glossary to terms a newcomer would not know
 4. Link to actual files using relative paths
 5. If the audience is not specified, ask before generating
+
+## Reference
+
+| File | Topic |
+|------|-------|
+| [audience-profiles.md](audience-profiles.md) | Junior/Senior/Contractor focus areas |
+| [output-template.md](output-template.md) | Markdown template for the onboarding doc |

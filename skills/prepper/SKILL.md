@@ -10,12 +10,21 @@ metadata:
   author: DROOdotFOO
   version: "1.0.0"
   tags: prepper, briefing, context, session
+  argument-hint: "[--repo owner/repo] [--project name]"
 ---
 
 # Prepper
 
 Pre-session context builder. Gathers git activity, GitHub state, CI status,
 dependency health, and recall knowledge into a priority-sorted briefing.
+
+## What You Get
+
+- Priority-sorted briefing with HIGH/MEDIUM/LOW sections
+- Git activity summary (recent commits, branch state)
+- GitHub state (open PRs, issues, CI status)
+- Dependency health and recall context
+- Markdown file or raw terminal output
 
 ## CLI Usage
 
@@ -31,71 +40,13 @@ prepper brief --output briefing.md
 
 # Inject into .claude/prepper-briefing.md for auto-loading
 prepper inject --repo owner/repo --project myproject
+
+# Cross-agent alert view
+prepper alerts --agent sentinel --limit 20
 ```
 
-## MCP Server
+## Reference
 
-```bash
-prepper serve
-```
-
-### Configure MCP
-
-Add to `~/.mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "prepper": {
-      "command": "prepper",
-      "args": ["serve"]
-    }
-  }
-}
-```
-
-### MCP Tools
-
-| Tool             | Description                                                 |
-| ---------------- | ----------------------------------------------------------- |
-| `prepper_brief`  | Generate a project briefing (git, GitHub, CI, deps, recall) |
-| `prepper_inject` | Generate and write briefing to .claude/prepper-briefing.md  |
-
-## Auto-inject on SessionStart
-
-Add to your project's `.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "startup",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "prepper brief --raw",
-            "timeout": 30
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-This generates a briefing at session start and injects it as context.
-For more control (repo/project detection), use the hook script:
-
-```json
-"command": "~/.agents/skills-repo/scripts/hooks/prepper-session-start.sh"
-```
-
-## Install
-
-```bash
-cd agents/prepper
-pip install -e .
-```
-
-Optional: `gh` CLI for GitHub state, `recall` CLI for knowledge base integration.
+| File | Topic |
+|------|-------|
+| [mcp-setup.md](mcp-setup.md) | MCP server, auto-inject hook, install |

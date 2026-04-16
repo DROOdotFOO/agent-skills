@@ -22,11 +22,18 @@ metadata:
   author: DROOdotFOO
   version: "2.0.0"
   tags: research, multi-agent, brainstorming, strategy, methodology
+  argument-hint: "<open-ended problem or research question>"
 ---
 
 # Polymath Split-Brain Workflow
 
 A meta-method for mapping the possibility space of a problem before committing to an approach. Forces uncorrelated views by spawning parallel agents that each see the problem through a different disciplinary lens. The value comes from the **spread** of returned ideas, not from averaging them -- disagreement is the signal.
+
+## What You Get
+
+- Landscape map: N sub-agent outputs covering uncorrelated disciplinary lenses
+- Synthesis of disagreements in structured template (not averaged consensus)
+- Actionable divergence points highlighting where frames conflict
 
 ## Killer items -- silent failures if skipped
 

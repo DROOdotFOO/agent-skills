@@ -17,6 +17,12 @@ metadata:
 Polyglot dependency updater. Detects ecosystems from lockfiles, scans for outdated
 packages, updates + tests, and optionally creates PRs.
 
+## What You Get
+
+- List of outdated dependencies per ecosystem with current/latest versions
+- Automated update + test run (dry-run by default)
+- Optional PR creation via `gh` CLI
+
 ## CLI Usage
 
 ```bash

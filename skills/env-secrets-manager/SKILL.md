@@ -41,6 +41,22 @@ Manage environment-variable hygiene and secrets safety across local development 
 4. Update `.env.example` and `.gitignore` as needed
 5. Add or tighten pre-commit/CI secret scanning gates
 
+## WRONG: secrets in code and examples
+
+```bash
+# WRONG: real credentials in .env.example
+DATABASE_URL=postgres://admin:s3cret@prod.db.internal/myapp
+STRIPE_SECRET_KEY=sk_live_abc123xyz
+```
+
+## CORRECT: placeholders only
+
+```bash
+# CORRECT: .env.example with safe placeholders
+DATABASE_URL=postgres://user:password@localhost/myapp_dev
+STRIPE_SECRET_KEY=sk_test_REPLACE_ME
+```
+
 ## Common Pitfalls
 
 | Mistake | Why it's bad |

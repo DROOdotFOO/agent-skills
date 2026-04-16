@@ -12,6 +12,12 @@ metadata:
 
 # Dependency Auditor
 
+## What You Get
+
+- Vulnerability report with CVE IDs, CVSS scores, and fix recommendations
+- License compliance audit (copyleft flags, conflicts, missing licenses)
+- Prioritized upgrade plan with breaking change risk assessment
+
 ## Philosophy
 
 Dependencies are attack surface. Every transitive dependency is code you did not write, did not review, and may not maintain. Audit proactively, not after an incident.

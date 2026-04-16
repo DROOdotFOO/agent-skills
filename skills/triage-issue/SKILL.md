@@ -8,9 +8,15 @@ metadata:
   author: DROOdotFOO
   version: "1.0.0"
   tags: triage, bugs, github, issues, tdd, investigation
+  argument-hint: "<bug description or unexpected behavior>"
 ---
 
 # Triage Issue
+
+## What You Get
+
+- GitHub issue created via `gh` with structured TDD fix plan
+- Self-contained: root cause, reproduction steps, RED-GREEN cycles, no file paths
 
 ## Philosophy
 

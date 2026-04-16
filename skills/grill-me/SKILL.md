@@ -8,6 +8,7 @@ metadata:
   author: mattpocock
   version: "1.0.0"
   tags: interview, design-review, planning, stress-test
+  argument-hint: "<plan description or paste design doc>"
   license: MIT
 ---
 

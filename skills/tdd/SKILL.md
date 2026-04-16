@@ -12,6 +12,11 @@ metadata:
 
 # TDD Skill
 
+## What You Get
+
+- Failing test (RED) -> minimal implementation (GREEN) -> refactored code, committed at each green step
+- Full test suite passing with no mocks of internal modules
+
 ## Philosophy
 
 Tests verify **behavior through public interfaces**, not implementation details. Never test private methods directly. Never mock your own modules.
@@ -47,6 +52,34 @@ Never skip ahead. Never write two tests before making the first green.
 ### Phase 4: Refactor
 
 Only refactor when GREEN. Look for: duplication, shallow modules, long methods, feature envy, primitive obsession. Run the full suite after every refactor step.
+
+## WRONG: writing all tests first
+
+```python
+# WRONG: this is waterfall disguised as TDD
+def test_add(): ...
+def test_subtract(): ...
+def test_multiply(): ...
+def test_divide(): ...
+def test_divide_by_zero(): ...
+# then implement all of Calculator at once
+```
+
+## CORRECT: one test at a time
+
+```python
+# RED: write one failing test
+def test_add():
+    assert Calculator().add(2, 3) == 5
+
+# GREEN: implement minimum to pass
+class Calculator:
+    def add(self, a, b): return a + b
+
+# next test only after green
+def test_subtract():
+    assert Calculator().subtract(5, 3) == 2
+```
 
 ## Cycle Checklist
 

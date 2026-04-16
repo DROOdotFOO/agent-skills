@@ -11,76 +11,56 @@ metadata:
   author: DROOdotFOO
   version: "1.0.0"
   tags: digest, research, monitoring, news
+  argument-hint: '"<topic>" [--days N] [--platforms p1,p2]'
 ---
 
 # Digest
 
 Generate a synthesized activity digest for any topic across multiple platforms.
 
+## What You Get
+
+- Ranked list of items across platforms, weighted by engagement and recency
+- Claude-synthesized narrative with citations (or raw items with `--no-synthesis`)
+- Markdown file or terminal output
+
 ## Usage
 
 ```bash
-# Default: HN + GitHub, last 30 days, terminal output
 digest generate "rust async runtime"
-
-# Narrow time window, specific platforms
 digest generate "zero knowledge proofs" --days 7 --platforms hn,github,reddit
-
-# Write markdown to file
 digest generate "noir language" --output digest.md
-
-# Skip Claude synthesis -- just rank and print raw items
 digest generate "elixir otp" --no-synthesis
-
-# Skip query expansion -- search the topic string literally
 digest generate "noir" --no-expansion
-
-# List available platform adapters
 digest list-platforms
 ```
 
 ## Available Platforms
 
-| Platform | Adapter key | Signal source |
-|----------|-------------|---------------|
-| Hacker News | `hn` | Algolia search API (points, comments) |
-| GitHub | `github` | `gh` CLI search (stars, forks, recent activity) |
-| Reddit | `reddit` | Reddit search JSON API (upvotes, comments) |
-| YouTube | `youtube` | yt-dlp flat-playlist search (views, likes) |
+| Platform | Key | Signal source |
+|----------|-----|---------------|
+| Hacker News | `hn` | Algolia search (points, comments) |
+| GitHub | `github` | `gh` CLI search (stars, forks) |
+| Reddit | `reddit` | Search JSON API (upvotes, comments) |
+| YouTube | `youtube` | yt-dlp flat-playlist (views, likes) |
 | ethresear.ch | `ethresearch` | Discourse search (views, likes, posts) |
-| Snapshot | `snapshot` | GraphQL governance API (votes, scores) |
-| Polymarket | `polymarket` | Gamma API market data (volume traded) |
-| Package registries | `packages` | hex.pm + crates.io + npm (recent downloads) |
-| CoinGecko | `coingecko` | Trending tokens, top gainers/losers, new listings |
-| Blockscout | `blockscout` | On-chain token transfers and address activity (Ethereum) |
-| Shodan | `shodan` | Exposed hosts, services, CVEs (requires SHODAN_API_KEY) |
+| Snapshot | `snapshot` | GraphQL governance (votes, scores) |
+| Polymarket | `polymarket` | Gamma API (volume traded) |
+| Packages | `packages` | hex.pm + crates.io + npm (downloads) |
+| CoinGecko | `coingecko` | Trending, gainers/losers, new listings |
+| Blockscout | `blockscout` | On-chain transfers, address activity |
+| Shodan | `shodan` | Hosts, services, CVEs (SHODAN_API_KEY) |
 
 ## Flags
 
-| Flag | Short | Default | Description |
-|------|-------|---------|-------------|
-| `--days` | `-d` | 30 | Lookback window in days |
-| `--platforms` | `-p` | `hn,github` | Comma-separated platform list |
-| `--max-items` | `-n` | 50 | Max items fetched per platform |
-| `--output` | `-o` | (none) | Write markdown to file instead of terminal |
-| `--no-synthesis` | | false | Skip Claude narrative synthesis |
-| `--no-expansion` | | false | Skip query expansion, search literally |
-
-## Query Expansion
-
-The digest agent auto-expands known topics into structured queries with
-platform-specific hints. For example, searching "noir" expands into compound
-phrases for HN (to avoid film noir / wine matches), GitHub org qualifiers
-(`org:noir-lang`), and topic tags.
-
-Expansion produces:
-- **terms** -- generic full-text search terms
-- **hn_terms** -- HN-specific compound phrases (avoids ambiguous short words)
-- **github_qualifiers** -- org/repo scoping (e.g. `org:noir-lang`, `repo:tokio-rs/tokio`)
-- **github_topics** -- topic tag filters
-
-If no expansion rules match, the topic is searched literally. Use `--no-expansion`
-to force literal search even when rules exist.
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--days` / `-d` | 30 | Lookback window in days |
+| `--platforms` / `-p` | `hn,github` | Comma-separated platform list |
+| `--max-items` / `-n` | 50 | Max items per platform |
+| `--output` / `-o` | (none) | Write markdown to file |
+| `--no-synthesis` | false | Skip Claude narrative |
+| `--no-expansion` | false | Skip query expansion |
 
 ## Pipeline
 
@@ -91,46 +71,8 @@ to force literal search even when rules exist.
 5. Synthesize narrative via Claude (unless `--no-synthesis`)
 6. Output to terminal (rich) or markdown file
 
-## MCP Server
+## Reference
 
-Start the MCP server (stdio transport):
-
-```bash
-digest serve
-```
-
-### Configure MCP
-
-Add to `~/.mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "digest": {
-      "command": "digest",
-      "args": ["serve"]
-    }
-  }
-}
-```
-
-### MCP Tools
-
-| Tool | Description |
-|------|-------------|
-| `digest_generate` | Generate a synthesized digest for a topic across platforms |
-| `digest_list_platforms` | List available platform adapters |
-| `digest_expand_query` | Preview query expansion for a topic |
-| `digest_structured_view` | Generate digest with structured view (timeline, controversy, tags, sources) |
-| `digest_recall_context` | Fetch historical context from recall knowledge base |
-| `digest_store_to_recall` | Store top digest items to recall for future reference |
-| `digest_alerts` | Read recent alerts from the digest watch system |
-
-## Install
-
-```bash
-cd agents/digest
-pip install -e .
-```
-
-Requires `ANTHROPIC_API_KEY` and the `gh` CLI (authenticated) for GitHub search.
+| File | Topic |
+|------|-------|
+| [mcp-setup.md](mcp-setup.md) | MCP server config and tool list |

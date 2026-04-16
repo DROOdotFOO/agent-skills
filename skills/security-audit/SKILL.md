@@ -20,6 +20,12 @@ General-purpose application security auditing. Covers OWASP Top 10, static analy
 tooling, variant analysis (Trail of Bits methodology), and supply chain security.
 Polyglot: Python, TypeScript, Go, Rust.
 
+## What You Get
+
+- Attack surface map (all trust boundary crossings)
+- Findings classified by severity (CRITICAL -> INFO) with code locations
+- Variant analysis: every instance of each vulnerability pattern across the codebase
+
 ## Philosophy
 
 Assume the attacker controls all user input, all HTTP headers, all query parameters,

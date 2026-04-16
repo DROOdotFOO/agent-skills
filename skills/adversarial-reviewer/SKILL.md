@@ -8,6 +8,7 @@ metadata:
   author: DROOdotFOO
   version: "1.0.0"
   tags: review, adversarial, security, reliability, code-quality
+  argument-hint: "<code block, file path, or PR URL>"
   license: MIT
 ---
 

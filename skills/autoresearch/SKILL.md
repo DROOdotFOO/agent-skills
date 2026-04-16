@@ -10,12 +10,19 @@ metadata:
   author: DROOdotFOO
   version: "1.0.0"
   tags: autoresearch, experiments, optimization, agents
+  argument-hint: '"<experiment topic>" [--metric m] [--direction lower|higher]'
 ---
 
 # Autoresearch
 
 Domain-agnostic autonomous experiment runner. Optimizes a single metric by
 iterating: hypothesis -> code change -> verify -> keep/discard.
+
+## What You Get
+
+- JSONL experiment log with metric history, deltas from baseline, and commit SHAs
+- Markdown results dashboard comparing all iterations
+- Git branch per experiment with keep/discard via commit/revert
 
 ## CLI Usage
 

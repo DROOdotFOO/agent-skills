@@ -2,6 +2,15 @@
 
 ## Session log
 
+**2026-04-16** -- Structural patterns. 53 skills, 8 agents + shared, 741 tests, 0 lint errors.
+
+- Root-level pytest: added pyproject.toml with importlib import mode, removed empty tests/__init__.py files; `pytest agents/` now runs all 741 tests from repo root
+- Skill splits (8 skills under 100 lines): blockscout, coingecko, cancer-predisposition-variant-analyst, digest, codebase-onboarding, git-guardrails, recall, prepper -- content moved to companion files with frontmatter
+- Output sections ("What You Get") added to 15 skills: digest, prepper, recall, codebase-onboarding, tdd, ci-cd-pipeline-builder, dependency-auditor, security-audit, mcp-server-builder, triage-issue, polymath, autoresearch, sentinel, watchdog, patchbot
+- Anti-pattern examples (WRONG/CORRECT pairs) added to 5 skills: tdd, ci-cd-pipeline-builder, git-guardrails, env-secrets-manager
+- argument-hint frontmatter added to 9 advisory skills: digest, recall, prepper, codebase-onboarding, polymath, triage-issue, autoresearch, grill-me, adversarial-reviewer
+- Plugin metadata updated: plugin.json + marketplace.json counts corrected (53 skills, 8 agents)
+
 **2026-04-12** -- Scribe agent. 51 skills, 8 agents + shared, 733 tests, 0 lint errors.
 
 - New agent: scribe -- session insight extractor that closes the knowledge loop

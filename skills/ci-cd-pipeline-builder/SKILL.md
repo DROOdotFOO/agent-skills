@@ -12,6 +12,11 @@ metadata:
 
 # CI/CD Pipeline Builder
 
+## What You Get
+
+- GitHub Actions or GitLab CI YAML file ready to commit
+- Dependency caching, pinned versions, test + lint + build stages
+
 ## Philosophy
 
 Start with a minimal reliable pipeline that runs tests on every push. Add complexity only when justified. A pipeline that is fast and trustworthy is better than one that is comprehensive and flaky.
@@ -62,6 +67,26 @@ Only if the user requests deployment. Add stages for:
 - Environment-specific secrets and approvals
 
 Keep deployment stages separate from CI stages. CI should pass before deployment is attempted.
+
+## WRONG: floating versions
+
+```yaml
+# WRONG: unpinned action version, no caching, floating runtime
+- uses: actions/setup-node@latest
+- run: npm ci && npm test
+```
+
+## CORRECT: pinned and cached
+
+```yaml
+# CORRECT: pinned action, lockfile cache, explicit runtime
+- uses: actions/setup-node@v4
+  with:
+    node-version-file: '.nvmrc'
+    cache: 'npm'
+- run: npm ci
+- run: npm test
+```
 
 ## Rules
 

@@ -17,6 +17,11 @@ metadata:
 Generate Model Context Protocol servers from OpenAPI specifications. Supports
 Python (FastMCP) and TypeScript targets.
 
+## What You Get
+
+- Working MCP server directory scaffolded from an OpenAPI spec
+- Typed tool definitions, auth wrappers, confirmation gates, and test stubs
+
 ## Workflow
 
 1. **Parse** -- Read the OpenAPI spec (JSON or YAML), extract paths, operations,

@@ -50,103 +50,16 @@ the appropriate platform ID (e.g. `solana`, `tron`, `ethereum`).
 
 GeckoTerminal endpoints use `/onchain` prefix on the same base URLs.
 
-## MCP Server
+## Reference
 
-CoinGecko provides an official MCP server for live data access. Two options:
-
-### Option 1: Remote (no install, keyless)
-
-Add to `~/.mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "coingecko": {
-      "url": "https://mcp.api.coingecko.com/mcp"
-    }
-  }
-}
-```
-
-Rate limited but works without API keys.
-
-### Option 2: Local stdio (higher limits)
-
-```json
-{
-  "mcpServers": {
-    "coingecko": {
-      "command": "npx",
-      "args": ["-y", "@coingecko/coingecko-mcp"],
-      "env": {
-        "COINGECKO_DEMO_API_KEY": "your-free-demo-key"
-      }
-    }
-  }
-}
-```
-
-Get a free Demo key at coingecko.com/en/api (30 calls/min).
-
-### MCP tools
-
-The server exposes 76+ API endpoints as tools including coin prices, market data,
-trending tokens, DEX pools, NFTs, and historical charts. It uses a code execution
-sandbox -- you write TypeScript against the CoinGecko SDK.
-
-## Reading guide
-
-| Question | Read |
-|----------|------|
-| Token prices, market cap, coin lookup | [coins](references/coins.md) |
-| DEX pools, trending, megafilter | [onchain-pools](references/onchain-pools.md) |
-| Price by contract address | [contract](references/contract.md) |
-| Global market stats, DeFi metrics | [global](references/global.md) |
-
-## Key endpoints cheat sheet
-
-```bash
-# Current price
-GET /simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true
-
-# Market data with ranking
-GET /coins/markets?vs_currency=usd&per_page=50&sparkline=true
-
-# Coin metadata + market data
-GET /coins/{id}?tickers=false&community_data=false
-
-# Price by contract address
-GET /simple/token_price/{platform_id}?contract_addresses=0x...&vs_currencies=usd
-
-# Top gainers/losers
-GET /coins/top_gainers_losers?vs_currency=usd&duration=24h
-
-# Trending DEX pools
-GET /onchain/networks/trending_pools?duration=24h
-
-# Pool megafilter
-GET /onchain/pools/megafilter?networks=eth&sort=h24_volume_usd_desc&reserve_in_usd_min=100000
-
-# Global market cap
-GET /global
-```
-
-## Common conventions
-
-- **Coin ID resolution**: Use `GET /coins/list` or `GET /search` to map symbols to IDs
-- **Auto-granularity for charts**: 1d = 5-min, 2-90d = hourly, 90d+ = daily (00:00 UTC)
-- **Date formats**: ISO `YYYY-MM-DD` for most endpoints, `DD-MM-YYYY` for `/coins/{id}/history`
-- **Latest daily data**: Available 10-35 min after midnight UTC
-
-## Error handling
-
-| Code | Meaning |
-|------|---------|
-| 401 | No API key |
-| 429 | Rate limit exceeded |
-| 10002 | Wrong auth method |
-| 10005 | Endpoint requires higher tier |
-| 10010 | Pro key on Demo URL (or vice versa) |
+| File | Topic |
+|------|-------|
+| [cheat-sheet.md](cheat-sheet.md) | Key endpoints, conventions, error codes |
+| [mcp-setup.md](mcp-setup.md) | MCP server config (remote + local) |
+| [references/coins.md](references/coins.md) | Token prices, market cap, coin lookup |
+| [references/onchain-pools.md](references/onchain-pools.md) | DEX pools, trending, megafilter |
+| [references/contract.md](references/contract.md) | Price by contract address |
+| [references/global.md](references/global.md) | Global market stats, DeFi metrics |
 
 ## See also
 

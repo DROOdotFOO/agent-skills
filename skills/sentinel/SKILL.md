@@ -17,6 +17,12 @@ metadata:
 On-chain contract monitor. 4 alert rules (large transfers, ownership changes,
 unusual methods, selfdestruct) across 8 chains via Blockscout API v2.
 
+## What You Get
+
+- Alert list: large transfers, ownership changes, unusual methods, selfdestruct calls
+- JSONL alert log at `~/.local/share/sentinel/alerts.jsonl`
+- macOS notifications for continuous watch mode
+
 ## CLI Usage
 
 ```bash

@@ -17,6 +17,12 @@ metadata:
 Continuous repo health monitor. Runs 6 checks: stale PRs, CI status, issue age,
 TODO-closed-refs, lockfile audit, and security advisories.
 
+## What You Get
+
+- Health report: pass/warn/fail for 6 checks per repo
+- Markdown report file or terminal output
+- Alerts in `~/.local/share/watchdog/alerts.jsonl` for cross-agent consumption
+
 ## CLI Usage
 
 ```bash
