@@ -69,6 +69,12 @@ EOF
 )"
 ```
 
+## What You Get
+
+- One or more GitHub issues filed via `gh issue create`, each with reproduction steps, expected behavior, and exploration notes
+- Parent/child issue trees when a single report reveals multiple distinct bugs
+- A running QA session log -- return to it with "what else?" until you say done
+
 ## Breakdown template
 
 When a report reveals multiple issues, file them separately with blocking

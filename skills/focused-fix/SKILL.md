@@ -50,6 +50,12 @@ Before starting any fix, check if the bug reveals an architectural problem:
 If any strike hits, note the architectural issue. Fix the bug first (do not
 refactor mid-fix), then file a follow-up issue for the architectural problem.
 
+## What You Get
+
+- A verified bug fix produced through five sequential phases: scope, trace, diagnose, fix, verify.
+- Root cause identification with an architectural strike assessment noting whether the bug class is systemic.
+- All tests passing after the fix, including downstream consumers, with a follow-up issue filed for any architectural problems discovered.
+
 ## Reading guide
 
 | Working on | Read |

@@ -62,6 +62,12 @@ Combine the best elements into a final design. Explain which parts came from whi
 - Prefer deep modules: small interface surface, rich behavior behind it.
 - If all designs converge, your constraints were too similar -- re-run with harder constraints.
 
+## What You Get
+
+- Three or more structurally distinct interface designs, each optimized for a different constraint set.
+- A side-by-side comparative evaluation scored against Ousterhout's criteria (depth, simplicity, misuse resistance).
+- A synthesized final design that combines the strongest elements from all candidates, with rationale for each choice.
+
 ## Sub-files
 
 | File | Topic |

@@ -8,22 +8,14 @@ like new governance proposals or engagement spikes.
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from enum import Enum
 
 from pydantic import BaseModel, Field
+from shared.models import AlertSeverity
 
 from digest.credibility import Tier, source_tier
 from digest.diff import Trend, classify_items
 from digest.memory import FeedMemory
 from digest.models import DigestResult, Item
-
-
-class AlertSeverity(str, Enum):
-    CRITICAL = "critical"
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-    INFO = "info"
 
 
 class DigestAlert(BaseModel):

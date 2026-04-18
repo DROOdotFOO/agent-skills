@@ -47,6 +47,12 @@ Recommended fix or alternative.
 
 Always end with a summary: total findings by category, overall quality score (0-100), and a PASS / CONDITIONAL PASS / FAIL verdict.
 
+## What You Get
+
+- A structured review report with findings categorized as MUST FIX, SHOULD FIX, SUGGESTIONS, and LOOKS GOOD, each with severity and file location.
+- Blast radius analysis showing how far the change reaches through dependency chains.
+- A quality score (0-100) and a final verdict (PASS, CONDITIONAL PASS, or FAIL).
+
 ## Sub-files
 
 | File                                       | Content                                    |

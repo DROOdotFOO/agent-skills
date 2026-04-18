@@ -7,25 +7,8 @@ and safe git/gh operations.
 from __future__ import annotations
 
 import re
-import sys
-from enum import Enum
 
-from pydantic import BaseModel
-
-
-class Verdict(str, Enum):
-    ALLOW = "allow"
-    DENY = "deny"
-    ASK = "ask"
-
-
-class HookResult(BaseModel):
-    """Result of a hook evaluation."""
-
-    verdict: Verdict
-    hook: str
-    reason: str
-
+from shared.hooks import HookResult, Verdict, log_hook_result
 
 # Known-safe commands that patchbot should be able to run.
 # Derived from detector.py UPDATE_COMMANDS, TEST_COMMANDS, OUTDATED_COMMANDS,
@@ -105,11 +88,4 @@ def pre_tool_use(command: str) -> HookResult:
     )
 
 
-def log_hook_result(result: HookResult) -> None:
-    """Log ASK verdicts to stderr so they're visible in non-interactive contexts."""
-    if result.verdict == Verdict.ASK:
-        print(
-            f"[HOOK] {result.hook}: {result.reason} "
-            "-- proceeding (ASK verdict, no interactive prompt available)",
-            file=sys.stderr,
-        )
+__all__ = ["Verdict", "HookResult", "log_hook_result", "pre_tool_use"]

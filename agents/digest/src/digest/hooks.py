@@ -11,25 +11,9 @@ import re
 import sys
 from typing import Any
 
-from digest.models import Item
+from shared.hooks import INJECTION_PATTERNS
 
-# Patterns that indicate prompt injection attempts in adapter responses.
-# Duplicated from recall.hooks (agents are standalone, no cross-imports).
-INJECTION_PATTERNS: list[tuple[str, str]] = [
-    (r"<\s*system\s*>", "XML system tag"),
-    (r"<\s*/\s*system\s*>", "XML system close tag"),
-    (r"<\s*instructions?\s*>", "XML instructions tag"),
-    (r"<\s*tool_use\s*>", "XML tool_use tag"),
-    (r"\[INST\]", "instruction delimiter"),
-    (r"<<\s*SYS\s*>>", "Llama system delimiter"),
-    (r"(?i)ignore\s+(all\s+)?previous\s+instructions?", "instruction override attempt"),
-    (r"(?i)you\s+are\s+now\s+(?:a|an)\b", "role reassignment attempt"),
-    (
-        r"(?i)forget\s+(?:all\s+)?(?:your\s+)?(?:previous\s+)?instructions?",
-        "instruction override attempt",
-    ),
-    (r"(?i)new\s+system\s+prompt", "system prompt injection"),
-]
+from digest.models import Item
 
 
 def _scan_text(text: str) -> str | None:

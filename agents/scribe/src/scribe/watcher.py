@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import sys
 import time
 from pathlib import Path
 
@@ -18,12 +17,6 @@ from scribe.extractor import extract_insights
 from scribe.hooks import Verdict, log_hook_result, pre_scribe_write
 from scribe.models import ScribeActivity, WatchState
 from scribe.session_parser import parse_session
-
-if sys.version_info >= (3, 11):
-    import tomllib
-else:
-    import tomli as tomllib  # type: ignore[no-redef]
-
 
 CLAUDE_DIR = Path.home() / ".claude"
 HISTORY_PATH = CLAUDE_DIR / "history.jsonl"
@@ -45,9 +38,9 @@ class ScribeWatchConfig(BaseModel):
 
     @classmethod
     def from_toml(cls, path: Path) -> ScribeWatchConfig:
-        with open(path, "rb") as f:
-            data = tomllib.load(f)
-        return cls(**data)
+        from shared.config import load_toml
+
+        return cls(**load_toml(path))
 
 
 # -- Offset tracking ----------------------------------------------------------
@@ -199,7 +192,7 @@ def process_session(
         if result.verdict == Verdict.ALLOW:
             filtered.append(entry)
         else:
-            log_hook_result(result)
+            log_hook_result(result, log_all=True)
 
     # Dedup against recall store
     unique = deduplicate(filtered, store, similarity_threshold=similarity_threshold)

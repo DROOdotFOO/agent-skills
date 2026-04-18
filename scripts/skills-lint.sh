@@ -93,7 +93,12 @@ for skill_dir in "${SKILLS_DIR}"/*/; do
         done
     fi
 
-    # 6. Check "See also" references point to real skills
+    # 6. Check for "What You Get" output section
+    if ! grep -qE '^##+ What You Get' "$skill_md" 2>/dev/null; then
+        check_warn "SKILL.md" "missing '## What You Get' section"
+    fi
+
+    # 7. Check "See also" references point to real skills
     if grep -q "## See also" "$skill_md" 2>/dev/null; then
         see_also_skills=""
         see_also_skills=$(sed -n '/## See also/,/^## /p' "$skill_md" | \

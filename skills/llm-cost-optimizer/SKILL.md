@@ -54,6 +54,12 @@ Apply techniques in this order (highest impact first):
 
 See [optimization-techniques.md](./optimization-techniques.md) for detailed guidance on each technique.
 
+## What You Get
+
+- A cost audit identifying which use cases drive the majority of LLM spend, with per-request and total cost breakdowns.
+- Prioritized optimization recommendations (model routing, caching, compression) ranked by reduction potential.
+- Concrete implementation steps with expected cost savings percentages for each technique.
+
 ## Rules
 
 1. Never optimize before measuring -- instrument first

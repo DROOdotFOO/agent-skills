@@ -60,6 +60,12 @@ Guardrails: input validation, output filtering, 30s timeout per agent
 Estimated cost: ~$0.05 per PR (avg 500 lines)
 ```
 
+## What You Get
+
+- An agent architecture document specifying each agent's role, inputs, outputs, tools, and constraints.
+- An orchestration pattern recommendation (pipeline, supervisor, hierarchical, or swarm) with rationale.
+- Tool schemas, guardrail definitions, and estimated per-invocation cost for the complete system.
+
 ## Sub-files
 
 | File                                                   | Content                                    |

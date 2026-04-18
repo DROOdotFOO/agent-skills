@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "digest": { "command": "digest", "args": ["serve"] },
+    "recall": { "command": "recall", "args": ["serve"] },
+    "scribe": { "command": "scribe", "args": ["serve"] },
+    "autoresearch": { "command": "autoresearch", "args": ["serve"] },
+    "watchdog": { "command": "watchdog", "args": ["serve"] },
+    "prepper": { "command": "prepper", "args": ["serve"] },
+    "sentinel": { "command": "sentinel", "args": ["serve"] },
+    "patchbot": { "command": "patchbot", "args": ["serve"] },
+    "coingecko": { "url": "https://mcp.api.coingecko.com/mcp" }
+  }
+}

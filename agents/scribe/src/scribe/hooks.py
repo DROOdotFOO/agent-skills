@@ -7,10 +7,7 @@ adds scribe-specific noise filtering.
 
 from __future__ import annotations
 
-import sys
-from enum import Enum
-
-from pydantic import BaseModel
+from shared.hooks import HookResult, Verdict, log_hook_result
 
 MIN_INSIGHT_LENGTH = 20
 
@@ -23,18 +20,6 @@ _NOISE_PREFIXES: list[str] = [
     "Collecting",
     "Downloading",
 ]
-
-
-class Verdict(str, Enum):
-    ALLOW = "allow"
-    DENY = "deny"
-    ASK = "ask"
-
-
-class HookResult(BaseModel):
-    verdict: Verdict
-    hook: str
-    reason: str
 
 
 def pre_scribe_write(content: str) -> HookResult:
@@ -65,10 +50,4 @@ def pre_scribe_write(content: str) -> HookResult:
     )
 
 
-def log_hook_result(result: HookResult) -> None:
-    """Log non-ALLOW verdicts to stderr."""
-    if result.verdict != Verdict.ALLOW:
-        print(
-            f"[HOOK] {result.hook}: {result.reason} (verdict={result.verdict.value})",
-            file=sys.stderr,
-        )
+__all__ = ["Verdict", "HookResult", "log_hook_result", "pre_scribe_write"]

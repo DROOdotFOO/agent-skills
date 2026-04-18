@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Agent-skills: 53 Claude Code skills and 8 autonomous agents (31 MCP tools, 741 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
+Agent-skills: 53 Claude Code skills and 8 autonomous agents (31 MCP tools, 771 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
 
 ## Structure
 
@@ -40,7 +40,7 @@ scripts/                  # Repo tooling (skills-lint.sh)
 ./scripts/skills-lint.sh
 ```
 
-Validates: frontmatter fields, trigger clauses, file references, cross-skill links.
+Validates: frontmatter fields, trigger clauses, file references, cross-skill links, "What You Get" sections.
 
 ### Adding a skill
 
@@ -75,7 +75,7 @@ All agents expose MCP servers via `<agent> serve` (stdio transport). Configure i
 cd agents/<name> && python -m pytest tests/ -v
 ```
 
-741 tests total across all agents + shared, 0 mocks.
+771 tests total across all agents + shared, 0 mocks.
 
 ## Conventions
 

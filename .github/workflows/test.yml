@@ -1,0 +1,42 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install agents
+        run: |
+          pip install --upgrade pip
+          pip install -e agents/shared
+          for d in agents/*/; do
+            if [ -f "$d/pyproject.toml" ] && [ "$d" != "agents/shared/" ]; then
+              pip install -e "$d[dev]"
+            fi
+          done
+
+      - name: Lint
+        run: |
+          ruff check agents/
+          ruff format --check agents/
+
+      - name: Test
+        run: pytest agents/ -v
+
+      - name: Skills lint
+        run: bash scripts/skills-lint.sh

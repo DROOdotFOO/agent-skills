@@ -58,6 +58,12 @@ Group terms into multiple tables by domain area (not one giant table).
   DECISION: use "Account" for financial, "User" for identity.
 ```
 
+## What You Get
+
+- A `UBIQUITOUS_LANGUAGE.md` file in the project root with canonical terms grouped by domain area
+- Tables listing each term's definition, aliases to avoid, relationships with cardinality, and example dialogue
+- Flagged ambiguities where the same word means different things in different contexts, each with a documented decision
+
 ## Rules
 
 1. **Be opinionated** -- Pick one canonical term per concept, always

@@ -3,19 +3,9 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from enum import Enum
 
 from pydantic import BaseModel, Field
-
-
-class AlertSeverity(str, Enum):
-    """Severity levels for contract alerts."""
-
-    CRITICAL = "critical"
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-    INFO = "info"
+from shared.models import AlertSeverity
 
 
 class ContractWatch(BaseModel):

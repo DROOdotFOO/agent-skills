@@ -56,6 +56,12 @@ Summary: discover -> recurs 2-3x -> review flags -> promote to CLAUDE.md or rule
 - [2026-04-05] Build takes 4min -- investigate caching
 ```
 
+## What You Get
+
+- A curated MEMORY.md with timestamped patterns, corrections, and observations accumulated across sessions
+- Promotion recommendations identifying recurring patterns ready to graduate to CLAUDE.md or `.claude/rules/`
+- Extracted skills scaffolded from patterns that recur frequently enough to warrant standalone skill files
+
 ## Rules
 
 1. Never promote after a single occurrence -- wait for recurrence

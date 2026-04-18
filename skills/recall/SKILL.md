@@ -55,6 +55,12 @@ recall stats
 - When encountering a useful pattern, capture it with project and tags
 - When finding a valuable resource, save it as a link entry
 
+## What You Get
+
+- Full CLI and MCP tool reference for querying and storing knowledge entries (decisions, patterns, gotchas, links, insights)
+- Entry type guidance so you store knowledge in the right category for later retrieval
+- Search and filtering patterns for finding relevant past context by project, type, or full-text query
+
 ## Reference
 
 | File | Topic |

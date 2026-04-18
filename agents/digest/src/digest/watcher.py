@@ -6,7 +6,6 @@ and trigger rules, then polls on a configurable interval.
 
 from __future__ import annotations
 
-import sys
 import time
 from pathlib import Path
 
@@ -54,16 +53,9 @@ class WatchConfig(BaseModel):
     @classmethod
     def from_toml(cls, path: Path) -> WatchConfig:
         """Load watch config from a TOML file."""
-        if sys.version_info >= (3, 11):
-            import tomllib
-        else:
-            try:
-                import tomllib
-            except ImportError:
-                import tomli as tomllib  # type: ignore[no-redef]
+        from shared.config import load_toml
 
-        text = path.read_text()
-        raw = tomllib.loads(text)
+        raw = load_toml(path)
 
         topics = []
         for t in raw.get("topics", []):

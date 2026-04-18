@@ -61,6 +61,12 @@ GeckoTerminal endpoints use `/onchain` prefix on the same base URLs.
 | [references/contract.md](references/contract.md) | Price by contract address |
 | [references/global.md](references/global.md) | Global market stats, DeFi metrics |
 
+## What You Get
+
+- Reference documentation for CoinGecko and GeckoTerminal API endpoints covering token prices, market data, DEX pools, and on-chain analytics.
+- Guidance on when to use aggregated CoinGecko data vs pool-level GeckoTerminal data, with multi-chain platform IDs.
+- Authentication tiers, rate limits, and MCP server configuration for automated queries.
+
 ## See also
 
 - `blockscout` -- on-chain contract state, transactions, token transfers

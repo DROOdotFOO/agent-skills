@@ -95,6 +95,12 @@ The linter checks:
 - File references in reading guide tables point to real files
 - Cross-skill references in "See also" point to real skill directories
 
+## What You Get
+
+- A complete `skills/<name>/` directory with a SKILL.md entry point containing valid frontmatter and trigger clauses
+- Sub-files with correct YAML frontmatter (impact, impactDescription, tags) and incorrect/correct example pairs
+- A skill that passes `./scripts/skills-lint.sh` on the first run with no manual fixes needed
+
 ## Reading guide
 
 | Topic | File |

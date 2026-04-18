@@ -2,17 +2,13 @@
 
 from __future__ import annotations
 
-import sys
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 
 from pydantic import BaseModel, Field
-
-if sys.version_info >= (3, 11):
-    import tomllib
-else:
-    import tomli as tomllib  # type: ignore[no-redef]
+from shared.config import load_toml
+from shared.models import AlertSeverity
 
 
 class Status(str, Enum):
@@ -50,16 +46,6 @@ class RepoHealth(BaseModel):
         if any(c.status == Status.WARN for c in self.checks):
             return Status.WARN
         return Status.PASS
-
-
-class AlertSeverity(str, Enum):
-    """Severity levels for watchdog alerts (aligned with sentinel/digest)."""
-
-    CRITICAL = "critical"
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-    INFO = "info"
 
 
 class WatchdogAlert(BaseModel):
@@ -104,8 +90,7 @@ class WatchConfig(BaseModel):
     @classmethod
     def from_toml(cls, path: Path) -> WatchConfig:
         """Load configuration from a TOML file."""
-        with open(path, "rb") as f:
-            data = tomllib.load(f)
+        data = load_toml(path)
         return cls(**data)
 
     @classmethod

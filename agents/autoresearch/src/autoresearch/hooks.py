@@ -8,25 +8,8 @@ mutable_files and dangerous content patterns.
 from __future__ import annotations
 
 import re
-import sys
-from enum import Enum
 
-from pydantic import BaseModel
-
-
-class Verdict(str, Enum):
-    ALLOW = "allow"
-    DENY = "deny"
-    ASK = "ask"
-
-
-class HookResult(BaseModel):
-    """Result of a hook evaluation."""
-
-    verdict: Verdict
-    hook: str
-    reason: str
-
+from shared.hooks import HookResult, Verdict, log_hook_result
 
 # Commands that are always safe for verify/guard.
 # Each entry is a regex anchored to the start of the command.
@@ -109,14 +92,7 @@ def pre_tool_use(command: str) -> HookResult:
     )
 
 
-def log_hook_result(result: HookResult) -> None:
-    """Log ASK verdicts to stderr so they're visible in non-interactive contexts."""
-    if result.verdict == Verdict.ASK:
-        print(
-            f"[HOOK] {result.hook}: {result.reason} "
-            "-- proceeding (ASK verdict, no interactive prompt available)",
-            file=sys.stderr,
-        )
+__all__ = ["Verdict", "HookResult", "log_hook_result", "pre_tool_use", "pre_sub_agent_spawn"]
 
 
 # Patterns in file content that suggest shell injection via agent-proposed code.

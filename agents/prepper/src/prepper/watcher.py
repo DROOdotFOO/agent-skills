@@ -7,19 +7,13 @@ new entries into a unified log and dispatches macOS notifications.
 from __future__ import annotations
 
 import json
-import sys
 import time
 from pathlib import Path
 
 from pydantic import BaseModel, Field
+from shared.config import load_toml
 from shared.notify import notify_macos
 from shared.paths import agent_alert_log, agent_data_dir
-
-if sys.version_info >= (3, 11):
-    import tomllib
-else:
-    import tomli as tomllib  # type: ignore[no-redef]
-
 
 # -- Config models -----------------------------------------------------------
 
@@ -48,8 +42,7 @@ class PrepperWatchConfig(BaseModel):
 
     @classmethod
     def from_toml(cls, path: Path) -> PrepperWatchConfig:
-        with open(path, "rb") as f:
-            data = tomllib.load(f)
+        data = load_toml(path)
 
         notif = data.get("notifications", {})
         logs_raw = data.get("agent_logs", [])

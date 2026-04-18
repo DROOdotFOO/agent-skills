@@ -7,42 +7,13 @@ before allowing persistence to the FTS5 store.
 from __future__ import annotations
 
 import re
-import sys
-from enum import Enum
 
-from pydantic import BaseModel
-
-
-class Verdict(str, Enum):
-    ALLOW = "allow"
-    DENY = "deny"
-    ASK = "ask"
-
-
-class HookResult(BaseModel):
-    """Result of a hook evaluation."""
-
-    verdict: Verdict
-    hook: str
-    reason: str
-
-
-# Patterns that indicate prompt injection attempts
-INJECTION_PATTERNS: list[tuple[str, str]] = [
-    (r"<\s*system\s*>", "XML system tag"),
-    (r"<\s*/\s*system\s*>", "XML system close tag"),
-    (r"<\s*instructions?\s*>", "XML instructions tag"),
-    (r"<\s*tool_use\s*>", "XML tool_use tag"),
-    (r"\[INST\]", "instruction delimiter"),
-    (r"<<\s*SYS\s*>>", "Llama system delimiter"),
-    (r"(?i)ignore\s+(all\s+)?previous\s+instructions?", "instruction override attempt"),
-    (r"(?i)you\s+are\s+now\s+(?:a|an)\b", "role reassignment attempt"),
-    (
-        r"(?i)forget\s+(?:all\s+)?(?:your\s+)?(?:previous\s+)?instructions?",
-        "instruction override attempt",
-    ),
-    (r"(?i)new\s+system\s+prompt", "system prompt injection"),
-]
+from shared.hooks import (
+    INJECTION_PATTERNS,
+    HookResult,
+    Verdict,
+    log_hook_result,
+)
 
 # Patterns that look like credentials or secrets
 CREDENTIAL_PATTERNS: list[tuple[str, str]] = [
@@ -88,11 +59,4 @@ def pre_memory_write(content: str) -> HookResult:
     )
 
 
-def log_hook_result(result: HookResult) -> None:
-    """Log ASK verdicts to stderr so they're visible in non-interactive contexts."""
-    if result.verdict == Verdict.ASK:
-        print(
-            f"[HOOK] {result.hook}: {result.reason} "
-            "-- proceeding (ASK verdict, no interactive prompt available)",
-            file=sys.stderr,
-        )
+__all__ = ["Verdict", "HookResult", "log_hook_result", "pre_memory_write"]

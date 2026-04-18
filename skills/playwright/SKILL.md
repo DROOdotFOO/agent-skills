@@ -105,6 +105,12 @@ await expect(page.getByText('Done')).toBeVisible();
 | [automation-recipes.md](automation-recipes.md) | Screenshots, PDF gen, network interception, auth, file uploads |
 | [accessibility.md](accessibility.md) | axe-core integration, ARIA, keyboard navigation testing |
 
+## What You Get
+
+- Reference documentation for Playwright browser automation covering both Python (pytest-playwright) and TypeScript (@playwright/test).
+- Selector strategies, auto-waiting patterns, and assertion best practices with WRONG vs CORRECT examples.
+- Recipes for common automation tasks: screenshots, PDF generation, network interception, auth flows, file uploads, and accessibility testing.
+
 ## See also
 
 - `tdd` -- for TDD workflow when writing Playwright tests

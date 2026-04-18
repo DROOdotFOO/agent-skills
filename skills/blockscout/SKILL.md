@@ -47,6 +47,12 @@ Default: Ethereum (1). Use `get_chains_list` to discover all 90+ supported chain
 | [tools-reference.md](tools-reference.md) | All 16 tools grouped by category |
 | [usage-patterns.md](usage-patterns.md) | Common workflows, pagination, error handling |
 
+## What You Get
+
+- Reference documentation for all 16 Blockscout MCP tools covering address intelligence, transactions, contracts, and block data.
+- Chain ID lookup tables and common usage patterns for querying on-chain state across 90+ EVM chains.
+- Pagination handling, error recovery, and time-based query guidance for efficient data retrieval.
+
 ## See also
 
 - `coingecko` -- market prices, volumes, DEX pools, trending tokens

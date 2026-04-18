@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 import typer
 from rich.console import Console
 from rich.table import Table
+from shared.config import load_toml
 from shared.notify import append_to_log, notify_macos
 from shared.paths import agent_alert_log
 
@@ -24,13 +24,7 @@ ALERTS_LOG = agent_alert_log("sentinel")
 
 def _load_config(config_path: Path) -> WatchConfig:
     """Load a sentinel.toml config file."""
-    if sys.version_info >= (3, 11):
-        import tomllib
-    else:
-        import tomli as tomllib
-
-    text = config_path.read_text()
-    data = tomllib.loads(text)
+    data = load_toml(config_path)
 
     contracts = []
     for entry in data.get("contracts", []):

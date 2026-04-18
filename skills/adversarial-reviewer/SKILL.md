@@ -53,6 +53,12 @@ After review, issue exactly one verdict:
 - **CONCERNS** -- HIGH or multiple MEDIUM issues. Merge after addressing.
 - **CLEAN** -- Only LOW issues. Safe to merge.
 
+## What You Get
+
+- A consolidated adversarial review report with findings from three independent personas (Saboteur, New Hire, Security Auditor), grouped by severity (CRITICAL/HIGH/MEDIUM/LOW).
+- Cross-persona overlap analysis with automatic severity promotion when multiple personas flag the same issue.
+- A single verdict (BLOCK, CONCERNS, or CLEAN) indicating merge readiness.
+
 ## Output Format
 
 ```

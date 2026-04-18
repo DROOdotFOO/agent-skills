@@ -45,6 +45,12 @@ Alert: burn rate >14.4x over 1h AND >6x over 6h -> page
 Dashboard: 4 panels (availability, latency distribution, error rate, saturation)
 ```
 
+## What You Get
+
+- SLI/SLO definitions with error budgets tailored to business requirements and historical performance data.
+- Burn-rate alert configurations designed to minimize false positives and pager fatigue.
+- Dashboard layouts organized by role (on-call, product, executive) with actionable panels for availability, latency, and saturation.
+
 ## Sub-files
 
 | File                                         | Content                                    |

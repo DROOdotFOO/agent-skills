@@ -40,6 +40,12 @@ Design retrieval-augmented generation pipelines with the right tradeoffs at each
 | Technical docs | Recursive                 | General-purpose  | Hybrid          |
 | Mixed/unknown  | Recursive (fallback)      | General-purpose  | Hybrid + rerank |
 
+## What You Get
+
+- A RAG pipeline architecture specifying chunking strategy, embedding model, vector store, and retrieval method for your document types
+- Concrete configuration recommendations (chunk size, overlap, dimensions, top-k) with rationale for each tradeoff
+- An evaluation plan using RAGAS or equivalent metrics to validate retrieval quality before and after tuning
+
 ## Rules
 
 1. Start simple -- fixed-size chunks + dense retrieval is a valid baseline

@@ -82,6 +82,12 @@ When rewriting with a voice profile loaded:
 | ------- | -------------------------------------- | ------------------------------------------------------------------------------------------- |
 | Chapman | [voices/chapman.md](voices/chapman.md) | Essays, blog posts, anything that benefits from thinking-out-loud and productive digression |
 
+## What You Get
+
+- A calibrated writing voice applied to your draft, borrowing specific structural and rhythmic moves from loaded voice profiles
+- In review mode, annotated feedback showing where your prose diverges from the target voice without rewriting it
+- Blended voice configurations that weight multiple influences (heavy/light) per-paragraph based on what the material needs
+
 ## Reading guide
 
 | Task                   | Read                                   |

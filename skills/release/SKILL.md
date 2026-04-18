@@ -46,6 +46,12 @@ Readiness: 8/9 checks passed (WARN: no stakeholder sign-off)
 Action: Tag and push? [y/n]
 ```
 
+## What You Get
+
+- A semantically versioned release tag with the correct bump (major/minor/patch) derived from conventional commits
+- A generated changelog grouped by category (features, fixes, breaking changes) with user-meaningful descriptions
+- A readiness report showing which pre-release checks passed or failed, with warnings for anything unresolved
+
 ## Sub-files
 
 | File                                               | Content                                    |

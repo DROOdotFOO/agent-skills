@@ -44,6 +44,12 @@ Priority: STRATEGIC (high value, high effort)
 
 End with a summary: total debt items by type, priority distribution, top 5 recommendations, and trend direction if historical data exists.
 
+## What You Get
+
+- A debt inventory listing every finding with type, severity, file location, and cost-of-delay assessment
+- Priority rankings using a strategic/tactical matrix so you know which debt to pay down first
+- A summary with totals by type, priority distribution, top 5 recommendations, and trend direction versus prior scans
+
 ## Sub-files
 
 | File                                   | Content                                  |
