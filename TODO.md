@@ -1,10 +1,72 @@
 # TODO
 
+## ~~Deployment gap: 6 skills not reaching ~/.claude/skills/~~ FIXED 2026-04-18
+
+Resolved. The `.chezmoiexternal.toml` config was correct (`include = ["*/skills/**"]`), but the 168h archive cache hadn't refreshed. Fixed with `chezmoi apply --refresh-externals ~/.agents/skills` + manual symlink creation. All 53 skills now deployed. After adding new skills, run `chezmoi apply --refresh-externals` to force re-download.
+
+## Framework improvements
+
+Identified 2026-04-18 via deep architecture audit. Ordered: dedup/shared abstractions first, CI last.
+
+### Phase A: Shared agent abstractions (deduplication)
+
+- [ ] **Shared CLI boilerplate** -- extract to `agents/shared/cli.py`
+  - `create_app(name, help)` factory for Typer app + console + err setup (duplicated across 8 agents)
+  - `load_toml_config(path)` with conditional `tomli`/`tomllib` (duplicated in sentinel, prepper, watchdog, scribe)
+  - `serve_command(server_factory)` decorator for MCP serve (identical pattern in 8 `mcp_server.py` files)
+- [ ] **Unified Alert model** -- extract to `agents/shared/models.py`
+  - Base `Alert(severity, rule_name, message, agent, timestamp, metadata)` replacing `SentinelAlert` (59 LOC), `WatchdogAlert` (114 LOC), `DigestAlert` (40 LOC) which are 70% identical
+  - `AlertStore` in `agents/shared/store.py` for JSONL append/read (replaces per-agent JSONL code)
+  - Enables cross-agent alert filtering without prepper as middleman
+- [ ] **MCP server factory** -- extract shared pattern from 8 identical `mcp_server.py` files
+  - Common: FastMCP creation, tool registration, stdio transport
+  - Agent-specific: tool definitions only
+- [ ] **Shared deps in pyproject.toml** -- `agent-shared` pulls common deps (typer, pydantic, rich, fastmcp)
+  - Add upper bounds to all deps (currently all `>=X.Y.Z` with no ceiling)
+  - Individual agents depend on `agent-shared` + their own specifics
+
+### Phase B: Testing gaps
+
+- [ ] **Integration test suite** -- `agents/*/tests/test_integration.py`
+  - CLI invocation tests via `typer.testing.CliRunner` (currently 0)
+  - MCP tool round-trip tests (currently only isolated tool tests, no transport)
+  - Alert JSONL serialization round-trips
+  - Watch command tests (digest, sentinel, prepper, watchdog -- all untested)
+- [ ] **Type checking** -- add mypy or pyright config to root `pyproject.toml`
+  - Currently no static type checking despite heavy pydantic usage
+
+### Phase C: Skill quality consistency
+
+- [ ] **Enforce `argument-hint`** in `skills-lint.sh` for skills accepting parameters
+  - Missing from: architect, agent-designer, adversarial-reviewer, others with 3+ params
+- [ ] **Enforce "What You Get" section** for all skills (currently 15/53 have it)
+- [ ] **Reading guide pattern** for skills with 4+ reference files (e.g. native-code has 8 files in references/ but no index)
+- [ ] **Pre-commit hook** for `skills-lint.sh` (currently manual-only)
+
+### Phase D: Documentation
+
+- [ ] Root README quick-start and architecture overview (currently no install instructions)
+- [ ] Shared `.mcp.json` template (currently requires manual copy-paste of 8 entries)
+- [ ] `.env.example` documenting required env vars (`ANTHROPIC_API_KEY`, `SHODAN_API_KEY`, etc.)
+- [ ] Expand scribe + patchbot READMEs (43-59 lines vs 77+ for digest)
+
+### Phase E: CI/CD (last)
+
+- [ ] **GitHub Actions workflow** -- `.github/workflows/test.yml`
+  - `pytest agents/ -v` (all 741 tests)
+  - `ruff check agents/`
+  - `bash scripts/skills-lint.sh`
+  - `python scripts/skill-triggers-test.py`
+- [ ] **Release automation** -- version bumping, changelog (all agents frozen at 0.1.0)
+- [ ] **Snyk agent-scan** gate (deferred: server returning 503)
+
+---
+
 ## Session log
 
 **2026-04-16** -- Structural patterns. 53 skills, 8 agents + shared, 741 tests, 0 lint errors.
 
-- Root-level pytest: added pyproject.toml with importlib import mode, removed empty tests/__init__.py files; `pytest agents/` now runs all 741 tests from repo root
+- Root-level pytest: added pyproject.toml with importlib import mode, removed empty tests/**init**.py files; `pytest agents/` now runs all 741 tests from repo root
 - Skill splits (8 skills under 100 lines): blockscout, coingecko, cancer-predisposition-variant-analyst, digest, codebase-onboarding, git-guardrails, recall, prepper -- content moved to companion files with frontmatter
 - Output sections ("What You Get") added to 15 skills: digest, prepper, recall, codebase-onboarding, tdd, ci-cd-pipeline-builder, dependency-auditor, security-audit, mcp-server-builder, triage-issue, polymath, autoresearch, sentinel, watchdog, patchbot
 - Anti-pattern examples (WRONG/CORRECT pairs) added to 5 skills: tdd, ci-cd-pipeline-builder, git-guardrails, env-secrets-manager
@@ -45,7 +107,7 @@
 - AARTS Level 2 hooks: PostToolUse (digest), PreMemoryRead (prepper), PreSubAgentSpawn (autoresearch)
 - digest hooks.py: scan adapter response items (title, url, raw dict) for injection patterns before synthesis; sanitize recall_context strings; strip poisoned items, log removals
 - prepper hooks.py: scan recall entries before briefing injection, strip entries with injection patterns, flag auto-sourced entries (digest:/extract:) with [auto] provenance prefix
-- autoresearch hooks.py: pre_sub_agent_spawn validates file changes against mutable_files + scans content for dangerous patterns (os.system, subprocess, eval, exec, __import__); replaces silent skip with formal DENY
+- autoresearch hooks.py: pre_sub_agent_spawn validates file changes against mutable_files + scans content for dangerous patterns (os.system, subprocess, eval, exec, **import**); replaces silent skip with formal DENY
 - ASK verdict enforcement: log_hook_result() added to all 5 agents (recall, autoresearch, patchbot, digest, prepper); ASK verdicts now log warning to stderr instead of passing silently
 - Fixed prepper gatherers.py: RecallStore -> Store import, added SearchResult unwrapping
 - Hooks wired into enforcement points: pipeline.py (digest), gatherers.py (prepper), cli.py (autoresearch), store.py (recall), runner.py (autoresearch), updater.py (patchbot)
@@ -441,7 +503,7 @@ Each adapter touches 5 files: `adapters/{key}.py`, `adapters/__init__.py`, `cred
 
 - [ ] XML parsing utility -- shared by arXiv (Atom), PubMed efetch (NCBI XML), UK Legislation (Atom). Extract to `adapters/_xml.py`.
 - [ ] ExpandedQuery extensions -- add `arxiv_categories: list[str]`, `pubmed_mesh: list[str]`, `legal_jurisdiction: str` to `expansion.py`
-- [ ] Credibility module updates -- add all new sources to SOURCE_TIERS + _per_item_bonus cases
+- [ ] Credibility module updates -- add all new sources to SOURCE_TIERS + \_per_item_bonus cases
 - [ ] Ranking weights -- add all new adapter keys to PLATFORM_WEIGHTS
 
 ---
