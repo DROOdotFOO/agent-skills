@@ -10,59 +10,59 @@ Identified 2026-04-18 via deep architecture audit. Ordered: dedup/shared abstrac
 
 ### Phase A: Shared agent abstractions (deduplication)
 
-- [ ] **Shared CLI boilerplate** -- extract to `agents/shared/cli.py`
-  - `create_app(name, help)` factory for Typer app + console + err setup (duplicated across 8 agents)
-  - `load_toml_config(path)` with conditional `tomli`/`tomllib` (duplicated in sentinel, prepper, watchdog, scribe)
-  - `serve_command(server_factory)` decorator for MCP serve (identical pattern in 8 `mcp_server.py` files)
-- [ ] **Unified Alert model** -- extract to `agents/shared/models.py`
-  - Base `Alert(severity, rule_name, message, agent, timestamp, metadata)` replacing `SentinelAlert` (59 LOC), `WatchdogAlert` (114 LOC), `DigestAlert` (40 LOC) which are 70% identical
-  - `AlertStore` in `agents/shared/store.py` for JSONL append/read (replaces per-agent JSONL code)
-  - Enables cross-agent alert filtering without prepper as middleman
-- [ ] **MCP server factory** -- extract shared pattern from 8 identical `mcp_server.py` files
-  - Common: FastMCP creation, tool registration, stdio transport
-  - Agent-specific: tool definitions only
-- [ ] **Shared deps in pyproject.toml** -- `agent-shared` pulls common deps (typer, pydantic, rich, fastmcp)
-  - Add upper bounds to all deps (currently all `>=X.Y.Z` with no ceiling)
-  - Individual agents depend on `agent-shared` + their own specifics
+- [x] **Shared hook primitives** -- extracted to `agents/shared/hooks.py`
+  - `Verdict`, `HookResult`, `log_hook_result` (was duplicated in recall, autoresearch, patchbot, scribe)
+  - `INJECTION_PATTERNS` (was duplicated in recall, digest, prepper)
+- [x] **AlertSeverity enum** -- extracted to `agents/shared/models.py` (was duplicated in sentinel, watchdog, digest)
+- [x] **TOML config loader** -- extracted to `agents/shared/config.py` with `load_toml`/`load_toml_string` (was duplicated in sentinel, watchdog, digest, prepper, scribe); removed direct `tomli` dep from 4 agents
+- [x] **Shared deps** -- recall, autoresearch, patchbot now depend on `agent-shared` (join sentinel, watchdog, digest, prepper, scribe)
+- ~~Shared CLI boilerplate~~ -- not worth it: 3 lines per agent, all different help strings
+- ~~Unified Alert model~~ -- not worth it: sentinel/watchdog/digest share only 3 fields, forced base class is a leaky abstraction
+- ~~MCP server factory~~ -- not worth it: FastMCP setup is 5 LOC, all different
+- ~~Upper bounds on deps~~ -- creates churn without lockfiles
 
 ### Phase B: Testing gaps
 
-- [ ] **Integration test suite** -- `agents/*/tests/test_integration.py`
-  - CLI invocation tests via `typer.testing.CliRunner` (currently 0)
-  - MCP tool round-trip tests (currently only isolated tool tests, no transport)
-  - Alert JSONL serialization round-trips
-  - Watch command tests (digest, sentinel, prepper, watchdog -- all untested)
-- [ ] **Type checking** -- add mypy or pyright config to root `pyproject.toml`
-  - Currently no static type checking despite heavy pydantic usage
+- [x] **CLI integration tests** -- `agents/*/tests/test_cli.py` via `typer.testing.CliRunner` for all 8 agents (30 tests: help, serve, subcommand smoke tests)
+- ~~MCP transport round-trip tests~~ -- factory tests sufficient, transport tests need async infra for marginal benefit
+- ~~Type checking~~ -- pydantic provides runtime validation, large surface area for marginal benefit
 
 ### Phase C: Skill quality consistency
 
-- [ ] **Enforce `argument-hint`** in `skills-lint.sh` for skills accepting parameters
-  - Missing from: architect, agent-designer, adversarial-reviewer, others with 3+ params
-- [ ] **Enforce "What You Get" section** for all skills (currently 15/53 have it)
-- [ ] **Reading guide pattern** for skills with 4+ reference files (e.g. native-code has 8 files in references/ but no index)
-- [ ] **Pre-commit hook** for `skills-lint.sh` (currently manual-only)
+- [x] **Enforce "What You Get" section** -- added to `skills-lint.sh` as warning; all 53/53 skills now have it
+- ~~Enforce `argument-hint`~~ -- most skills don't accept freeform input, would produce 44 false positives
+- ~~Reading guide pattern~~ -- SKILL.md already serves as entry point with file references
+- ~~Pre-commit hook~~ -- CI catches it
 
 ### Phase D: Documentation
 
-- [ ] Root README quick-start and architecture overview (currently no install instructions)
-- [ ] Shared `.mcp.json` template (currently requires manual copy-paste of 8 entries)
-- [ ] `.env.example` documenting required env vars (`ANTHROPIC_API_KEY`, `SHODAN_API_KEY`, etc.)
-- [ ] Expand scribe + patchbot READMEs (43-59 lines vs 77+ for digest)
+- [x] `.env.example` documenting required env vars
+- [x] `mcp.example.json` -- copyable MCP config template
+- [x] Expand scribe + patchbot READMEs (now match digest's pattern)
+- ~~Root README quick-start~~ -- README already has install instructions and comprehensive tables
 
 ### Phase E: CI/CD (last)
 
-- [ ] **GitHub Actions workflow** -- `.github/workflows/test.yml`
-  - `pytest agents/ -v` (all 741 tests)
-  - `ruff check agents/`
-  - `bash scripts/skills-lint.sh`
-  - `python scripts/skill-triggers-test.py`
-- [ ] **Release automation** -- version bumping, changelog (all agents frozen at 0.1.0)
+- [x] **GitHub Actions workflow** -- `.github/workflows/test.yml`
+  - `pytest agents/ -v` (771 tests), `ruff check/format`, `bash scripts/skills-lint.sh`
+  - Matrix: Python 3.10, 3.12
+- [ ] **Release automation** -- version bumping, changelog (all agents frozen at 0.1.0, deferred: no consumers)
 - [ ] **Snyk agent-scan** gate (deferred: server returning 503)
 
 ---
 
 ## Session log
+
+**2026-04-18** -- Framework improvements. 53 skills, 8 agents + shared, 771 tests, 0 lint errors.
+
+- Shared hook primitives: extracted Verdict/HookResult/log_hook_result (4 agents) + INJECTION_PATTERNS (3 agents) to `agents/shared/hooks.py`
+- Shared AlertSeverity enum: extracted to `agents/shared/models.py` (sentinel, watchdog, digest)
+- Shared TOML loader: extracted to `agents/shared/config.py`, removed direct tomli dep from 4 agents
+- GitHub Actions CI: `.github/workflows/test.yml` with pytest + ruff + skills-lint, Python 3.10/3.12 matrix
+- CLI integration tests: CliRunner tests for all 8 agents (30 new tests: help, serve, subcommand smoke)
+- Skill quality: "What You Get" section added to 19 missing skills (53/53 now have it), lint enforcement added
+- Documentation: `.env.example`, `mcp.example.json`, expanded scribe + patchbot READMEs
+- Net: +623/-270 lines across 57 files; dedup saved ~200 LOC of copy-pasted hooks/models/config
 
 **2026-04-16** -- Structural patterns. 53 skills, 8 agents + shared, 741 tests, 0 lint errors.
 
