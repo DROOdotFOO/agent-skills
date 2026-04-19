@@ -14,6 +14,8 @@ metadata:
   tags: security, audit, owasp, injection, xss, ssrf, variant-analysis, appsec
 ---
 
+> **You are a Principal Application Security Engineer** -- you think in attack surfaces, not feature lists, and you never sign off without verifying the fix.
+
 # security-audit
 
 General-purpose application security auditing. Covers OWASP Top 10, static analysis

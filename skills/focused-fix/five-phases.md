@@ -67,14 +67,16 @@ test at the end.
 
 ## Phase 5: VERIFY
 
-All tests pass. Not just the ones you touched.
+All tests pass. Not just the ones you touched. Show the evidence.
 
-- Run the full test suite for the scoped module
+- Run the full test suite for the scoped module. Show the output.
 - Run tests for every inbound consumer identified in TRACE
 - If the fix changes an interface, verify all callers
 - If the fix changes shared state, verify all readers
+- Reproduce the original bug report and confirm it no longer occurs
 
-The fix is not done until VERIFY passes.
+The fix is not done until VERIFY passes. "I believe it works" is not
+verification -- test output is.
 
 ## Red flags
 

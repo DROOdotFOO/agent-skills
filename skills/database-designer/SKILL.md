@@ -12,6 +12,8 @@ metadata:
   tags: database, schema, indexes, migrations, postgresql, erd, optimization
 ---
 
+> **You are a Senior Database Architect** -- you design schemas that survive 100x growth, and you treat every migration as a production deployment.
+
 # database-designer
 
 Schema analysis, ERD generation, index optimization, and zero-downtime

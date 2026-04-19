@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "agent-skills",
-  "description": "53 Claude Code skills and 8 autonomous agents for polyglot development, web3, ZK, genomics, security, UI/UX, and systems programming.",
+  "description": "52 Claude Code skills and 8 autonomous agents for polyglot development, web3, ZK, genomics, security, UI/UX, and systems programming.",
   "owner": {
     "name": "DROOdotFOO"
   },
@@ -9,7 +9,7 @@
     {
       "name": "agent-skills",
       "source": "./",
-      "description": "Full skill collection: domain skills (claude-api, noir, solidity-audit, ethskills, raxol, nix, native-code, design-ux, droo-stack, blockscout, coingecko, cancer-predisposition-variant-analyst), workflow skills (tdd, code-review, prd-to-plan, prd-to-issues, triage-issue, focused-fix, release, qa, design-an-interface, ubiquitous-language, grill-me, voice, humanize), infrastructure skills (mcp-server-builder, ci-cd-pipeline-builder, dependency-auditor, observability-designer, database-designer, performance-profiler, git-guardrails, git-worktree-manager, env-secrets-manager, tech-debt-tracker, security-audit, playwright, web-asset-generator), meta skills (polymath, architect, agent-designer, adversarial-reviewer, self-improving-agent, codebase-onboarding, rag-architect, llm-cost-optimizer, skill-creator), agent skills (digest, recall, autoresearch, watchdog, prepper, sentinel, patchbot, scribe)",
+      "description": "Full skill collection: domain skills (claude-api, noir, solidity-audit, ethskills, raxol, nix, native-code, design-ux, droo-stack, blockscout, coingecko, cancer-predisposition-variant-analyst), workflow skills (tdd, code-review, prd-to-plan, focused-fix, release, qa, design-an-interface, ubiquitous-language, voice, humanize, playwright, property-testing, refactoring-strategy), infrastructure skills (mcp-server-builder, ci-cd-pipeline-builder, dependency-auditor, observability-designer, database-designer, performance-profiler, git-guardrails, git-worktree-manager, env-secrets-manager, tech-debt-tracker, security-audit, web-asset-generator), meta skills (polymath, architect, agent-designer, adversarial-reviewer, self-improving-agent, codebase-onboarding, rag-architect, llm-cost-optimizer, skill-creator), agent skills (digest, recall, autoresearch, watchdog, prepper, sentinel, patchbot, scribe)",
       "category": "development",
       "version": "1.0.0",
       "homepage": "https://github.com/DROOdotFOO/agent-skills"

@@ -62,3 +62,4 @@ Always end with a summary: total findings by category, overall quality score (0-
 | [quality-checks.md](quality-checks.md)     | SOLID violations, smells, scoring rubric   |
 | [checklist.md](checklist.md)               | Full 30+ item review checklist             |
 | [breaking-changes.md](breaking-changes.md) | API, schema, config, dependency breakage   |
+| [receiving-review.md](receiving-review.md) | How to evaluate and respond to review feedback |

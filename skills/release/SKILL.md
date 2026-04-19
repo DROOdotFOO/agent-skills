@@ -20,7 +20,8 @@ End-to-end release management: parse conventional commits, determine the version
 2. **Determine version bump** -- Apply SemVer rules: BREAKING CHANGE -> major, feat -> minor, everything else -> patch.
 3. **Generate changelog** -- Group changes by category, write user-meaningful descriptions. See [changelog-template.md](changelog-template.md).
 4. **Readiness checks** -- Validate pre-release conditions. See [readiness-checklist.md](readiness-checklist.md).
-5. **Create release** -- Tag the commit, push tag, create GitHub release with changelog body.
+5. **Verify** -- Run the full test suite on the exact commit being tagged. Show the output. Do not tag a commit you have not tested in this session.
+6. **Create release** -- Tag the commit, push tag, create GitHub release with changelog body.
 
 ## Version Bump Logic
 

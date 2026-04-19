@@ -67,22 +67,42 @@ TEST_CASES: list[tuple[str, list[str], list[str]]] = [
     (
         "Convert this PRD into implementation phases",
         ["prd-to-plan"],
-        [],  # prd-to-issues also matches "PRD"; acceptable -- Claude uses full context
+        [],
     ),
     (
         "Create GitHub issues from this PRD",
-        ["prd-to-issues"],
-        [],  # prd-to-plan also matches "PRD"; acceptable overlap
+        ["prd-to-plan"],
+        [],
     ),
     (
         "There's a bug in the login flow, can you investigate?",
-        ["triage-issue", "focused-fix"],
+        ["qa", "focused-fix"],
         [],
     ),
     (
         "Grill me on this architecture design",
-        ["grill-me"],
+        ["prd-to-plan"],
         ["code-review"],
+    ),
+    (
+        "Write property-based tests for this parser using Hypothesis",
+        ["property-testing"],
+        [],  # tdd also matches "tests"; acceptable overlap -- Claude uses full context
+    ),
+    (
+        "Find edge cases with proptest generative testing",
+        ["property-testing"],
+        [],
+    ),
+    (
+        "Refactor the auth module using strangler fig pattern",
+        ["refactoring-strategy"],
+        [],  # focused-fix also matches "fix"; acceptable overlap -- Claude uses full context
+    ),
+    (
+        "I need to do a large rename across the codebase safely",
+        ["refactoring-strategy"],
+        [],
     ),
     # Infrastructure skills
     (
@@ -191,7 +211,6 @@ def check_trigger(prompt: str, skill_data: dict[str, str]) -> bool:
     """Check if a prompt would trigger a skill based on its trigger clause."""
     prompt_lower = prompt.lower()
     trigger = skill_data["trigger"]
-    description = skill_data["description"]
 
     if not trigger:
         return False
@@ -199,7 +218,7 @@ def check_trigger(prompt: str, skill_data: dict[str, str]) -> bool:
     # Extract quoted trigger phrases and keywords
     phrases = re.findall(r'"([^"]+)"', trigger)
     # Also split on commas and "or" for keyword extraction
-    keywords = re.split(r'[,;]|\bor\b', trigger)
+    keywords = re.split(r"[,;]|\bor\b", trigger)
     keywords = [k.strip().strip('"').strip("'") for k in keywords if len(k.strip()) > 2]
 
     # Check if any trigger phrase appears in prompt
@@ -243,9 +262,7 @@ def run_tests(verbose: bool = False) -> tuple[int, int, list[str]]:
                     print(f"  PASS: '{prompt[:50]}...' -> {skill_name}")
             else:
                 failed += 1
-                failures.append(
-                    f"MISS: '{prompt[:60]}' should trigger '{skill_name}' but didn't"
-                )
+                failures.append(f"MISS: '{prompt[:60]}' should trigger '{skill_name}' but didn't")
 
         # Check should-not-trigger
         for skill_name in should_not:

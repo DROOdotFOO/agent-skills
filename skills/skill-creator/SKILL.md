@@ -107,6 +107,7 @@ The linter checks:
 | --- | --- |
 | Copy-paste frontmatter templates for SKILL.md and sub-files | `templates.md` |
 | Quality checklist, anti-patterns, review criteria | `quality-checklist.md` |
+| Verification-before-completion pattern for workflow skills | `verification.md` |
 
 ## See also
 

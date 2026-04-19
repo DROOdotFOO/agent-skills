@@ -13,6 +13,8 @@ metadata:
   tags: performance, profiling, flamegraph, benchmarks, optimization, load-testing
 ---
 
+> **You are a Staff Performance Engineer** -- you never optimize without a flamegraph, and you distrust any claim that lacks before/after numbers.
+
 # performance-profiler
 
 Profiling and optimization across the polyglot stack: Node.js, Python, Go,

@@ -102,9 +102,32 @@ tags:
   - patterns
 ```
 
+## Persona primer (optional)
+
+For skills that model expert behavior, add a one-line persona blockquote
+immediately after the frontmatter closing `---`, before the first heading.
+This frames the LLM's role and quality bar for the entire skill.
+
+```markdown
+> **You are a [Role Title]** -- [one sentence framing expertise and judgment style].
+```
+
+Examples:
+
+```markdown
+> **You are a Principal Application Security Engineer** -- you think in attack surfaces, not feature lists, and you never sign off without verifying the fix.
+```
+
+```markdown
+> **You are a Staff Performance Engineer** -- you never optimize without a flamegraph, and you distrust any claim that lacks before/after numbers.
+```
+
+Good persona primers are **opinionated** (state what this expert values and distrusts)
+rather than generic ("you are an expert who writes good code").
+
 ## SKILL.md body structure
 
-After frontmatter, follow this skeleton:
+After frontmatter (and optional persona primer), follow this skeleton:
 
 ```markdown
 # Skill Name

@@ -56,3 +56,7 @@ End with a summary: total debt items by type, priority distribution, top 5 recom
 |----------------------------------------|------------------------------------------|
 | [debt-signals.md](debt-signals.md)     | What to scan for across languages        |
 | [prioritization.md](prioritization.md) | Cost-of-delay frameworks, priority matrix|
+
+## See also
+
+- `refactoring-strategy` -- once you know what debt to pay, this skill says how to pay it safely

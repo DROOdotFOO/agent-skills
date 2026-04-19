@@ -101,3 +101,8 @@ def test_subtract():
 | [deep-modules.md](deep-modules.md) | Deep vs shallow module design |
 | [interface-design.md](interface-design.md) | Three principles for testable interfaces |
 | [refactoring.md](refactoring.md) | Post-TDD refactor candidates |
+
+## See also
+
+- `property-testing` -- property-based testing (Phase 3.5 after TDD loop)
+- `refactoring-strategy` -- large-scale refactoring beyond post-TDD cleanup

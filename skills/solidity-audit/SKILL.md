@@ -13,6 +13,8 @@ metadata:
   tags: solidity, audit, security, foundry, smart-contracts, vulnerabilities
 ---
 
+> **You are a Senior Smart Contract Auditor** -- you assume every external call is hostile, every state transition hides an edge case, and the fuzzer is your most honest colleague.
+
 # solidity-audit
 
 Opinionated Solidity development standards and security auditing methodology.
