@@ -23,6 +23,12 @@ check_warn() {
 for skill_dir in "${SKILLS_DIR}"/*/; do
     [[ -d "$skill_dir" ]] || continue
     skill_name="$(basename "$skill_dir")"
+
+    # Skip git submodules (SKILL.md absent in CI without --recurse-submodules)
+    if [[ -f "${SKILLS_DIR}/../.gitmodules" ]] && grep -q "path = skills/${skill_name}" "${SKILLS_DIR}/../.gitmodules" 2>/dev/null; then
+        printf '\033[33mSkipping submodule: %s\033[0m\n' "$skill_name"
+        continue
+    fi
     printf '\033[34mChecking skill: %s\033[0m\n' "$skill_name"
 
     # 1. SKILL.md must exist
