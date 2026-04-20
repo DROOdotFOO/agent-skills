@@ -7,7 +7,20 @@ tags: solidity, audit, methodology, slither, mythril
 
 # Audit Methodology
 
-## 4-Phase Audit Process
+## 5-Phase Audit Process
+
+### Phase 0: Reconnaissance
+
+Before reading code for vulnerabilities, build context. See
+[pre-audit.md](pre-audit.md) for the full process.
+
+1. **Classify entry points** -- every external/public function by access level (OPEN/AUTH/ADMIN/INTERNAL)
+2. **Identify protocol archetype** -- Lending, DEX, Yield, Stablecoin, Bridge, or Governance. Load the corresponding threat profile.
+3. **Extract invariants** -- from documentation, formulate as testable properties
+4. **Map dependencies** -- external contracts, oracles, governance parameters
+
+Do not proceed to Phase 1 until you can answer: "What type of protocol is
+this, what are its critical invariants, and where are its trust boundaries?"
 
 ### Phase 1: Scoping
 
@@ -86,7 +99,26 @@ Two-pass approach (adapted from scv-scan methodology):
 - What happens during partial failures?
 - Are there trust assumptions that could be violated?
 
-### Phase 4: Classification & Reporting
+**Weaponize across contracts:** When you confirm a vulnerability in one
+contract, immediately search ALL other contracts in scope for the same
+pattern. Report all instances as a single finding with multiple locations.
+
+```bash
+# Example: found missing balance check in Vault.sol -- search everywhere
+grep -rn "transferFrom" src/ | grep -v "balanceOf"
+```
+
+### Phase 4: Validation
+
+Before reporting, validate every finding. See [anti-skip.md](anti-skip.md)
+for the full framework.
+
+1. **FP elimination pass** -- For each MEDIUM+ finding, attempt to disprove it. Only CONFIRMED findings go in the report.
+2. **Proof construction** -- Every MEDIUM+ finding must have a `proof:` field with concrete values. No proof = LEAD (goes in appendix).
+3. **Variant sweep** -- For each confirmed finding, search all contracts for the same pattern.
+4. **Anti-skip check** -- Review the rationalizations table. Did you dismiss anything using one of those rationalizations?
+
+### Phase 5: Classification & Reporting
 
 #### Severity definitions
 

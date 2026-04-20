@@ -24,6 +24,7 @@ Aztec integration, and testing strategy.
 
 - Circuit architecture and constraint optimization patterns
 - ZK-specific security: privacy leaks, oracle safety, nullifier attacks
+- Systematic circuit audit methodology (spec-to-constraint mapping, completeness, privacy analysis)
 - Aztec contract integration (notes, storage, account abstraction)
 - Testing strategy: nargo tests, e2e setup, cross-chain messaging
 - Constrained vs unconstrained computation guidance
@@ -54,6 +55,7 @@ knowledge that requires ZK expertise.
 | Oracle calls, unconstrained computation          | [circuits/unconstrained](circuits/unconstrained.md)     |
 | Privacy leaks, public/private input design       | [security/privacy](security/privacy.md)                 |
 | Unconstrained return safety, oracle verification | [security/oracle-safety](security/oracle-safety.md)     |
+| Circuit audit methodology, spec compliance       | [security/circuit-audit](security/circuit-audit.md)     |
 | Aztec-specific attacks: nullifiers, MEV, leakage | [security/aztec-contracts](security/aztec-contracts.md) |
 | Aztec contract structure, notes, storage         | [aztec/contracts](aztec/contracts.md)                   |
 | Account abstraction, access control, keys        | [aztec/accounts](aztec/accounts.md)                     |

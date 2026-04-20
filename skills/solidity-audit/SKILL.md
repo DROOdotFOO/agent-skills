@@ -23,9 +23,12 @@ scv-scan, trail of bits, ethskills) and tailored to our workflow.
 
 ## What You Get
 
+- Pre-audit reconnaissance (entry-point classification, protocol-type threat profiles)
 - Foundry-first development patterns (testing, fuzzing, invariants, forks)
-- Vulnerability taxonomy: reentrancy, access control, oracles, flash loans, MEV
-- 4-phase audit methodology with finding report template
+- Vulnerability taxonomy: reentrancy, access control, oracles, flash loans, MEV, weird ERC20s
+- Bleeding-edge attack vector database with detect/false-positive pairs
+- 5-phase audit methodology with proof-required discipline and FP elimination
+- Anti-skip rules preventing false negatives from rationalized dismissals
 - Code quality standards (NatSpec, errors, events, gas patterns)
 - Live documentation sources (ETHSkills, community references)
 
@@ -70,11 +73,15 @@ This skill activates when writing, reviewing, or auditing Solidity contracts.
 | Oracle manipulation, Chainlink, TWAP            | [vulnerabilities/oracle-manipulation](vulnerabilities/oracle-manipulation.md) |
 | Flash loan price/governance attacks             | [vulnerabilities/flash-loans](vulnerabilities/flash-loans.md)                 |
 | MEV, frontrunning, sandwich protection          | [vulnerabilities/mev](vulnerabilities/mev.md)                                 |
+| Weird ERC20 tokens (fee-on-transfer, rebasing)  | [vulnerabilities/weird-erc20](vulnerabilities/weird-erc20.md)                 |
+| Bleeding-edge vectors (EIP-7702, precision, proxy) | [vulnerabilities/attack-vectors](vulnerabilities/attack-vectors.md)        |
 
 ### Audit workflow
 
 | Task                                         | Read                                                                |
 | -------------------------------------------- | ------------------------------------------------------------------- |
-| Full audit methodology (4 phases)            | [audit-workflow/methodology](audit-workflow/methodology.md)         |
+| Pre-audit reconnaissance (entry points, threat profiles) | [audit-workflow/pre-audit](audit-workflow/pre-audit.md)   |
+| Full audit methodology (5 phases)            | [audit-workflow/methodology](audit-workflow/methodology.md)         |
+| Anti-skip rules, proof discipline, FP elimination | [audit-workflow/anti-skip](audit-workflow/anti-skip.md)        |
 | Finding report template                      | [audit-workflow/report-template](audit-workflow/report-template.md) |
 | Live documentation sources (ETHSkills, etc.) | [live-sources](live-sources.md)                                     |

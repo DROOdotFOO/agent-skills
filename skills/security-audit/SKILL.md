@@ -27,6 +27,8 @@ Polyglot: Python, TypeScript, Go, Rust.
 - Attack surface map (all trust boundary crossings)
 - Findings classified by severity (CRITICAL -> INFO) with code locations
 - Variant analysis: every instance of each vulnerability pattern across the codebase
+- Audit discipline: anti-skip rules, proof-required findings, FP elimination
+- Threat personas (external attacker, authenticated user, compromised dependency)
 
 ## Philosophy
 
@@ -38,6 +40,9 @@ for every variant of the same pattern across the codebase.
 ## Audit Workflow: 4 Phases
 
 ### Phase 1: Attack Surface Mapping
+
+Read the code for comprehension first (see [audit-discipline.md](audit-discipline.md)).
+Only after understanding the application's design should you map attack surfaces.
 
 Identify all trust boundary crossings:
 - HTTP endpoints (routes, controllers, handlers)
@@ -55,7 +60,8 @@ Identify all trust boundary crossings:
 Run static analysis tools and manual pattern matching against the attack surface.
 See [vulnerability-patterns.md](vulnerability-patterns.md) for OWASP Top 10 with
 incorrect/correct code examples per language. See [static-analysis.md](static-analysis.md)
-for tool configuration and semgrep rules.
+for tool configuration and semgrep rules. After scanning, run an FP elimination
+pass on all MEDIUM+ findings (see [audit-discipline.md](audit-discipline.md)).
 
 ### Phase 3: Variant Analysis
 
@@ -105,3 +111,4 @@ across any language except Solidity.
 | Static analysis tools and semgrep rules | [static-analysis.md](static-analysis.md) |
 | Trail of Bits variant analysis methodology | [variant-analysis.md](variant-analysis.md) |
 | Dependency and supply chain auditing | [supply-chain.md](supply-chain.md) |
+| Anti-skip rules, proof discipline, FP elimination | [audit-discipline.md](audit-discipline.md) |
