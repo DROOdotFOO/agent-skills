@@ -10,8 +10,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-import httpx
-
+from digest.adapters._helpers import fetch_json
 from digest.expansion import ExpandedQuery
 from digest.models import Item
 
@@ -66,10 +65,8 @@ class RedditAdapter:
             "type": "link",
         }
         headers = {"User-Agent": USER_AGENT}
-        response = httpx.get(SEARCH_URL, params=params, headers=headers, timeout=30.0)
-        response.raise_for_status()
-        data = response.json().get("data", {})
-        return data.get("children", [])
+        payload = fetch_json(SEARCH_URL, params=params, headers=headers, default={})
+        return (payload.get("data", {}).get("children") or [])
 
     def _build_item(self, post: dict) -> Item:
         score = post.get("score", 0)

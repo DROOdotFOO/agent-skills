@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 from datetime import datetime
 
+from shared.dates import parse_iso_utc
+
 from scribe.models import SessionAnalysis, SessionMessage, ToolCall
 
 # Patterns that indicate user is correcting Claude
@@ -120,13 +122,15 @@ def _compute_duration(messages: list[SessionMessage]) -> float | None:
     """Duration from first to last message timestamp, in seconds."""
     timestamps: list[datetime] = []
     for msg in messages:
-        if msg.timestamp:
-            try:
-                if isinstance(msg.timestamp, str):
-                    ts = datetime.fromisoformat(msg.timestamp.replace("Z", "+00:00"))
-                else:
-                    ts = datetime.fromtimestamp(float(msg.timestamp) / 1000)
+        if not msg.timestamp:
+            continue
+        if isinstance(msg.timestamp, str):
+            ts = parse_iso_utc(msg.timestamp)
+            if ts is not None:
                 timestamps.append(ts)
+        else:
+            try:
+                timestamps.append(datetime.fromtimestamp(float(msg.timestamp) / 1000))
             except (ValueError, TypeError, OSError):
                 continue
 

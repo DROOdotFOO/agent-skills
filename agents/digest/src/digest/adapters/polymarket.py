@@ -8,8 +8,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-import httpx
-
+from digest.adapters._helpers import fetch_json, parse_iso_utc
 from digest.expansion import ExpandedQuery
 from digest.models import Item
 
@@ -50,9 +49,7 @@ class PolymarketAdapter:
             "active": "true",
             "closed": "false",
         }
-        response = httpx.get(GAMMA_URL, params=params, timeout=30.0)
-        response.raise_for_status()
-        return response.json()
+        return fetch_json(GAMMA_URL, params=params, default=[]) or []
 
     def _build_item(self, market: dict) -> Item:
         question = market.get("question", "")
@@ -68,7 +65,7 @@ class PolymarketAdapter:
         url = f"https://polymarket.com/event/{slug}" if slug else "https://polymarket.com"
 
         end_date = market.get("endDate")
-        timestamp = self._parse_timestamp(end_date) or datetime.now(timezone.utc)
+        timestamp = parse_iso_utc(end_date) or datetime.now(timezone.utc)
 
         return Item(
             source=self.name,
@@ -98,12 +95,3 @@ class PolymarketAdapter:
         except (ValueError, TypeError):
             return 0
 
-    @staticmethod
-    def _parse_timestamp(value: str | None) -> datetime | None:
-        """Parse an ISO 8601 timestamp string."""
-        if not value:
-            return None
-        try:
-            return datetime.fromisoformat(value.replace("Z", "+00:00"))
-        except (ValueError, TypeError):
-            return None

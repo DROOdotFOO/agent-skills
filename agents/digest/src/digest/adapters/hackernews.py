@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 
-import httpx
-
+from digest.adapters._helpers import fetch_json
 from digest.expansion import ExpandedQuery
 from digest.models import Item
 
@@ -43,9 +42,8 @@ class HackerNewsAdapter:
             "numericFilters": f"created_at_i>{int(since.timestamp())}",
             "hitsPerPage": limit,
         }
-        response = httpx.get(ALGOLIA_URL, params=params, timeout=30.0)
-        response.raise_for_status()
-        return response.json().get("hits", [])
+        payload = fetch_json(ALGOLIA_URL, params=params, default={})
+        return payload.get("hits", []) or []
 
     def _build_item(self, hit: dict) -> Item:
         url = hit.get("url") or f"https://news.ycombinator.com/item?id={hit['objectID']}"

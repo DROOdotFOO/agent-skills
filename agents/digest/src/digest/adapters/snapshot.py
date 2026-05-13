@@ -10,8 +10,7 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 
-import httpx
-
+from digest.adapters._helpers import fetch_json
 from digest.expansion import ExpandedQuery
 from digest.models import Item
 
@@ -87,7 +86,7 @@ class SnapshotAdapter:
         return results
 
     def _query_proposals(self, where: dict, limit: int) -> list[dict]:
-        payload = {
+        body = {
             "query": PROPOSALS_QUERY,
             "variables": {
                 "first": min(limit, 100),
@@ -96,10 +95,8 @@ class SnapshotAdapter:
                 "orderDirection": "desc",
             },
         }
-        response = httpx.post(GRAPHQL_URL, json=payload, timeout=30.0)
-        response.raise_for_status()
-        data = response.json()
-        return data.get("data", {}).get("proposals", [])
+        data = fetch_json(GRAPHQL_URL, method="POST", json=body, default={})
+        return data.get("data", {}).get("proposals", []) or []
 
     def _build_item(self, proposal: dict) -> Item:
         votes = proposal.get("votes") or 0
