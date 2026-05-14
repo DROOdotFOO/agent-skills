@@ -110,12 +110,13 @@ class SemanticScholarAdapter:
         title = paper.get("title") or paper_id
         url = paper.get("url") or f"{PAPER_HTML}/{paper_id}"
 
-        timestamp = pub_date or self._year_to_datetime(paper.get("year")) or datetime.now(timezone.utc)
+        timestamp = (
+            pub_date or self._year_to_datetime(paper.get("year")) or datetime.now(timezone.utc)
+        )
 
-        author = format_authors_etal([
-            a.get("name") for a in (paper.get("authors") or [])
-            if isinstance(a, dict)
-        ])
+        author = format_authors_etal(
+            [a.get("name") for a in (paper.get("authors") or []) if isinstance(a, dict)]
+        )
 
         citation_count = coerce_int(paper.get("citationCount"))
         influential = coerce_int(paper.get("influentialCitationCount"))
@@ -179,4 +180,3 @@ class SemanticScholarAdapter:
         if isinstance(value, str):
             return value or None
         return None
-

@@ -47,7 +47,9 @@ class PubMedAdapter:
         Dedupes by PMID; returns up to `limit` items sorted by publication date
         (newest first within each term).
         """
-        mindate = since_date(days, fmt="%Y/%m/%d") or datetime.now(timezone.utc).strftime("%Y/%m/%d")
+        mindate = since_date(days, fmt="%Y/%m/%d") or datetime.now(timezone.utc).strftime(
+            "%Y/%m/%d"
+        )
         pmids: list[str] = []
         seen_ids: set[str] = set()
 
@@ -119,10 +121,9 @@ class PubMedAdapter:
         sortpubdate = summary.get("sortpubdate")
         date_part = sortpubdate.split()[0] if sortpubdate else None
         timestamp = parse_date_utc(date_part, formats=("%Y/%m/%d",)) or datetime.now(timezone.utc)
-        author = format_authors_etal([
-            a.get("name") for a in (summary.get("authors") or [])
-            if isinstance(a, dict)
-        ])
+        author = format_authors_etal(
+            [a.get("name") for a in (summary.get("authors") or []) if isinstance(a, dict)]
+        )
 
         citation_count = coerce_int(citation.get("citation_count"))
         rcr = coerce_float(citation.get("relative_citation_ratio"))
@@ -159,4 +160,3 @@ class PubMedAdapter:
                 if value:
                     return str(value)
         return None
-

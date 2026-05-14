@@ -197,4 +197,3 @@ class ClinicalTrialsAdapter:
         if conditions:
             parts.append(f"conditions={', '.join(conditions[:3])}")
         return " | ".join(parts) if parts else "No metadata available"
-

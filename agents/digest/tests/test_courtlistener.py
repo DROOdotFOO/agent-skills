@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from datetime import timezone
 
-from digest.adapters.courtlistener import CourtListenerAdapter, SITE_BASE
-from digest.credibility import _per_item_bonus, source_tier, Tier
+from digest.adapters.courtlistener import SITE_BASE, CourtListenerAdapter
+from digest.credibility import Tier, _per_item_bonus, source_tier
 
 
 def _adapter() -> CourtListenerAdapter:
@@ -122,7 +122,9 @@ def test_judge_none_is_none():
 
 
 def test_summary_uses_snippet_when_present():
-    item = _adapter()._build_item(_result(snippet="...due process and qualified immunity..."), "10858307")
+    item = _adapter()._build_item(
+        _result(snippet="...due process and qualified immunity..."), "10858307"
+    )
     assert item.summary == "...due process and qualified immunity..."
 
 
@@ -137,7 +139,9 @@ def test_summary_none_when_snippet_missing():
 
 
 def test_raw_preserves_court_and_court_id():
-    item = _adapter()._build_item(_result(court="U.S. Supreme Court", court_id="scotus"), "10858307")
+    item = _adapter()._build_item(
+        _result(court="U.S. Supreme Court", court_id="scotus"), "10858307"
+    )
     assert item.raw["court"] == "U.S. Supreme Court"
     assert item.raw["court_id"] == "scotus"
 

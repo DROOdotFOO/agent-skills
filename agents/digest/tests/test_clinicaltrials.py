@@ -9,7 +9,7 @@ from __future__ import annotations
 from datetime import timezone
 
 from digest.adapters.clinicaltrials import PHASE_SCORES, ClinicalTrialsAdapter
-from digest.credibility import _per_item_bonus, source_tier, Tier
+from digest.credibility import Tier, _per_item_bonus, source_tier
 
 
 def _adapter() -> ClinicalTrialsAdapter:
@@ -63,7 +63,10 @@ def _study(
     if start_date:
         protocol["statusModule"]["startDateStruct"] = {"date": start_date, "type": "ACTUAL"}
     if last_update:
-        protocol["statusModule"]["lastUpdatePostDateStruct"] = {"date": last_update, "type": "ACTUAL"}
+        protocol["statusModule"]["lastUpdatePostDateStruct"] = {
+            "date": last_update,
+            "type": "ACTUAL",
+        }
 
     return {"protocolSection": protocol}
 
@@ -136,12 +139,16 @@ def test_url_uses_nct_id():
 
 
 def test_title_prefers_brief_title():
-    item = _adapter()._build_item(_study(brief_title="Brief", official_title="Official"), "NCT06038617")
+    item = _adapter()._build_item(
+        _study(brief_title="Brief", official_title="Official"), "NCT06038617"
+    )
     assert item.title == "Brief"
 
 
 def test_title_falls_back_to_official_title():
-    item = _adapter()._build_item(_study(brief_title=None, official_title="Official"), "NCT06038617")
+    item = _adapter()._build_item(
+        _study(brief_title=None, official_title="Official"), "NCT06038617"
+    )
     assert item.title == "Official"
 
 
@@ -200,7 +207,9 @@ def test_raw_preserves_conditions():
 
 
 def test_raw_preserves_dates():
-    item = _adapter()._build_item(_study(start_date="2024-01-15", last_update="2026-05-13"), "NCT06038617")
+    item = _adapter()._build_item(
+        _study(start_date="2024-01-15", last_update="2026-05-13"), "NCT06038617"
+    )
     assert item.raw["startDate"] == "2024-01-15"
     assert item.raw["lastUpdatePostDate"] == "2026-05-13"
 

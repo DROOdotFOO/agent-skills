@@ -309,4 +309,3 @@ class ShodanAdapter:
                     normalized.append({"value": v["value"], "count": int(v["count"])})
             result[facet_name] = normalized
         return result
-

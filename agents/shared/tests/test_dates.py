@@ -6,18 +6,21 @@ from datetime import datetime, timedelta, timezone
 
 from shared.dates import cutoff_datetime, parse_date_utc, parse_iso_utc, since_date
 
-
 # ----------------------------------------------------------------------
 # parse_iso_utc
 # ----------------------------------------------------------------------
 
 
 def test_parse_iso_utc_z_suffix():
-    assert parse_iso_utc("2024-06-15T12:30:00Z") == datetime(2024, 6, 15, 12, 30, 0, tzinfo=timezone.utc)
+    assert parse_iso_utc("2024-06-15T12:30:00Z") == datetime(
+        2024, 6, 15, 12, 30, 0, tzinfo=timezone.utc
+    )
 
 
 def test_parse_iso_utc_offset():
-    assert parse_iso_utc("2024-06-15T12:30:00+00:00") == datetime(2024, 6, 15, 12, 30, 0, tzinfo=timezone.utc)
+    assert parse_iso_utc("2024-06-15T12:30:00+00:00") == datetime(
+        2024, 6, 15, 12, 30, 0, tzinfo=timezone.utc
+    )
 
 
 def test_parse_iso_utc_naive_tags_utc():
@@ -50,12 +53,16 @@ def test_parse_date_utc_default_iso():
 
 
 def test_parse_date_utc_custom_format():
-    assert parse_date_utc("2024/06/15", formats=("%Y/%m/%d",)) == datetime(2024, 6, 15, tzinfo=timezone.utc)
+    assert parse_date_utc("2024/06/15", formats=("%Y/%m/%d",)) == datetime(
+        2024, 6, 15, tzinfo=timezone.utc
+    )
 
 
 def test_parse_date_utc_multi_format_falls_through():
     """Tries each format in order; first match wins."""
-    assert parse_date_utc("2024-06", formats=("%Y-%m-%d", "%Y-%m")) == datetime(2024, 6, 1, tzinfo=timezone.utc)
+    assert parse_date_utc("2024-06", formats=("%Y-%m-%d", "%Y-%m")) == datetime(
+        2024, 6, 1, tzinfo=timezone.utc
+    )
 
 
 def test_parse_date_utc_none_for_none():

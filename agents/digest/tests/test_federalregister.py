@@ -12,7 +12,7 @@ from datetime import timezone
 
 from digest.adapters._helpers import since_date
 from digest.adapters.federalregister import FederalRegisterAdapter
-from digest.credibility import _per_item_bonus, source_tier, Tier
+from digest.credibility import Tier, _per_item_bonus, source_tier
 
 
 def _adapter() -> FederalRegisterAdapter:

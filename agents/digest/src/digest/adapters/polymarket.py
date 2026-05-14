@@ -94,4 +94,3 @@ class PolymarketAdapter:
             return int(float(value))
         except (ValueError, TypeError):
             return 0
-

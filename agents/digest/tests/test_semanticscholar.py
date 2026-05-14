@@ -11,7 +11,7 @@ from datetime import datetime, timedelta, timezone
 
 from digest.adapters._helpers import cutoff_datetime, parse_date_utc
 from digest.adapters.semanticscholar import SemanticScholarAdapter
-from digest.credibility import _per_item_bonus, source_tier, Tier
+from digest.credibility import Tier, _per_item_bonus, source_tier
 
 
 def _adapter() -> SemanticScholarAdapter:
@@ -22,7 +22,7 @@ def _paper(**overrides) -> dict:
     """Minimal /paper/search-shape dict, overridable per test."""
     base = {
         "paperId": "00003fcde1fe3c572d2b4e4c704856bdbf8e7085",
-        "title": "AIMC-Spec: A Benchmark Dataset for Automatic Intrapulse Modulation Classification",
+        "title": "AIMC-Spec: A Benchmark Dataset for Automatic Modulation Classification",
         "year": 2026,
         "publicationDate": "2026-01-13",
         "citationCount": 1,
@@ -133,7 +133,13 @@ def test_author_none_when_no_authors():
 
 def test_open_access_url_extracted():
     item = _adapter()._build_item(
-        _paper(openAccessPdf={"url": "https://arxiv.org/pdf/2601.08265.pdf", "status": "GREEN", "license": "CC-BY"}),
+        _paper(
+            openAccessPdf={
+                "url": "https://arxiv.org/pdf/2601.08265.pdf",
+                "status": "GREEN",
+                "license": "CC-BY",
+            }
+        ),
         None,
     )
     assert item.raw["openAccessPdf"] == "https://arxiv.org/pdf/2601.08265.pdf"

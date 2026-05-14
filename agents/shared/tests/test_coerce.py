@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from shared.coerce import coerce_float, coerce_int, format_authors_etal
 
-
 # ----------------------------------------------------------------------
 # coerce_int
 # ----------------------------------------------------------------------

@@ -136,4 +136,3 @@ class FederalRegisterAdapter:
             if name:
                 return name
         return ""
-

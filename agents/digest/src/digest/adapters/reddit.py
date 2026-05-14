@@ -66,7 +66,7 @@ class RedditAdapter:
         }
         headers = {"User-Agent": USER_AGENT}
         payload = fetch_json(SEARCH_URL, params=params, headers=headers, default={})
-        return (payload.get("data", {}).get("children") or [])
+        return payload.get("data", {}).get("children") or []
 
     def _build_item(self, post: dict) -> Item:
         score = post.get("score", 0)

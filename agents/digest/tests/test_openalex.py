@@ -9,7 +9,7 @@ from __future__ import annotations
 from datetime import timezone
 
 from digest.adapters.openalex import OpenAlexAdapter
-from digest.credibility import _per_item_bonus, source_tier, Tier
+from digest.credibility import Tier, _per_item_bonus, source_tier
 
 
 def _adapter() -> OpenAlexAdapter:
@@ -92,7 +92,10 @@ def test_engagement_handles_null_count():
 
 
 def test_extract_work_id_from_url():
-    assert OpenAlexAdapter._extract_work_id({"id": "https://openalex.org/W7137631773"}) == "W7137631773"
+    assert (
+        OpenAlexAdapter._extract_work_id({"id": "https://openalex.org/W7137631773"})
+        == "W7137631773"
+    )
 
 
 def test_extract_work_id_returns_none_when_missing():
@@ -126,7 +129,9 @@ def test_doi_normalization_wraps_bare_doi():
 
 
 def test_doi_normalization_preserves_full_url():
-    assert OpenAlexAdapter._normalize_doi("https://doi.org/10.1234/x") == "https://doi.org/10.1234/x"
+    assert (
+        OpenAlexAdapter._normalize_doi("https://doi.org/10.1234/x") == "https://doi.org/10.1234/x"
+    )
 
 
 def test_doi_normalization_none_when_missing():
@@ -140,19 +145,25 @@ def test_author_uses_display_name():
 
 
 def test_author_single_author():
-    work = _work(authorships=[{
-        "author_position": "first",
-        "author": {"display_name": "Solo Researcher"},
-    }])
+    work = _work(
+        authorships=[
+            {
+                "author_position": "first",
+                "author": {"display_name": "Solo Researcher"},
+            }
+        ]
+    )
     item = _adapter()._build_item(work, "W4400000000")
     assert item.author == "Solo Researcher"
 
 
 def test_author_falls_back_to_raw_author_name():
     """If author.display_name missing, use raw_author_name."""
-    work = _work(authorships=[
-        {"author_position": "first", "raw_author_name": "Smith, A.", "author": {}},
-    ])
+    work = _work(
+        authorships=[
+            {"author_position": "first", "raw_author_name": "Smith, A.", "author": {}},
+        ]
+    )
     item = _adapter()._build_item(work, "W4400000000")
     assert item.author == "Smith, A."
 
@@ -188,9 +199,11 @@ def test_raw_open_access_handles_missing():
 
 def test_raw_concepts_strip_url_prefix():
     """Concept IDs come as URLs but the trailing segment is what's useful."""
-    work = _work(concepts=[
-        {"id": "https://openalex.org/C123", "display_name": "Biology", "level": 0, "score": 0.9}
-    ])
+    work = _work(
+        concepts=[
+            {"id": "https://openalex.org/C123", "display_name": "Biology", "level": 0, "score": 0.9}
+        ]
+    )
     item = _adapter()._build_item(work, "W4400000000")
     assert item.raw["concepts"][0]["id"] == "C123"
     assert item.raw["concepts"][0]["display_name"] == "Biology"

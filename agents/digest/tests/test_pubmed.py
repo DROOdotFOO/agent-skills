@@ -10,7 +10,7 @@ from __future__ import annotations
 from datetime import timezone
 
 from digest.adapters.pubmed import PubMedAdapter
-from digest.credibility import _per_item_bonus, source_tier, Tier
+from digest.credibility import Tier, _per_item_bonus, source_tier
 
 
 def _adapter() -> PubMedAdapter:
@@ -48,7 +48,12 @@ def test_engagement_uses_citation_count():
     item = _adapter()._build_item(
         "40400000",
         _summary(),
-        {"pmid": 40400000, "citation_count": 23, "relative_citation_ratio": 1.8, "is_clinical": False},
+        {
+            "pmid": 40400000,
+            "citation_count": 23,
+            "relative_citation_ratio": 1.8,
+            "is_clinical": False,
+        },
     )
     assert item.engagement == 23
 
@@ -63,7 +68,12 @@ def test_engagement_zero_for_uncited_paper():
     item = _adapter()._build_item(
         "40400000",
         _summary(),
-        {"pmid": 40400000, "citation_count": 0, "relative_citation_ratio": None, "is_clinical": False},
+        {
+            "pmid": 40400000,
+            "citation_count": 0,
+            "relative_citation_ratio": None,
+            "is_clinical": False,
+        },
     )
     assert item.engagement == 0
 

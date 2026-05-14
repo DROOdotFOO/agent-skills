@@ -6,8 +6,8 @@ import logging
 from collections.abc import Callable
 from datetime import datetime, timezone
 
-from shared.http import fetch_json
 from shared.dates import parse_iso_utc
+from shared.http import fetch_json
 
 from sentinel.models import Alert, ContractWatch, Transaction
 from sentinel.rules import ALL_RULES
@@ -43,7 +43,9 @@ def _parse_transaction(raw: dict) -> Transaction:
     if raw_input and len(raw_input) >= 10:
         method_id = raw_input[:10]
 
-    ts = parse_iso_utc(raw.get("timestamp") or raw.get("block_timestamp")) or datetime.now(timezone.utc)
+    ts = parse_iso_utc(raw.get("timestamp") or raw.get("block_timestamp")) or datetime.now(
+        timezone.utc
+    )
 
     to_addr = raw.get("to")
     if isinstance(to_addr, dict):

@@ -121,9 +121,7 @@ class ArxivAdapter:
         primary_category = primary_cat_el.attrib.get("term") if primary_cat_el is not None else None
 
         categories = [
-            cat.attrib["term"]
-            for cat in entry.findall("atom:category", NS)
-            if "term" in cat.attrib
+            cat.attrib["term"] for cat in entry.findall("atom:category", NS) if "term" in cat.attrib
         ]
 
         comment_el = entry.find("arxiv:comment", NS)

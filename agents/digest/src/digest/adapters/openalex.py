@@ -35,19 +35,21 @@ API_URL = "https://api.openalex.org/works"
 
 # Fields we ask /works to return. Keeping this list narrow keeps responses
 # small (OpenAlex defaults to ALL fields, which is ~30KB per item).
-SELECT_FIELDS = ",".join([
-    "id",
-    "doi",
-    "title",
-    "cited_by_count",
-    "counts_by_year",
-    "fwci",
-    "type",
-    "open_access",
-    "authorships",
-    "publication_date",
-    "concepts",
-])
+SELECT_FIELDS = ",".join(
+    [
+        "id",
+        "doi",
+        "title",
+        "cited_by_count",
+        "counts_by_year",
+        "fwci",
+        "type",
+        "open_access",
+        "authorships",
+        "publication_date",
+        "concepts",
+    ]
+)
 
 # Matches OpenAlex IDs like W1234567890 in URLs like https://openalex.org/W1234567890
 WORK_ID_RE = re.compile(r"openalex\.org/(W\d+)")
@@ -193,4 +195,3 @@ class OpenAlexAdapter:
         if not value or not isinstance(value, str):
             return None
         return value.rsplit("/", 1)[-1] or None
-

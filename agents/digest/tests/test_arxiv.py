@@ -11,7 +11,7 @@ import xml.etree.ElementTree as ET
 from datetime import timezone
 
 from digest.adapters.arxiv import NS, ArxivAdapter
-from digest.credibility import _per_item_bonus, source_tier, Tier
+from digest.credibility import Tier, _per_item_bonus, source_tier
 
 
 def _adapter() -> ArxivAdapter:
@@ -41,7 +41,7 @@ def _entry(
     parts = [
         '<entry xmlns="http://www.w3.org/2005/Atom"',
         ' xmlns:arxiv="http://arxiv.org/schemas/atom">',
-        f'<id>http://arxiv.org/abs/{arxiv_id}{version}</id>',
+        f"<id>http://arxiv.org/abs/{arxiv_id}{version}</id>",
         f"<title>{title}</title>",
         f"<summary>{summary}</summary>",
         f"<published>{published}</published>",
