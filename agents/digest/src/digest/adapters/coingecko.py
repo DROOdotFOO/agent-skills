@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-import httpx
-
+from digest.adapters._helpers import fetch_json
 from digest.expansion import ExpandedQuery
 from digest.models import Item
 
@@ -55,13 +54,7 @@ class CoinGeckoAdapter:
 
     def _fetch_trending(self, terms: list[str], limit: int) -> list[Item]:
         """Fetch trending coins from CoinGecko."""
-        try:
-            resp = httpx.get(f"{BASE_URL}/search/trending", timeout=30.0)
-            resp.raise_for_status()
-            data = resp.json()
-        except (httpx.HTTPError, ValueError):
-            return []
-
+        data = fetch_json(f"{BASE_URL}/search/trending", default={})
         items = []
         for entry in data.get("coins", [])[:limit]:
             coin = entry.get("item", {})
@@ -97,17 +90,11 @@ class CoinGeckoAdapter:
 
     def _fetch_gainers_losers(self, terms: list[str], limit: int) -> list[Item]:
         """Fetch top gainers and losers."""
-        try:
-            resp = httpx.get(
-                f"{BASE_URL}/coins/top_gainers_losers",
-                params={"vs_currency": "usd", "duration": "24h"},
-                timeout=30.0,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-        except (httpx.HTTPError, ValueError):
-            return []
-
+        data = fetch_json(
+            f"{BASE_URL}/coins/top_gainers_losers",
+            params={"vs_currency": "usd", "duration": "24h"},
+            default={},
+        )
         items = []
         for category in ("top_gainers", "top_losers"):
             label = "Gainer" if category == "top_gainers" else "Loser"
@@ -147,13 +134,7 @@ class CoinGeckoAdapter:
 
     def _fetch_new_coins(self, terms: list[str], limit: int) -> list[Item]:
         """Fetch recently listed coins."""
-        try:
-            resp = httpx.get(f"{BASE_URL}/coins/list/new", timeout=30.0)
-            resp.raise_for_status()
-            data = resp.json()
-        except (httpx.HTTPError, ValueError):
-            return []
-
+        data = fetch_json(f"{BASE_URL}/coins/list/new", default=[])
         items = []
         for coin in data[: limit * 2]:
             name = coin.get("name", "")

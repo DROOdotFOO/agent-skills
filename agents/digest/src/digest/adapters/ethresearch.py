@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-import httpx
-
+from digest.adapters._helpers import fetch_json, parse_iso_utc
 from digest.expansion import ExpandedQuery
 from digest.models import Item
 
@@ -37,14 +36,10 @@ class EthResearchAdapter:
         return list(seen.values())[:limit]
 
     def _search_term(self, term: str, limit: int) -> list[dict]:
-        params = {
-            "q": term,
-            "order": "latest",
-        }
+        params = {"q": term, "order": "latest"}
         headers = {"User-Agent": "agent-skills-digest/1.0"}
-        response = httpx.get(SEARCH_URL, params=params, headers=headers, timeout=30.0)
-        response.raise_for_status()
-        return response.json().get("topics", [])[:limit]
+        payload = fetch_json(SEARCH_URL, params=params, headers=headers, default={})
+        return (payload.get("topics") or [])[:limit]
 
     @staticmethod
     def _engagement(topic: dict) -> int:
@@ -63,11 +58,7 @@ class EthResearchAdapter:
         topic_id = topic["id"]
         url = f"{BASE_URL}/t/{slug}/{topic_id}"
 
-        created_at = topic.get("created_at", "")
-        if created_at:
-            timestamp = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
-        else:
-            timestamp = datetime.now(timezone.utc)
+        timestamp = parse_iso_utc(topic.get("created_at")) or datetime.now(timezone.utc)
 
         return Item(
             source=self.name,

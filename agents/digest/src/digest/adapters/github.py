@@ -7,6 +7,7 @@ import shutil
 import subprocess
 from datetime import datetime, timedelta, timezone
 
+from digest.adapters._helpers import parse_iso_utc
 from digest.expansion import ExpandedQuery
 from digest.models import Item
 
@@ -133,7 +134,7 @@ class GitHubAdapter:
             title=f"{row['fullName']}: {row.get('description') or ''}".strip(": "),
             url=row["url"],
             author=row.get("owner", {}).get("login"),
-            timestamp=datetime.fromisoformat(row["createdAt"].replace("Z", "+00:00")),
+            timestamp=parse_iso_utc(row.get("createdAt")) or datetime.now(timezone.utc),
             engagement=engagement,
             raw={
                 "kind": "repo",
@@ -176,7 +177,7 @@ class GitHubAdapter:
             title=row["title"],
             url=row["url"],
             author=(row.get("author") or {}).get("login"),
-            timestamp=datetime.fromisoformat(row["createdAt"].replace("Z", "+00:00")),
+            timestamp=parse_iso_utc(row.get("createdAt")) or datetime.now(timezone.utc),
             engagement=row.get("commentsCount", 0),
             raw={"kind": "issue", **row},
         )

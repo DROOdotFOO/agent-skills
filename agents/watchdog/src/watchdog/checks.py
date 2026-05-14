@@ -14,6 +14,8 @@ import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
+from shared.dates import parse_iso_utc
+
 from watchdog.models import CheckResult, Status
 
 
@@ -74,7 +76,7 @@ def check_stale_prs(repo: str, max_age_days: int = 14) -> list[CheckResult]:
 
     stale_prs = []
     for pr in prs:
-        created = datetime.fromisoformat(pr["createdAt"].replace("Z", "+00:00"))
+        created = parse_iso_utc(pr["createdAt"]) or datetime.now(timezone.utc)
         age_days = (now - created).days
         if age_days >= max_age_days:
             author = pr.get("author", {}).get("login", "unknown")
@@ -197,7 +199,7 @@ def check_open_issues_age(repo: str, max_age_days: int = 30) -> list[CheckResult
         assignees = issue.get("assignees", [])
         if not assignees:
             continue
-        created = datetime.fromisoformat(issue["createdAt"].replace("Z", "+00:00"))
+        created = parse_iso_utc(issue["createdAt"]) or datetime.now(timezone.utc)
         age_days = (now - created).days
         if age_days >= max_age_days:
             names = ", ".join(a.get("login", "?") for a in assignees)

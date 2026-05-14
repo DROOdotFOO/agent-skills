@@ -9,8 +9,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-import httpx
-
+from digest.adapters._helpers import fetch_json, parse_iso_utc
 from digest.expansion import ExpandedQuery
 from digest.models import Item
 
@@ -48,10 +47,9 @@ class PackagesAdapter:
 
     def _search_hex(self, term: str, limit: int) -> list[dict]:
         params = {"search": term, "sort": "recent_downloads", "page": 1}
-        response = httpx.get(HEX_URL, params=params, timeout=30.0)
-        response.raise_for_status()
+        payload = fetch_json(HEX_URL, params=params, default=[])
         results = []
-        for pkg in response.json()[:limit]:
+        for pkg in (payload or [])[:limit]:
             releases = pkg.get("releases", [])
             latest_release = releases[0] if releases else {}
             results.append(
@@ -71,10 +69,9 @@ class PackagesAdapter:
     def _search_crates(self, term: str, limit: int) -> list[dict]:
         params = {"q": term, "sort": "recent-downloads", "per_page": min(limit, 100)}
         headers = {"User-Agent": USER_AGENT}
-        response = httpx.get(CRATES_URL, params=params, headers=headers, timeout=30.0)
-        response.raise_for_status()
+        payload = fetch_json(CRATES_URL, params=params, headers=headers, default={})
         results = []
-        for crate in response.json().get("crates", []):
+        for crate in payload.get("crates", []) or []:
             results.append(
                 {
                     "registry": "crates",
@@ -91,10 +88,9 @@ class PackagesAdapter:
 
     def _search_npm(self, term: str, limit: int) -> list[dict]:
         params = {"text": term, "size": min(limit, 250)}
-        response = httpx.get(NPM_URL, params=params, timeout=30.0)
-        response.raise_for_status()
+        payload = fetch_json(NPM_URL, params=params, default={})
         results = []
-        for obj in response.json().get("objects", []):
+        for obj in payload.get("objects", []) or []:
             package = obj.get("package", {})
             score = obj.get("score", {})
             popularity = (score.get("detail") or {}).get("popularity", 0.0)
@@ -135,13 +131,10 @@ class PackagesAdapter:
 
 
 def _parse_timestamp(value: str | None) -> datetime:
-    """Parse an ISO 8601 timestamp, falling back to epoch on failure."""
-    if not value:
-        return datetime.fromtimestamp(0, tz=timezone.utc)
-    try:
-        dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
-        if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=timezone.utc)
-        return dt
-    except (ValueError, TypeError):
-        return datetime.fromtimestamp(0, tz=timezone.utc)
+    """Parse an ISO 8601 timestamp, falling back to epoch on failure.
+
+    Unlike the other adapters' fallback to "now", packages.py falls back to
+    epoch (1970-01-01) so packages with missing dates sort as "very old"
+    rather than "freshly published".
+    """
+    return parse_iso_utc(value) or datetime.fromtimestamp(0, tz=timezone.utc)

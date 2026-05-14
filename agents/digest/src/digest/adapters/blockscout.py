@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-import httpx
-
+from digest.adapters._helpers import fetch_json, parse_iso_utc
 from digest.expansion import ExpandedQuery
 from digest.models import Item
 
@@ -55,18 +54,8 @@ class BlockscoutAdapter:
         base_url = BLOCKSCOUT_URLS[DEFAULT_CHAIN]
         items: list[Item] = []
 
-        try:
-            resp = httpx.get(
-                f"{base_url}/api/v2/search",
-                params={"q": term},
-                timeout=30.0,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-        except (httpx.HTTPError, ValueError):
-            return []
-
-        results = data.get("items", [])[:5]
+        data = fetch_json(f"{base_url}/api/v2/search", params={"q": term}, default={})
+        results = (data.get("items") or [])[:5]
         per_result_limit = max(limit // max(len(results), 1), 5)
         for result in results:
             result_type = result.get("type", "")
@@ -84,20 +73,14 @@ class BlockscoutAdapter:
         name = token.get("name", "") or address[:10]
         symbol = token.get("symbol", "")
 
-        try:
-            resp = httpx.get(
-                f"{base_url}/api/v2/tokens/{address}/transfers",
-                params={"limit": str(min(limit, 20))},
-                timeout=30.0,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-        except (httpx.HTTPError, ValueError):
-            return []
-
+        data = fetch_json(
+            f"{base_url}/api/v2/tokens/{address}/transfers",
+            params={"limit": str(min(limit, 20))},
+            default={},
+        )
         return [
             self._build_transfer_item(tx, base_url, name, symbol)
-            for tx in data.get("items", [])[:limit]
+            for tx in (data.get("items") or [])[:limit]
         ]
 
     def _build_transfer_item(self, tx: dict, base_url: str, name: str, symbol: str) -> Item:
@@ -130,18 +113,12 @@ class BlockscoutAdapter:
         address = address_info.get("address", "")
         name = address_info.get("name", "") or address[:10]
 
-        try:
-            resp = httpx.get(
-                f"{base_url}/api/v2/addresses/{address}/transactions",
-                params={"limit": str(min(limit, 20))},
-                timeout=30.0,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-        except (httpx.HTTPError, ValueError):
-            return []
-
-        return [self._build_tx_item(tx, base_url, name) for tx in data.get("items", [])[:limit]]
+        data = fetch_json(
+            f"{base_url}/api/v2/addresses/{address}/transactions",
+            params={"limit": str(min(limit, 20))},
+            default={},
+        )
+        return [self._build_tx_item(tx, base_url, name) for tx in (data.get("items") or [])[:limit]]
 
     def _build_tx_item(self, tx: dict, base_url: str, name: str) -> Item:
         value_wei = int(tx.get("value", "0"))
@@ -170,13 +147,8 @@ class BlockscoutAdapter:
 
 
 def _parse_timestamp(ts_str: str) -> datetime:
-    """Parse a Blockscout API timestamp."""
-    if ts_str:
-        try:
-            return datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
-        except ValueError:
-            pass
-    return datetime.now(timezone.utc)
+    """Parse a Blockscout API timestamp; falls back to now when missing/invalid."""
+    return parse_iso_utc(ts_str) or datetime.now(timezone.utc)
 
 
 def _addr(val: str | dict | None) -> str:
