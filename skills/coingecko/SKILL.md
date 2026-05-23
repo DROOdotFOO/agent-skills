@@ -6,7 +6,7 @@ description: >
   TRIGGER when: user asks about token/coin prices, market caps, trading volume,
   DEX pools, trending tokens, price history, crypto market data, or CoinGecko API usage.
   DO NOT TRIGGER when: user asks about on-chain contract state or transactions
-  (use blockscout skill), or Solidity/smart contract code (use solidity-audit skill).
+  (use blockscout skill), or Solidity/smart contract code (use solidity-auditor skill).
 metadata:
   author: DROOdotFOO
   version: "1.0.0"

@@ -10,7 +10,7 @@ description: >
   "zk readiness", "pre-eip review", "circuit-solidity audit", or "zk
   pre-audit"; EIP/ERC draft is being prepared for submission and a hybrid
   Solidity + Noir codebase needs a structural readiness check.
-  DO NOT TRIGGER when: protocol is Solidity-only (use solidity-audit skill or
+  DO NOT TRIGGER when: protocol is Solidity-only (use solidity-auditor skill or
   pashov's x-ray); deep circuit-design questions without Solidity integration
   (use noir skill); general Ethereum tooling questions (use ethskills); when a
   full external audit is the goal rather than a pre-audit briefing.
@@ -57,17 +57,17 @@ that calls out each of these explicitly with `On-chain enforced? Yes/No` flags.
 
 - **Start with the circuit-map.** The first place a hybrid protocol breaks is the circuit↔solidity boundary. If the public-input parity table has any drift rows, fix those before reading anything else.
 - **Treat the EIP-readiness verdict as a gate.** Any High-impact finding open at submission grades the protocol EXPOSED regardless of test coverage. The verdict is opinionated by design.
-- **Pair with `solidity-audit` + `noir`.** zk-x-ray surfaces *what to look at*; the deep methodology for each side lives in those skills.
+- **Pair with `solidity-auditor` + `noir`.** zk-x-ray surfaces *what to look at*; the deep methodology for each side lives in those skills.
 
 ## See also
 
 - `noir` -- ZK circuit design, constraint optimization, Aztec integration
-- `solidity-audit` -- Foundry-first audit methodology + vulnerability taxonomy for the Solidity side
+- `solidity-auditor` -- Foundry-first audit methodology + vulnerability taxonomy for the Solidity side
 - `ethskills` -- EIP / ERC standards lookup, RPC providers, framework selection
 - `blockscout` -- on-chain data queries when validating deployment state
 
 This skill **complements** all four. For Solidity-only projects, defer to
-`solidity-audit` plus pashov's public `x-ray`; for circuit-only design
+`solidity-auditor` plus pashov's public `x-ray`; for circuit-only design
 questions, defer to `noir`. zk-x-ray's value is the seam where the two meet.
 
 ## Reading guide

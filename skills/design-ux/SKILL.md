@@ -7,8 +7,9 @@ description: >
   or creating DESIGN.md documentation. Covers React, Tailwind CSS, terminal UI, and
   mobile patterns with a monospace-first, constraint-based design philosophy.
   DO NOT TRIGGER when: writing React/TypeScript code logic (use droo-stack skill),
-  building Raxol TUI framework features (use raxol skill), or working with
-  CSS-in-JS runtime concerns (this skill covers design decisions, not runtime).
+  building Raxol TUI framework features (use raxol skill), working with
+  CSS-in-JS runtime concerns (this skill covers design decisions, not runtime),
+  or designing API/module/public-surface interfaces (use interface-designer skill).
 metadata:
   author: DROOdotFOO
   version: "1.0.0"
@@ -45,7 +46,7 @@ Design decisions flow from constraints, not decoration. Start from the character
 - **Code-level patterns** (TypeScript, React hooks, error handling) -- use `droo-stack`
 - **Raxol framework API** (TEA agents, headless sessions, MCP tools) -- use `raxol`
 - **Claude/Anthropic SDK integration** -- use `claude-api`
-- **Solidity/smart contract design** -- use `solidity-audit`
+- **Solidity/smart contract design** -- use `solidity-auditor`
 
 ## Reading Guide
 

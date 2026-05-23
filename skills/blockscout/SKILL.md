@@ -7,7 +7,7 @@ description: >
   TRIGGER when: user asks about on-chain data, contract state, token balances,
   transaction history, ENS lookup, NFT holdings, or uses blockscout MCP tools.
   DO NOT TRIGGER when: user asks about crypto market prices or trading volume
-  (use coingecko skill), or writing Solidity code (use solidity-audit skill).
+  (use coingecko skill), or writing Solidity code (use solidity-auditor skill).
 metadata:
   author: DROOdotFOO
   version: "1.0.0"
@@ -58,4 +58,4 @@ Default: Ethereum (1). Use `get_chains_list` to discover all 90+ supported chain
 - `coingecko` -- market prices, volumes, DEX pools, trending tokens
 - `sentinel` -- automated contract monitoring with alert rules
 - `ethskills` -- framework selection, RPC providers, EIP/ERC standards
-- `solidity-audit` -- smart contract security patterns and audit methodology
+- `solidity-auditor` -- smart contract security patterns and audit methodology

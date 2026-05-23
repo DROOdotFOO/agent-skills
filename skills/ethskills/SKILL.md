@@ -4,7 +4,7 @@ description: >
   Ethereum ecosystem tooling and standards reference. TRIGGER when: asking
   about Ethereum development tools, framework selection, RPC providers, block
   explorers, EIP/ERC standards, or general Web3 development workflow. DO NOT
-  TRIGGER when: writing or auditing Solidity code (use solidity-audit skill),
+  TRIGGER when: writing or auditing Solidity code (use solidity-auditor skill),
   or working with Noir/ZK circuits (use noir skill).
 metadata:
   author: DROOdotFOO
@@ -15,7 +15,7 @@ metadata:
 # ethskills
 
 Ethereum ecosystem tooling, framework selection, and standards reference.
-For Solidity code and auditing, use solidity-audit. For ZK/Noir, use noir.
+For Solidity code and auditing, use solidity-auditor. For ZK/Noir, use noir.
 
 ## What You Get
 
@@ -32,7 +32,7 @@ resources.
 
 ## When NOT to use
 
-- For Solidity code or security auditing -- use solidity-audit
+- For Solidity code or security auditing -- use solidity-auditor
 - For Noir/ZK circuit design -- use noir
 - For non-Ethereum languages -- use droo-stack
 
@@ -41,7 +41,7 @@ resources.
 - `blockscout` -- full Blockscout MCP tool reference (16 tools, usage patterns)
 - `coingecko` -- crypto market data, token prices, DEX pools, trending tokens
 - `sentinel` -- automated on-chain contract monitoring with alert rules
-- `solidity-audit` -- for EIP/ERC implementation guidance and security review
+- `solidity-auditor` -- for EIP/ERC implementation guidance and security review
 - `noir` -- for ZK circuit patterns and Aztec contract integration
 - `zk-x-ray` -- for pre-EIP audit briefings on ZK + EVM hybrid protocols
 - `design-ux` -- for dApp frontend design patterns

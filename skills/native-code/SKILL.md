@@ -6,7 +6,8 @@ description: >
   code for BEAM integration, tree-sitter grammar NIFs, or discussing native
   performance boundaries in Elixir. DO NOT TRIGGER when: general C/Zig/Rust
   language questions (use droo-stack), general Elixir patterns (use droo-stack),
-  Raxol framework (use raxol skill).
+  Raxol framework (use raxol skill), or ffmpeg upstream / libav* hand-written
+  assembly (use ffmpeg-asm skill).
 metadata:
   author: DROOdotFOO
   version: "1.0.0"

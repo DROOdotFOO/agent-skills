@@ -2,7 +2,7 @@
 name: tech-debt-tracker
 description: |
   Automated tech debt scanning, classification, and cost-of-delay prioritization.
-  TRIGGER when: user asks to find tech debt, audit code quality, prioritize refactoring, track debt trends, or assess code health; user runs /tech-debt or /debt-scan.
+  TRIGGER when: user asks to find tech debt, audit code quality or code health, prioritize refactoring, track debt trends, identify cleanup candidates, or assess where to invest engineering effort; user runs /tech-debt or /debt-scan.
   DO NOT TRIGGER when: writing new features, doing code review (use code-review skill), debugging specific bugs.
 metadata:
   author: DROOdotFOO

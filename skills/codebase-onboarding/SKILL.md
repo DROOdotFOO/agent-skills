@@ -3,8 +3,9 @@ name: codebase-onboarding
 description: >
   Auto-generate onboarding documentation from codebase analysis, tailored
   to the reader's experience level. TRIGGER when: user asks to onboard someone
-  to a codebase, generate project documentation for new team members, create
-  a getting-started guide, or explain a codebase to a specific audience.
+  to a codebase, document this codebase, generate project documentation for
+  new team members, write a codebase walkthrough or tour, create a
+  getting-started guide, or explain a codebase to a specific audience.
   DO NOT TRIGGER when: user wants API reference docs (use language-specific
   tooling), or wants to understand a single file (just read it).
 metadata:

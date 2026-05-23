@@ -1,6 +1,6 @@
 # agent-skills
 
-53 Claude Code skills and 8 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming.
+54 Claude Code skills and 8 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming.
 
 ## How skill loading works
 
@@ -10,7 +10,7 @@ Skills are **lazy**. Claude Code reads the short trigger clause from each `SKILL
 
 What's always present: ~2-4 lines of trigger description per skill. What's lazy: everything else. 53 skills at a few lines each is a small fraction of the context window. The heavy content -- sometimes hundreds of lines of domain-specific reference -- only loads when you're actually working in that domain.
 
-So no, installing all 53 won't bloat your sessions. I.E. the noir ZK skill isn't eating tokens while you're reviewing a PR.
+So no, installing all 54 won't bloat your sessions. I.E. the noir ZK skill isn't eating tokens while you're reviewing a PR.
 
 ## Skills
 
@@ -24,12 +24,12 @@ Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
 | `droo-stack`                            | Polyglot patterns (Elixir, TS, Go, Rust, C, Zig, Python, Lua, Shell, Noir, Chezmoi)      |
 | `raxol`                                 | Elixir TUI/agent framework (TEA agents, MCP, headless sessions)                          |
 | `noir`                                  | ZK circuit design, Aztec contracts, constraint optimization                              |
-| `solidity-audit`                        | Solidity dev standards, vulnerability taxonomy, Foundry-first audit                      |
+| `solidity-auditor`                        | Solidity dev standards, vulnerability taxonomy, Foundry-first audit                      |
 | `zk-x-ray`                              | Pre-audit briefing for ZK + EVM hybrids (Noir + Solidity), public-input parity check     |
 | `ethskills`                             | Ethereum tooling, framework selection, EIP/ERC standards                                 |
-| `design-ux`                             | UI/UX design patterns, design tokens, accessibility, TUI aesthetics                      |
 | `nix`                                   | Nix language, flakes, NixOS, Home Manager, packaging                                     |
 | `native-code`                           | NIF development (C/Rust/Rustler), SIMD (Zig), BEAM native boundary                       |
+| `ffmpeg-asm`                            | ffmpeg upstream + integration: x86inc.asm, NEON + Apple M4 SME, HBD templating, dispatch, checkasm, upstream patch workflow |
 | `coingecko`                             | CoinGecko/GeckoTerminal API: prices, markets, DEX pools, trending tokens                 |
 | `blockscout`                            | Blockscout MCP: 16 tools for on-chain data across 8+ chains                              |
 | `web-asset-generator`                   | Favicon, app icon, OG image, devicon generation and optimization                         |
@@ -45,9 +45,9 @@ Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
 | `focused-fix`           | 5-phase bug fix: SCOPE -> TRACE -> DIAGNOSE -> FIX -> VERIFY            |
 | `release`               | Conventional commits, semver bumping, changelog, readiness checks       |
 | `qa`                    | Bug triage and issue creation; interactive QA with background explorer  |
-| `design-an-interface`   | "Design It Twice" -- parallel sub-agents with divergent constraints     |
+| `interface-designer`   | "Design It Twice" -- parallel sub-agents with divergent constraints     |
 | `ubiquitous-language`   | DDD glossary extraction, canonical terms                                |
-| `playwright`            | Browser automation testing with Playwright                              |
+| `design-ux`             | UI/UX design patterns, design tokens, accessibility, TUI aesthetics     |
 | `property-testing`      | Generative/property-based testing (Hypothesis, proptest, StreamData, fast-check) |
 | `refactoring-strategy`  | Strangler fig, large renames, safe restructuring for polyglot codebases |
 
@@ -65,7 +65,9 @@ Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
 | `git-worktree-manager`   | Parallel dev with deterministic port allocation                 |
 | `env-secrets-manager`    | Leak detection, rotation, pre-commit setup                      |
 | `tech-debt-tracker`      | Debt scanning, cost-of-delay prioritization                     |
-| `security-audit`         | Security vulnerability scanning and compliance assessment       |
+| `security-auditor`       | Security vulnerability scanning and compliance assessment       |
+| `playwright`             | Browser automation and e2e testing tooling (Python + TS)        |
+| `prepper`                | Pre-session project briefings (git, GitHub, CI, deps, recall)   |
 
 ### Meta
 
@@ -83,10 +85,9 @@ Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
 | `recall`               | Knowledge base: query past decisions, patterns, gotchas                |
 | `autoresearch`         | Check experiment status, run iterations, view dashboards               |
 | `watchdog`             | Scan repos for stale PRs, failing CI, security advisories              |
-| `prepper`              | Generate pre-session project briefings                                 |
 | `sentinel`             | Monitor on-chain contracts for anomalous transactions                  |
 | `patchbot`             | Scan and update outdated dependencies across ecosystems                |
-| `voice`                | Writing voice calibration from studied authors, combinatorial blending |
+| `writing-voice`        | Writing voice calibration from studied authors, combinatorial blending |
 | `skill-creator`        | Scaffold new skills with frontmatter, triggers, and sub-files          |
 
 ## Agents

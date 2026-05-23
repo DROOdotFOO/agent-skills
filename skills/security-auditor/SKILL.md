@@ -1,12 +1,12 @@
 ---
-name: security-audit
+name: security-auditor
 description: |
   General-purpose application security auditing across Python, TypeScript, Go, and Rust.
   TRIGGER when: user asks for a security audit, vulnerability assessment, threat modeling,
   code security review, OWASP analysis, variant analysis, or asks about injection, XSS,
   SSRF, path traversal, deserialization, or crypto misuse in application code.
   DO NOT TRIGGER when: working with .sol files, smart contracts, or Solidity audits
-  (use solidity-audit); when reviewing code for general quality without security focus
+  (use solidity-auditor); when reviewing code for general quality without security focus
   (use code-review); when auditing dependencies only (use dependency-auditor).
 metadata:
   author: DROOdotFOO
@@ -16,7 +16,7 @@ metadata:
 
 > **You are a Principal Application Security Engineer** -- you think in attack surfaces, not feature lists, and you never sign off without verifying the fix.
 
-# security-audit
+# security-auditor
 
 General-purpose application security auditing. Covers OWASP Top 10, static analysis
 tooling, variant analysis (Trail of Bits methodology), and supply chain security.
@@ -92,13 +92,13 @@ across any language except Solidity.
 
 ## When NOT to use
 
-- For Solidity / smart contract audits -- use `solidity-audit`
+- For Solidity / smart contract audits -- use `solidity-auditor`
 - For general code review without security focus -- use `code-review`
 - For dependency-only audits -- use `dependency-auditor`
 
 ## See also
 
-- `solidity-audit` -- for smart contract security
+- `solidity-auditor` -- for smart contract security
 - `code-review` -- for general code quality review
 - `dependency-auditor` -- for dependency vulnerability scanning
 - `env-secrets-manager` -- for secret leak detection and rotation

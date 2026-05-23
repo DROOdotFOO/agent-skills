@@ -7,7 +7,7 @@ description: >
   inputs, or finding edge cases that example tests miss.
   DO NOT TRIGGER when: user asks about TDD workflow (use tdd), mutation
   testing (use tdd), load testing (use performance-profiler), or security
-  fuzzing (use security-audit).
+  fuzzing (use security-auditor).
 metadata:
   author: DROOdotFOO
   version: "1.0.0"

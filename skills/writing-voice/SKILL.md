@@ -1,12 +1,12 @@
 ---
-name: voice
+name: writing-voice
 description: >
   Writing voice calibration from studied authors. Accepts combinatorial
   voice arguments to blend multiple writer influences.
-  TRIGGER when: user invokes "/voice" or asks to "write like", "in the
-  style of", "voice of", "blend voices", or references a specific writer
-  influence for their prose. Also when user asks to review writing for
-  voice/tone/style quality.
+  TRIGGER when: user invokes "/writing-voice" or asks to "write like",
+  "in the style of", "voice of", "blend voices", or references a
+  specific writer influence for their prose. Also when user asks to
+  review writing for voice/tone/style quality.
   DO NOT TRIGGER when: user asks to humanize existing text (use humanize
   skill), write code, generate commit messages, or produce technical
   documentation where voice is irrelevant.
@@ -16,7 +16,7 @@ metadata:
   tags: writing, voice, style, prose, editing
 ---
 
-# voice
+# writing-voice
 
 Calibrate your writing voice against studied authors. Each voice file captures what a specific writer does -- sentence rhythms, structural habits, rhetorical moves, what they avoid -- so you can apply those patterns to your own prose without losing your identity.
 

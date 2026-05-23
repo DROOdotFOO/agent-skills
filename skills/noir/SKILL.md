@@ -6,7 +6,9 @@ description: >
   zoir extension, or discussing zero-knowledge proof design. Covers circuit
   architecture, constraint optimization, ZK-specific security, and Aztec
   integration. DO NOT TRIGGER when: only Noir language syntax is needed
-  (droo-stack handles that), or working with Solidity (use solidity-audit skill).
+  (droo-stack handles that), working with Solidity only (use solidity-auditor
+  skill), or hybrid Solidity + Noir projects with both foundry.toml and
+  Nargo.toml (use zk-x-ray skill).
 metadata:
   author: DROOdotFOO
   version: "1.0.0"
@@ -38,13 +40,13 @@ knowledge that requires ZK expertise.
 ## When NOT to use
 
 - For Noir language syntax only (types, modules, generics) -- use droo-stack
-- For Solidity smart contracts -- use solidity-audit
+- For Solidity smart contracts -- use solidity-auditor
 - For general Ethereum tooling -- use ethskills
 
 ## See also
 
 - `droo-stack` -- for Noir language syntax (types, modules, generics)
-- `solidity-audit` -- for Solidity verifier contracts that consume Noir proofs
+- `solidity-auditor` -- for Solidity verifier contracts that consume Noir proofs
 - `zk-x-ray` -- for pre-audit reports on ZK + EVM hybrid protocols (Noir + Solidity)
 - `ethskills` -- for Ethereum ecosystem tooling and standards
 

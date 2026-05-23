@@ -1,5 +1,5 @@
 ---
-name: design-an-interface
+name: interface-designer
 description: |
   Design interfaces using Ousterhout's "Design It Twice" method with parallel sub-agents.
   TRIGGER when: user asks to design an API, interface, module boundary, or public surface area, or says "design it twice."

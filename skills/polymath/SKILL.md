@@ -8,10 +8,12 @@ description: >
   disagreements into a landscape map.
   TRIGGER when: the user explicitly invokes the technique
   ("polymath", "split-brain", "multiagency", "let's run agents to/for X",
-  "remember our polymath multiagency"), OR when ALL of these are true:
-  (a) the problem is research/strategy/framing-level, (b) the user has
-  indicated framing uncertainty (not debugging), (c) the cost of picking the
-  wrong frame is high, (d) the user has not already specified an approach.
+  "remember our polymath multiagency"); OR asks to brainstorm/ideate
+  across multiple framings of an architecture, design, or strategy
+  problem; OR when ALL of these are true: (a) the problem is
+  research/strategy/framing-level, (b) the user has indicated framing
+  uncertainty (not debugging), (c) the cost of picking the wrong frame
+  is high, (d) the user has not already specified an approach.
   DO NOT TRIGGER when: debugging ("stuck on this regex/error/build/typo/merge
   conflict"), file/syntax lookups, single-answer questions, naming/styling
   micro-decisions, or anything where one direct answer would suffice. When the

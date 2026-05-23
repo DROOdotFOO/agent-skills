@@ -6,10 +6,11 @@ description: >
   chezmoi templates. Provides incorrect/correct examples that complement
   CLAUDE.md preferences. DO NOT TRIGGER when: working with Claude API or
   Anthropic SDK (use claude-api skill), Raxol TUI/agent framework patterns
-  (use raxol skill), Solidity smart contracts (use solidity-audit skill),
+  (use raxol skill), Solidity smart contracts (use solidity-auditor skill),
   ZK circuit domain questions (use noir skill -- this skill only covers Noir
-  language syntax), or NIF/SIMD domain questions (use native-code skill --
-  this skill only covers C and Zig language syntax).
+  language syntax), NIF/SIMD domain questions for BEAM integration (use
+  native-code skill -- this skill only covers C and Zig general syntax), or
+  ffmpeg upstream / libav* assembly work (use ffmpeg-asm skill).
 metadata:
   author: DROOdotFOO
   version: "1.0.0"

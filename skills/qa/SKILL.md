@@ -5,8 +5,10 @@ description: >
   or interactive multi-bug QA sessions with background codebase exploration.
   TRIGGER when: user reports a bug, unexpected behavior, or regression; wants
   to triage an issue; wants to run a QA session; says "qa session"; or asks to
-  create an issue for a bug. DO NOT TRIGGER when: user wants to fix a bug
-  (use focused-fix), or wants a code review of a PR (use code-review).
+  create an issue for a bug. DO NOT TRIGGER when: user is actively
+  implementing a fix themselves (use focused-fix -- qa is for triage,
+  reproduction, and issue authoring, not the fix work), or wants a code
+  review of a PR (use code-review).
 metadata:
   author: DROOdotFOO
   version: "2.0.0"

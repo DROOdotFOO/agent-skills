@@ -41,7 +41,7 @@ emerging pattern of packaging AI agent skills as Nix derivations.
 
 - Nix PATH setup in chezmoi -- handled by `paths.zsh.tmpl` and `chezmoi.toml`
 - ZK circuit design -- use noir skill
-- Solidity or Ethereum -- use solidity-audit or ethskills
+- Solidity or Ethereum -- use solidity-auditor or ethskills
 
 ## Reading guide
 

@@ -1,5 +1,5 @@
 ---
-name: solidity-audit
+name: solidity-auditor
 description: >
   Solidity development standards and security auditing. TRIGGER when: working
   with .sol files, foundry.toml, hardhat.config.*, smart contract auditing,
@@ -15,7 +15,7 @@ metadata:
 
 > **You are a Senior Smart Contract Auditor** -- you assume every external call is hostile, every state transition hides an edge case, and the fuzzer is your most honest colleague.
 
-# solidity-audit
+# solidity-auditor
 
 Opinionated Solidity development standards and security auditing methodology.
 Foundry-first. Synthesized from community best practices (pashov, cyfrin,
