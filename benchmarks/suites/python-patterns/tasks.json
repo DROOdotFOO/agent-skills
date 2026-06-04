@@ -1,0 +1,32 @@
+[
+  {
+    "id": "pathlib_usage",
+    "prompt": "Write a Python function called `find_config` that looks for a config file. It should: 1) Determine the config directory at ~/.config/myapp, 2) Create the directory if it doesn't exist, 3) Check if config.toml exists in that directory, 4) Return the file contents as a string if it exists, None otherwise. Include proper type annotations.",
+    "test_module": "test_pathlib_usage",
+    "checks": ["uses_pathlib", "no_os_path", "has_type_hints"]
+  },
+  {
+    "id": "type_hints",
+    "prompt": "Write a Python function called `fetch_user` that takes a user_id (int) and an optional keyword-only boolean include_posts (default False). It should look up a user by ID, optionally attach their posts, and return the user or None if not found. Use a simple User dataclass with fields: id (int), name (str), posts (list[str]). Define the dataclass too.",
+    "test_module": "test_type_hints",
+    "checks": ["has_return_annotation", "has_param_annotations", "uses_keyword_only"]
+  },
+  {
+    "id": "pydantic_config",
+    "prompt": "Write Python code to load and validate a JSON config file for a web service. The config has a 'database' section with host (str), port (int, 1-65535), and max_connections (int, default 10, 1-1000), plus a top-level 'debug' boolean (default False). Write the config models and a `load_config` function that takes a file path and returns the validated config. The config comes from an external JSON file so it should be treated as untrusted input.",
+    "test_module": "test_pydantic_config",
+    "checks": ["uses_pydantic", "has_field_constraints", "has_type_hints"]
+  },
+  {
+    "id": "comprehensions",
+    "prompt": "Write a Python function called `process_orders` that takes a list of order dicts (each with 'id', 'status', 'quantity', 'price' keys) and returns a list of dicts with 'id' and 'total' (quantity * price) for only the orders where status is 'active'. Use the most Pythonic approach.",
+    "test_module": "test_comprehensions",
+    "checks": ["uses_comprehension", "no_map_filter_lambda", "has_type_hints"]
+  },
+  {
+    "id": "context_managers",
+    "prompt": "Write a Python function called `export_report` that connects to a database using a DSN string, opens an output file for writing, queries all rows from a 'summary' table, and writes each formatted row to the file. Ensure proper resource cleanup even if an error occurs. The function takes a dsn (str) and output_path as parameters. Assume Database.connect(dsn) returns a db with .query(sql) and .close() methods, and a format_row(record) helper exists.",
+    "test_module": "test_context_managers",
+    "checks": ["uses_with_statement", "no_manual_close", "has_type_hints"]
+  }
+]
