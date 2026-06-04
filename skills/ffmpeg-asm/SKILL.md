@@ -66,6 +66,7 @@ the patch goes to ffmpeg-devel, not GitHub.
 4. **Dispatch registration is part of the patch** -- a perfect kernel that nobody calls runs zero times
 5. **VZEROUPPER on AVX exit, mask-register hygiene on AVX-512** -- Skylake-class transition penalty is real
 6. **Contribute via ffmpeg's canonical paths, not the GitHub mirror** -- `code.ffmpeg.org` or `git send-email` to ffmpeg-devel; see `references/upstream-workflow.md`
+7. **Asm comments describe the computation, not the patch** -- drop AI-narration / authoring-meta (`// Args are bare reg names`, `// Chroma-preserving variant of X for...`); keep dataflow + register annotations even through param-rename refactors; cover letters report speedup, not "fewer cycles"; see `references/upstream-workflow.md` "Comment style"
 
 ## When to use
 
@@ -121,6 +122,10 @@ the patch goes to ffmpeg-devel, not GitHub.
 | Hand-duplicated SSE/AVX kernels                      | Doubles maintenance, divergent bugs                 | Use `INIT_XMM sse2` / `INIT_YMM avx2` to share source                |
 | AVX2 lane-crossing assumed to be SSE-style shuffle   | Silent wrong output on upper 128-bit lane           | Read AVX2 shuffle docs; use `vperm2i128` for cross-lane              |
 | GitHub PR opened against ffmpeg mirror               | Ignored -- mirror is read-only                      | Use `code.ffmpeg.org` or `git send-email` to ffmpeg-devel             |
+| AI-narration `//` comments left in asm               | Reviewer blocks PR for noise; reads as authoring-meta, not code semantics | Strip comments that explain the refactor or implementation choice; keep dataflow + register annotations only |
+| `//` annotations stripped during param-rename refactor | Block: reviewer flags lost annotations one by one  | Carry original comment text verbatim through the rename; change the symbol, not the trailing prose |
+| Cover letter framed as "fewer cycles" / every bench width dumped | Reviewer requests rewrite; speedup is the grep target | Frame as speedup (new/baseline); foreground the widest column; model after `f54841d375` |
+| v(N)->v(N+1) diff edits lines unrelated to review comments | Forgejo `Compare` button useless; review history splinters | Constrain revisions to review comments; split structural changes into a separate prep commit |
 | 8-bit-only kernel registered in HBD dispatch path    | Integer overflow on first 10-bit frame              | Add 10/12-bit variants (`_10`, `_12` suffix); see references/high-bit-depth |
 | `SECTION_RODATA` constants without explicit align    | Misaligned `mova` traps                             | `SECTION_RODATA 32` (or 64 for AVX-512); use `ALIGN`                 |
 | `--enable-gpl` toggled accidentally on LGPL target   | Downstream license obligations change               | Audit `./configure` output; keep LGPL builds clean of GPL components |

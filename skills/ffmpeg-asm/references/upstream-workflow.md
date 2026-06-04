@@ -173,6 +173,77 @@ Patch 3: minor comment cleanup
 Reviewers grep the cover letter for benchmark numbers and FATE
 status. Lead with that.
 
+## Comment style: code and cover letter
+
+Condensed from real review feedback on swscale/aarch64 patches
+(notably ramiro's REQUEST_CHANGES on PR #23272). Apply on every
+revision before `git format-patch`.
+
+### Asm `//` comments
+
+- Describe **what the code computes**, not how the patch was
+  authored. Drop authoring-meta and AI narration like `// Args are
+  bare reg names (e.g. v5)`, `// Chroma-preserving variant of X for
+  the 2-lines-at-a-time path because we wanted to reuse...`. These
+  read as patch-process commentary, not code semantics.
+- Keep concise dataflow and register annotations:
+  `// incC = (h & 1) ? paddincC : -width`,
+  `// srcU += incU`,
+  `// load luma (interleaved)`.
+  These are the comments reviewers cite when they have to re-read
+  your asm six months later.
+- When a refactor renames symbols or reorders params, **carry the
+  original comment text through verbatim**. Silently losing useful
+  annotations during cosmetic churn is one of the most common
+  review-block reasons on multi-revision patches -- five of the nine
+  inline comments on PR #23272 were "comment as well" / "comment
+  changed as well" / "this line removed the X part of the comment
+  unnecessarily".
+
+### Commit message body
+
+- The technical claim (what the patch does, perf, correctness
+  evidence) is what belongs here. No AI-disclosure paragraph by
+  default. No platform-availability caveats like "LE-only / Apple
+  Silicon" -- Storsjö flagged that on PR #23152 v1.
+- If a reviewer asks directly about AI use, answer inline on the
+  list/PR, not in the commit message.
+
+### Cover-letter benchmark reporting
+
+- Report **speedup** (`new / baseline`, or `<cycles> (<speedup>x)`),
+  not "fewer cycles" or raw cycle deltas. The reviewer greps for
+  the headline speedup number.
+- For multi-width benches (e.g. width=320/640/1280/1920), foreground
+  the widest column where speedup peaks; one representative width
+  with the speedup is what lands, not every row.
+- For multi-CPU benches, follow the per-row / per-CPU column layout
+  of commit `f54841d375` (`avcodec/aarch64: add pngdsp`):
+
+  ```
+  Test Name                    A55-gcc-11        M1-clang           A76-gcc-12
+  ------------------------------------------------------------------------
+  add_bytes_l2_4096_neon        1807.2 ( 2.01x)    1.6 ( 1.94x)    333.0 ( 6.35x)
+  add_paeth_prediction_3_neon  33036.1 ( 2.41x)  145.1 ( 1.66x)  20443.3 ( 1.97x)
+  ```
+
+  Each cell is `<cycles> (<speedup>x)`; speedup is explicit and
+  greppable.
+
+### Diff hygiene across revisions
+
+- Each v(N) -> v(N+1) diff should touch only lines that address
+  review comments. Forgejo's `Compare` button between revisions
+  needs to remain useful; if you also rewrite unrelated comments,
+  reorder neighbors, or apply tree-wide reflows, the Compare view
+  becomes too noisy to review.
+- Structural follow-ups (e.g. replacing `compute_rgb` with
+  `compute_rgb_2l` tree-wide) belong in a **separate prep commit at
+  the head of the series**, not folded into the original change.
+- Before sending, diff your v(N) branch against your v(N-1) branch
+  locally and look at the line count -- if it's much larger than the
+  set of review comments justifies, you have noise to strip.
+
 ### Patchwork: finding and tracking your patch
 
 `patchwork.ffmpeg.org` indexes everything sent to the list. Bookmark
