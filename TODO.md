@@ -24,28 +24,17 @@
 - [ ] Track AARTS spec evolution (currently v0.1)
 - [ ] Track Sage MCP interception support (not in v0.8.0, needed for our 8 MCP agents)
 
+### Agents
+
+- [ ] **patchbot local-name collisions** -- `patchbot update --ecosystem python` will upgrade `digest`, `prepper`, `recall`, `scribe`, `sentinel`, `watchdog` from PyPI, clobbering our local editable installs (all six are unrelated third-party packages on PyPI with the same names). Add an exclude mechanism (`--exclude`, `.patchbotignore`, or auto-detect editable installs via `pip list -e`) before anyone runs a real update at repo root. Lockfile-aware command selection already landed (uv/poetry/requirements.txt/pyproject); this is the remaining footgun.
+
 ### Digest adapters
 
-Expand beyond tech/crypto. Full API specs in `agents/digest/SPECS.md`.
+Expand beyond tech/crypto. Full API specs in `agents/digest/SPECS.md`. Tier 1 + most of Tier 2 shipped 2026-05-13 (see Completed below).
 
-**Tier 1** (clean APIs, implement first):
-
-- [x] Semantic Scholar -- JSON, citationCount + influentialCitationCount, tldr as summary, soft-fails on 429 (done 2026-05-13; set `S2_API_KEY` for real usage)
-- [x] PubMed -- JSON esearch + esummary + iCite (XML efetch avoided; key optional, done 2026-05-13)
-- [x] Federal Register -- JSON, keyless, page_views + significant flag (done 2026-05-13; comment_count not available on list endpoint — see SPECS.md note)
-- [x] Shodan enhancements -- InternetDB fallback + facets endpoint shipped 2026-05-13. Exploits API deferred (needs CVE-pattern routing).
-
-**Tier 2** (moderate complexity):
-
-- [x] arXiv -- Atom XML, no engagement (engagement=0; S2 composite enrichment deferred), 3s rate-limit respected (done 2026-05-13)
-- [x] OpenAlex -- JSON, 470M+ works, fwci bonus, polite pool via OPENALEX_EMAIL (done 2026-05-13)
-- [x] CourtListener -- JSON opinions search, citeCount engagement, SCOTUS bonus, anonymous works (done 2026-05-13)
-- [x] ClinicalTrials.gov -- JSON v2 API, enrollment + phase engagement, keyless, urllib not httpx (done 2026-05-13)
 - [ ] Congress.gov -- JSON, cosponsor count needs 2nd call, free key
-
-**Tier 3-4** (niche): Crossref, regulations.gov, openFDA, bioRxiv, WHO DON, CDC MMWR, EUR-Lex, UK Legislation
-
-**Shared infra**: XML parser (arXiv/PubMed/UK Legislation), ExpandedQuery extensions, credibility + ranking updates
+- [ ] **Tier 3-4** (niche): Crossref, regulations.gov, openFDA, bioRxiv, WHO DON, CDC MMWR, EUR-Lex, UK Legislation
+- [ ] **Shared infra**: XML parser (arXiv/PubMed/UK Legislation), ExpandedQuery extensions, credibility + ranking updates
 
 ### Benchmarking
 

@@ -71,7 +71,7 @@ def update(
         plan = UpdatePlan(
             ecosystem=eco,
             dependencies=deps,
-            update_command=get_update_command(eco),
+            update_command=get_update_command(eco, repo_path, deps),
             test_command=get_test_command(eco),
         )
         console.print(f"[bold]{eco.value}[/bold]: updating with `{plan.update_command}`")
@@ -102,7 +102,7 @@ def pr(
         plan = UpdatePlan(
             ecosystem=eco,
             dependencies=deps,
-            update_command=get_update_command(eco),
+            update_command=get_update_command(eco, repo_path, deps),
             test_command=get_test_command(eco),
         )
         console.print(f"[bold]{eco.value}[/bold]: updating deps...")

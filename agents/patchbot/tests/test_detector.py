@@ -109,6 +109,72 @@ def test_get_update_commands():
     assert "pip" in get_update_command(Ecosystem.PYTHON)
 
 
+def test_python_update_uv_lock():
+    with tempfile.TemporaryDirectory() as tmp:
+        (Path(tmp) / "uv.lock").touch()
+        assert get_update_command(Ecosystem.PYTHON, tmp) == "uv sync --upgrade"
+
+
+def test_python_update_poetry_lock():
+    with tempfile.TemporaryDirectory() as tmp:
+        (Path(tmp) / "poetry.lock").touch()
+        assert get_update_command(Ecosystem.PYTHON, tmp) == "poetry update"
+
+
+def test_python_update_requirements_txt():
+    with tempfile.TemporaryDirectory() as tmp:
+        (Path(tmp) / "requirements.txt").touch()
+        assert (
+            get_update_command(Ecosystem.PYTHON, tmp)
+            == "pip install --upgrade -r requirements.txt"
+        )
+
+
+def test_python_update_pyproject_with_deps():
+    from patchbot.models import Dependency
+
+    deps = [
+        Dependency(
+            name="requests",
+            current_version="2.0.0",
+            latest_version="3.0.0",
+            ecosystem=Ecosystem.PYTHON,
+        ),
+        Dependency(
+            name="pydantic",
+            current_version="1.9.0",
+            latest_version="2.0.0",
+            ecosystem=Ecosystem.PYTHON,
+        ),
+    ]
+    with tempfile.TemporaryDirectory() as tmp:
+        (Path(tmp) / "pyproject.toml").touch()
+        cmd = get_update_command(Ecosystem.PYTHON, tmp, deps)
+        assert cmd == "pip install --upgrade requests pydantic"
+
+
+def test_python_update_pyproject_no_deps_is_noop():
+    with tempfile.TemporaryDirectory() as tmp:
+        (Path(tmp) / "pyproject.toml").touch()
+        # No deps and no lockfile -- should not invent a destructive command.
+        assert get_update_command(Ecosystem.PYTHON, tmp) == "pip list --outdated"
+
+
+def test_python_update_uv_takes_priority_over_requirements():
+    with tempfile.TemporaryDirectory() as tmp:
+        (Path(tmp) / "uv.lock").touch()
+        (Path(tmp) / "requirements.txt").touch()
+        (Path(tmp) / "pyproject.toml").touch()
+        assert get_update_command(Ecosystem.PYTHON, tmp) == "uv sync --upgrade"
+
+
+def test_python_update_poetry_takes_priority_over_requirements():
+    with tempfile.TemporaryDirectory() as tmp:
+        (Path(tmp) / "poetry.lock").touch()
+        (Path(tmp) / "requirements.txt").touch()
+        assert get_update_command(Ecosystem.PYTHON, tmp) == "poetry update"
+
+
 def test_get_test_commands():
     assert get_test_command(Ecosystem.ELIXIR) == "mix test"
     assert get_test_command(Ecosystem.RUST) == "cargo test"

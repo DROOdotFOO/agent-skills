@@ -104,7 +104,7 @@ def create_server() -> FastMCP:
         plan = UpdatePlan(
             ecosystem=eco,
             dependencies=deps,
-            update_command=get_update_command(eco),
+            update_command=get_update_command(eco, repo_path, deps),
             test_command=get_test_command(eco),
         )
 
