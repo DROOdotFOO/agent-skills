@@ -16,13 +16,14 @@ description: >
   full external audit is the goal rather than a pre-audit briefing.
 metadata:
   author: DROOdotFOO
-  version: "0.1.0"
+  version: "0.2.0"
   tags: zk, zero-knowledge, audit, noir, solidity, hybrid, eip, x-ray, pre-audit, ultrahonk, barretenberg
 ---
 
 # zk-x-ray
 
-Pashov's `x-ray` methodology adapted for ZK + EVM hybrids: Noir circuits +
+Pashov's `x-ray` methodology (v2 — 2026-04-22 readiness-report evolution
+with cross-linked invariants) adapted for ZK + EVM hybrids: Noir circuits +
 Solidity verifier contracts + an oracle / registry layer that validates circuit
 public inputs.
 
@@ -206,12 +207,105 @@ State the protocol's classification explicitly: `Protocol classified as: ZK
 
 ### 2f. Invariant synthesis
 
-Run pashov's invariant synthesis (Conservation / Bound / Ratio / StateMachine /
-Temporal -- two-pass guard extract + lift) over the Solidity sources. **Add a
-sixth category** specific to ZK hybrids:
+Run pashov v2's invariant synthesis over the Solidity sources, **then** add the
+ZK-specific §5 (Circuit↔Solidity Consistency). The synthesis is a reasoning pass
+— no new tool calls except a batched Grep for Pass B write-site enumeration.
 
-**Circuit↔Solidity Consistency** (CSC). Each row pairs a Solidity-side commitment
-with a circuit-side commitment that the proof must satisfy:
+**Terminology.** A *guard* is a per-call precondition enforced at a single
+callsite (e.g., `require(amount >= MIN)`). Guards are not falsifiable — the code
+guarantees them locally. An *invariant* is a property that must hold globally
+across any sequence of calls. Guards feed §1 (Enforced Guards reference) only;
+properties lifted from guards or stated in NatSpec feed §2 / §3 / §4.
+
+**NatSpec routing (run first).** For each `@invariant` tag or inline comment
+asserting a global property (*"totalSupply always equals Σ balances"*,
+*"fee never exceeds MAX_BP"*, *"only one active epoch"*), route DIRECTLY to §2
+(or §3 / §4 if cross-contract or economic) by shape (Conservation / Bound /
+Ratio / StateMachine / Temporal). Source tag: `NatSpec: Contract.sol:LN`. Do NOT
+place developer-stated global invariants in §1 — §1 is per-call guard
+predicates only.
+
+**Walk order** (each step uses raw extraction data, not prior-step conclusions):
+
+1. **Conservation scan.** For each function, find delta-write pairs where
+   `Δ(A) = +expr` and `Δ(B) = -expr` in the same function body. Each matched
+   pair is a candidate: `A + B = const` or `A == Σ B[key]`. Verify across ALL
+   functions that write either variable — partial conservation splits into
+   Yes/No rows. **Negative conservation:** if a function that *ought* to track
+   a flow (flashloan, receive/forward, settle) has zero storage Δ, record this
+   as a Conservation-negative finding. Absence of Δ is itself an observation.
+
+2. **Guard extraction + lift (two passes).**
+
+   **Pass A — Verbatim into §1.** Every `require` / `assert` / `if-revert`
+   becomes a `G-N` row in §1. Quote the predicate verbatim with `file:line`.
+   This is a mechanical dump of per-call preconditions — not falsifiable.
+   Skip guards that reference only function parameters with no storage tie-back.
+
+   **Pass B — Lift to global property.** For each guard, ask: *does this imply
+   a property that must hold across any sequence of calls?*
+   - If NO (transient parameter consumed by the function) → leave in §1 only.
+   - If YES (persistent property — e.g. `require(amount >= MIN)` at deposit
+     implies "every active position ≥ MIN"; `require(_fee <= 10)` at setter
+     implies "fee ∈ [0, 10]") → rewrite as a global property, then locate ALL
+     write sites of the constrained storage variable via Grep on the variable
+     name. **Batch ALL write-site Greps for all lifted guards into a SINGLE
+     parallel message.**
+     - If ALL write sites enforce the equivalent guard → §2 Bound invariant
+       with On-chain=**Yes**.
+     - If ANY write site writes without the guard → §2 Bound invariant with
+       On-chain=**No**, citing the unguarded write site as the gap. **This is
+       the high-signal output** — the gap is simultaneously an invariant and a
+       potential bug.
+
+3. **Ratio scan.** Each storage write of form `A = B * C / D` where B, C, D are
+   storage or function-scoped snapshots → record the ratio + snapshot ordering
+   (before/after other state changes in the same function).
+
+4. **State machine / one-shot scan.** For each enum/uint/address in
+   `require(var == X); ... var = Y` patterns:
+   - **One-shot latch** (no path back) → record (e.g., `setStrategy`).
+   - **Togglable flag** (another function flips back) → NOT a state-machine
+     invariant, skip.
+   - **Cyclic state** driven by timing → record as cycle invariant.
+
+5. **Temporal scan.** Each `block.timestamp` or `block.number` comparison
+   against a storage variable (deadline, lastUpdate, lockPeriod). Note whether
+   checked-then-updated (safe) or updated-then-checked (stale-read risk).
+
+6. **Cross-contract scan.** External call where the return value feeds
+   arithmetic or a storage write → record caller assumption + callee write
+   sites. If the callee can change state independently, the assumption is
+   unvalidated → §3 cross-contract invariant with On-chain=No. Both sides must
+   be inside scope files. Include **setter-vs-invariant mismatches** where an
+   admin setter writes a storage value without checking that existing
+   invariants still hold.
+
+7. **Economic derivation.** Check if any combination of §2 + §3 invariants
+   implies a higher-order property. Each §4 row must cite the I-N / X-N IDs it
+   derives from. If the chain has any On-chain=No source, §4 is also No.
+
+**Verification gate (MANDATORY drop rules).**
+
+- Conservation: confirm Δ-pair exists at cited lines (same function body).
+- Guard (§1 row): confirm the require/assert/if-revert is verbatim from code.
+- Guard lift (§2 row): confirm the lifted property references persistent
+  storage. Confirm all write sites enumerated. If any write site lacks the
+  guard and the row says Yes, the row is invalid.
+- NatSpec: confirm the tag/comment exists verbatim at cited location AND
+  asserts a global (not per-call) property.
+- Ratio: confirm formula and snapshot ordering.
+- StateMachine: both edges exist AND no reverse path (else drop as togglable).
+- Temporal: comparison involves a storage variable.
+- Cross-contract: both caller + callee sides inside scope.
+- Economic: all referenced I-N / X-N IDs are themselves verified.
+- If you cannot verify → drop the row. "Could not verify" is not a valid row.
+
+### 2f-ZK. Circuit↔Solidity Consistency (§5 — unique to zk-x-ray)
+
+After the pashov walk, add §5: Circuit↔Solidity Consistency (CSC). Each row
+pairs a Solidity-side commitment with a circuit-side commitment that the proof
+must satisfy:
 
 | ID | Property | Solidity side | Circuit side | On-chain enforced? |
 |----|----------|---------------|--------------|--------------------|
@@ -233,14 +327,113 @@ In **one message**, parallel-write:
 1. **x-ray report** at zk-x-ray/x-ray.md -- top-level report. Sections per the templates reference:
    - Overview + scope table (separating Solidity contracts, circuits, generated verifiers, libraries)
    - Threat & Trust Model (using ZK-aware adversary ranking from the threats reference)
-   - Attack surfaces (cross-link to the invariants and circuit-map files)
+   - Attack surfaces — **MUST cross-link** to invariant block IDs (see below)
+   - **§3 Invariants is a POINTER ONLY** — a single blockquote callout with
+     counts (guards / single-contract / cross-contract / economic / CSC) and a
+     strong link to the invariants.md output. Do NOT duplicate the table here. This was
+     pashov v1 behaviour and is no longer correct.
    - **Pre-EIP Findings** -- if the project has an EIP / ERC draft, this section is required: concrete pre-submission action items, severity-tagged.
    - Verdict (FORTIFIED / HARDENED / ADEQUATE / FRAGILE / EXPOSED)
 2. **entry-points map** at zk-x-ray/entry-points.md -- pashov-style classified entry points
-3. **invariants catalog** at zk-x-ray/invariants.md -- pashov-style §1-4 PLUS §5 (Circuit↔Solidity Consistency)
+3. **invariants catalog** at zk-x-ray/invariants.md — five sections:
+   §1 Enforced Guards (Reference), §2 Inferred Single-Contract, §3 Inferred
+   Cross-Contract, §4 Economic, §5 Circuit↔Solidity Consistency. **Use
+   `#### G-N` / `#### I-N` / `#### X-N` / `#### E-N` / `#### CSC-N` heading
+   blocks — NOT tables.** Heading anchors (slug `#g-1`, `#i-17`, `#csc-2`, …)
+   are the target of cross-file markdown links from x-ray.md attack surfaces;
+   inline `<a id>` anchors inside table cells do NOT work cross-file in
+   VS Code. Each `G-N` block must include a `Purpose` line. Every inferred
+   block MUST cite a concrete Δ-pair, guard-lift + write-sites, edge, temporal
+   predicate, or NatSpec claim — drop blocks that cannot. Every cross-contract
+   block must cite BOTH caller-side assumption AND callee-side write sites.
 4. **circuit map** at zk-x-ray/circuit-map.md -- per-circuit table covering public-input parity,
    hashing scheme, in-circuit signature checks, domain tags. **This file is
    unique to zk-x-ray** and the deliverable that purely-Solidity audits miss.
+
+### Cross-link requirement (Key Attack Surfaces ↔ invariants.md)
+
+When writing Section 2 Key Attack Surfaces, cross-reference each surface
+against the invariants.md blocks you just produced. If the surface's cited
+`file:line` falls within the `Location` / `Derivation` / `Caller side` /
+`Callee side` window of any `G-N` / `I-N` / `X-N` / `E-N` / `CSC-N` block,
+append the matching IDs as bracketed markdown links immediately after the
+surface title using LOWERCASE slug fragments:
+
+```markdown
+- **Surface name** &nbsp;&#91;[X-4](invariants.md#x-4), [I-17](invariants.md#i-17), [CSC-2](invariants.md#csc-2)&#93; — ...
+```
+
+Separate each surface bullet with a blank line. Surfaces that are purely
+access-control or upgrade-ability concerns may be left unlinked — that is a
+healthy signal, not a gap. Typical hit rate on non-trivial protocols: ≥70% of
+surfaces link to at least one invariant. For ZK hybrids, attack surfaces
+touching the prover / verifier / registry should almost always link to CSC-N
+rows.
+
+### Test existence vs. coverage execution (CRITICAL)
+
+**Test presence** comes from Step 1 enumeration (`test_files`,
+`test_functions`, `stateless_fuzz`, `foundry_invariant`, `echidna`, `medusa`,
+`certora`, `halmos`, `hevm`, plus `nargo test` for circuits) — file-scan
+results, always reliable.
+
+**Coverage metrics** (`forge coverage`, circuit nargo test execution) require
+installed toolchains and successful compilation. Failure can be unrelated to
+test quality (missing deps, stack-too-deep, `bb` version drift).
+
+Rules:
+
+1. Use `test_files`/`test_functions` from Step 1 for ALL test existence
+   claims. Never infer "no tests" from coverage tool failure.
+2. If coverage fails but enumeration shows tests exist, report:
+   `"[N] test files with [M] test functions detected; coverage metrics
+   unavailable — [failure reason]"`.
+3. In "Gaps", only flag missing categories (stateless_fuzz=0,
+   foundry_invariant=0, echidna=0, …). Prioritize: missing stateful fuzz +
+   formal verification for math-heavy financial logic is higher priority than
+   missing fork tests. For ZK: missing circuit-level fuzz / formal proof of
+   constraint soundness is high-priority — call it out explicitly.
+4. Test presence and coverage metrics are independent signals — do not let
+   coverage failure cascade into the threat model.
+
+### Branch scoping
+
+The git analysis is scoped to the **current branch only** (HEAD). All git
+signals reflect commits reachable from HEAD — not other branches.
+
+1. State the analyzed branch in the report header or git history section:
+   `"Analyzed branch: \`[branch]\` at \`[commit]\`"`.
+2. When describing fix commits from git history, describe them as what the
+   **current branch code** does — not what a fix "changed" if you cannot see
+   the before/after on this branch.
+3. If the repo shape is `squashed_import` (1 commit), there is no meaningful
+   evolution — state this and skip fix/hotspot analysis.
+
+### Backwards-compatibility code detection
+
+While reading source, watch for code that appears to be remnants of a removed
+mechanism kept so the remaining codebase does not break. Common signals: empty
+or trivial function bodies, state variables declared but never meaningfully
+read or written, comments containing "deprecated" / "legacy" / "backwards
+compat" / "no longer used".
+
+Before classifying anything as backwards-compatibility, run **mandatory
+verification checks** (batch all caller-check Greps into a SINGLE message):
+
+1. **Caller check (REQUIRED).** No active callers in the current codebase.
+   If it IS called from active code paths, it is current design, not BC.
+2. **NatSpec/comment check (REQUIRED).** If code has NatSpec or inline
+   comments explaining intentional behavior ("simplified for X mode",
+   "by design", "intentionally zero"), this is documented intent, not BC.
+3. **Interface obligation check.** A function returning defaults because an
+   interface requires it AND actively called is current architecture.
+
+Only classify as BC when (a) no active callers, (b) no documenting comments,
+(c) git history shows the mechanism was removed.
+
+Note BC code explicitly in Section 1 of the report so auditors know which
+parts are retained for compatibility vs live functionality. Omit the
+subsection if no BC code survives the verification gate.
 
 Optional 5th file: if the project warrants a diagram, generate an architecture
 SVG via the same generator flow as pashov's skill (port that script in if/when

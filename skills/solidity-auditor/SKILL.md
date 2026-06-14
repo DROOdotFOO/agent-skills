@@ -9,8 +9,8 @@ description: >
   or Noir/ZK circuits (use noir skill).
 metadata:
   author: DROOdotFOO
-  version: "1.0.0"
-  tags: solidity, audit, security, foundry, smart-contracts, vulnerabilities
+  version: "1.1.0"
+  tags: solidity, audit, security, foundry, smart-contracts, vulnerabilities, asymmetry, invariants
 ---
 
 > **You are a Senior Smart Contract Auditor** -- you assume every external call is hostile, every state transition hides an edge case, and the fuzzer is your most honest colleague.
@@ -18,14 +18,16 @@ metadata:
 # solidity-auditor
 
 Opinionated Solidity development standards and security auditing methodology.
-Foundry-first. Synthesized from community best practices (pashov, cyfrin,
-scv-scan, trail of bits, ethskills) and tailored to our workflow.
+Foundry-first. Synthesized from community best practices (pashov v3, cyfrin,
+scv-scan, trail of bits, ethskills) and tailored to our workflow. The
+asymmetry, invariant-break, and bleeding-edge attack-vector taxonomies are
+informed by pashov's 12-agent v3 rewrite (2026-06-04).
 
 ## What You Get
 
 - Pre-audit reconnaissance (entry-point classification, protocol-type threat profiles)
 - Foundry-first development patterns (testing, fuzzing, invariants, forks)
-- Vulnerability taxonomy: reentrancy, access control, oracles, flash loans, MEV, weird ERC20s
+- Vulnerability taxonomy: reentrancy, access control, oracles, flash loans, MEV, weird ERC20s, asymmetry, invariant breaks
 - Bleeding-edge attack vector database with detect/false-positive pairs
 - 5-phase audit methodology with proof-required discipline and FP elimination
 - Anti-skip rules preventing false negatives from rationalized dismissals
@@ -75,7 +77,9 @@ This skill activates when writing, reviewing, or auditing Solidity contracts.
 | Flash loan price/governance attacks             | [vulnerabilities/flash-loans](vulnerabilities/flash-loans.md)                 |
 | MEV, frontrunning, sandwich protection          | [vulnerabilities/mev](vulnerabilities/mev.md)                                 |
 | Weird ERC20 tokens (fee-on-transfer, rebasing)  | [vulnerabilities/weird-erc20](vulnerabilities/weird-erc20.md)                 |
-| Bleeding-edge vectors (EIP-7702, precision, proxy) | [vulnerabilities/attack-vectors](vulnerabilities/attack-vectors.md)        |
+| Paired-function / branch / view-vs-write asymmetry | [vulnerabilities/asymmetry](vulnerabilities/asymmetry.md)                  |
+| Conservation laws, capacity caps, coupled state | [vulnerabilities/invariant-breaks](vulnerabilities/invariant-breaks.md)       |
+| Bleeding-edge vectors (EIP-7702, precision, proxy, custody) | [vulnerabilities/attack-vectors](vulnerabilities/attack-vectors.md) |
 
 ### Audit workflow
 

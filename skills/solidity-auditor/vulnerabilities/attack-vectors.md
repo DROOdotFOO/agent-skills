@@ -201,6 +201,204 @@ in the domain separator allow cross-chain replay or cross-contract replay.
 | False Positive When | Full EIP-712 domain with `name`, `version`, `chainId`, `verifyingContract` |
 | Severity | HIGH (signature replay across chains or contracts) |
 
+## Narrow-Int Sign Drop
+
+**Attack**: `uint24`/`int24` round-trips drop the sign bit. Negative ticks
+or signed offsets become huge positive values, corrupting downstream
+tree-tick or interval math (Uniswap V3 / V4 tick logic, AMM range orders).
+
+| Field | Value |
+|---|---|
+| Detect Signal | Casts between `uint24` and `int24`, or `int256` → `int24` without bounds checks |
+| Code Pattern | `int24 tick = int24(someInt256);` near tick / range / interval logic |
+| False Positive When | Cast is gated by an explicit range check that excludes the sign-bit edge |
+| Severity | HIGH (silent tick corruption in concentrated-liquidity math) |
+
+## Intermediate-Shift Overflow
+
+**Attack**: `(x << shift) / y` overflows `uint256` when `shift` makes `x`
+exceed type max — even though the divided result is safe. Construct
+flash-loan-scale `x` that breaks the intermediate.
+
+| Field | Value |
+|---|---|
+| Detect Signal | `<<` immediately preceding `/` where the shift width is data-dependent |
+| Code Pattern | `(amount << 64) / target` with `amount` attacker-influenced |
+| False Positive When | Shift width is a constant ≤ 64 and operand fits a small uint |
+| Severity | HIGH (reverts of legitimate flows, or wrap if assembly `shl` is used) |
+
+## Sole-Occupant Boundary
+
+**Attack**: Strict-less-than guards on participant counts or pool sizes
+exclude the single-occupant case. The intended distinguishing-from-zero
+check is wrong (should be `<=`):
+
+```solidity
+if (participants > 1) { ... }  // BUG: single solo participant gets skipped
+```
+
+| Field | Value |
+|---|---|
+| Detect Signal | `<` / `>` against participant / pool / lender counts in distinguishing-from-zero context |
+| False Positive When | `<` is intentional (e.g., enforcing minimum two-party operation) |
+| Severity | MEDIUM (DoS at sole-occupant edge) |
+
+## Cast-Wrap at Saturation
+
+**Attack**: Down-casts `uint64((x << 64) / y)` wrap to near-zero when the
+ratio approaches 1; at saturation utilization, fees and rates silently
+collapse instead of being capped. Lending and rate-curve code is the
+common locus.
+
+| Field | Value |
+|---|---|
+| Detect Signal | Narrow downcast on a fixed-point ratio whose normal range approaches 1.0 |
+| Code Pattern | `uint64 fee = uint64((x << 64) / y);` with `x ≈ y` |
+| False Positive When | Result is explicitly clamped before the cast |
+| Severity | HIGH (lender APR or vault fee silently goes to zero) |
+
+## Truncated Interest Accrual
+
+**Attack**: Lending utilization curves scaling by `rate / SECONDS_PER_YEAR`
+produce zero accrual when `principal · rate < SCALE`. Borrowers pay
+nothing across the period — repeatable, compoundable theft of interest.
+
+| Field | Value |
+|---|---|
+| Detect Signal | Per-second accrual formula `principal * rate * dt / SCALE` with no minimum |
+| False Positive When | Accrual is capped to a per-block minimum or rounded UP for debt |
+| Severity | MEDIUM-HIGH (compounding free borrow on small principals) |
+
+## Unsigned Subtraction Underflow
+
+**Attack**: `unsigned a - unsigned b` underflows when `b > a` at insolvent
+or edge positions; downstream code interprets the wrap-around as a huge
+positive value. Walk every `a - b` where bounds aren't asserted.
+
+```solidity
+uint256 surplus = totalCollateral - totalDebt;  // BUG: insolvent → underflow before 0.8 / unchecked block
+```
+
+| Field | Value |
+|---|---|
+| Detect Signal | Subtraction in an `unchecked { ... }` block or pre-0.8 Solidity, between two attacker-influenced unsigned values |
+| False Positive When | An explicit `if (b > a) revert/return` precedes the subtraction |
+| Severity | CRITICAL when downstream value is used for distribution / payout |
+
+## Wrong-Mask Bit Pack/Unpack
+
+**Attack**: Bitmask constants in pack/unpack helpers silently clear or
+preserve adjacent fields when miscalculated; downstream readers receive
+zero for fields that should carry data. Verify every mask against the
+bit layout it claims to extract.
+
+| Field | Value |
+|---|---|
+| Detect Signal | Hex masks (`0xff...`) used in `and`/`or` operations on packed structs |
+| False Positive When | The bit layout is documented and the mask matches the documented field width |
+| Severity | HIGH (zero defaults can authorize, pass guards, or skip validation) |
+
+## Divide-by-Edge-Value
+
+**Attack**: Formulas `x / tickSpacing`, `x / config.value`, `x / decimals`
+revert or zero when the edge case (1, 0) is permitted as input. Construct
+an input where the divisor reaches the edge.
+
+| Field | Value |
+|---|---|
+| Detect Signal | Division by a storage value writable by admin or user without `> 0` / `>= MIN` gating |
+| False Positive When | Setter rejects edge values OR division is in `unchecked { ... }` (rare and itself a finding) |
+| Severity | HIGH (DoS on critical flow if revert, silent corruption if zero result is consumed) |
+
+## Bytes20 Truncation (Cross-Encoded Recipients)
+
+**Attack**: Encoders packing a long sender — `bytes32` non-EVM address,
+`address` + extra metadata — into a narrower `bytes20` output silently
+truncate. Refunds and callbacks route to the truncated value. Common in
+bridges and cross-chain messaging.
+
+| Field | Value |
+|---|---|
+| Detect Signal | `bytes20(longerBytes)` cast where source can exceed 20 bytes (BTC bech32, Solana 32-byte, attacker-chosen length) |
+| Code Pattern | `address recipient = address(bytes20(payload));` after `payload` was decoded from cross-chain message |
+| False Positive When | Source format is enforced to exactly 20 bytes by an upstream validator |
+| Severity | CRITICAL (funds routed to attacker-controlled truncated address) |
+
+## ERC721 Hook Re-Entry
+
+**Attack**: `safeTransferFrom` calls `onERC721Received` on the receiver
+**before** the originating contract finalizes state. The receiver re-enters
+and observes inconsistent mid-flow state. Same shape applies to ERC1155
+hooks and Uniswap V3 mint callbacks.
+
+| Field | Value |
+|---|---|
+| Detect Signal | `safeTransferFrom` / `safeMint` / `_safeMint` mid-flow with state writes still pending after the call |
+| Code Pattern | NFT receiver hook fires before the originating contract sets `ownership[id] = newOwner` |
+| False Positive When | A reentrancy guard wraps the entire flow OR all state writes complete before the safe transfer |
+| Severity | HIGH (double-mint, ownership-races, stale balance reads) |
+
+## Unrestricted External Call from Custody
+
+**Attack**: A contract holding tokens or NFTs performs an external call
+whose target and calldata are attacker-controlled. The attacker calls
+back into the held-asset contract (`safeTransferFrom`) using the holding
+contract's authority.
+
+| Field | Value |
+|---|---|
+| Detect Signal | A contract that has approvals or holds NFTs makes a user-supplied `.call(...)`, `.delegatecall(...)`, or arbitrary `IXxx(target).foo(...)` |
+| Code Pattern | "Multicall", "execute", "callback-router" patterns where target ≠ msg.sender |
+| False Positive When | Targets are whitelisted to a fixed allow-list |
+| Severity | CRITICAL (confused-deputy fund drain) |
+
+## Unbounded Caller-Supplied Fee/Bonus
+
+**Attack**: External entry-points accept a fee or bonus parameter without
+an upper bound. Downstream economics assume reasonable values but the
+caller sets arbitrary — draining or bricking the path.
+
+```solidity
+function liquidate(address user, uint256 bonusBps) external {
+    // BUG: bonusBps capped only by uint256.max — caller picks any value
+    uint256 bonus = collateral[user] * bonusBps / 10_000;
+    payable(msg.sender).transfer(bonus);
+}
+```
+
+| Field | Value |
+|---|---|
+| Detect Signal | `external` function accepts a `bps`/`fee`/`bonus`/`slippage` value used in payout math without a `<= MAX_*` check |
+| False Positive When | Value is constrained against a stored max OR is the caller's own protective minimum (e.g., `minAmountOut`) |
+| Severity | CRITICAL (drain via inflated bonus) |
+
+## Approval Residual
+
+**Attack**: `approve(out + fee)` paired with `consume(out - fee)` leaves
+`2 · fee` of residual allowance per call. After N calls the spender holds
+`N · 2 · fee` of unspent allowance — convert to fund theft via any path
+that pulls from the residual.
+
+| Field | Value |
+|---|---|
+| Detect Signal | `approve(token, X)` followed by a path that consumes less than X, with no `approve(token, 0)` cleanup |
+| False Positive When | Allowance is reset to 0 (or to actual consumed amount) at the end of the flow |
+| Severity | HIGH (cumulative theft scales with call count) |
+
+## Same-Block Oracle Read
+
+**Attack**: A wrapper reads an external oracle in the **same block** as a
+write that touches the underlying pool. An attacker manipulates the
+oracle in the prior block (V3 `slot0`, single-source feed) and the
+wrapper accepts the manipulated value.
+
+| Field | Value |
+|---|---|
+| Detect Signal | Oracle read inside a function that also performs a deposit / liquidation / settle in the same tx, without time gating |
+| Code Pattern | `slot0` read, single-source feed read, or `latestRoundData` without round-id staleness check |
+| False Positive When | The read uses an enforced minimum staleness window OR an averaged TWAP with sufficient window |
+| Severity | CRITICAL (single-tx price-manipulation drain) |
+
 ## Quick Reference
 
 | Vector | Core Signal | Severity | Category |
@@ -213,3 +411,17 @@ in the domain separator allow cross-chain replay or cross-contract replay.
 | Storage collision | Non-EIP-1967 proxy slots | CRITICAL | Proxy |
 | Donation attack | `balanceOf(this)` in price/share math | HIGH | Economic |
 | Signature replay | ecrecover without EIP-712 domain | HIGH | Auth |
+| Narrow-int sign drop | `int24` / `uint24` casts in tick math | HIGH | Math |
+| Intermediate-shift overflow | `(x << shift) / y` with attacker-scale x | HIGH | Math |
+| Sole-occupant boundary | `participants > 1` excluding the lone case | MEDIUM | Boundary |
+| Cast-wrap at saturation | Downcast of ratio ≈ 1.0 | HIGH | Math |
+| Truncated interest accrual | `principal · rate < SCALE` → 0 accrual | MEDIUM-HIGH | Math |
+| Unsigned subtraction underflow | `a - b` with `b > a` in `unchecked` | CRITICAL | Math |
+| Wrong-mask bit pack | Hex mask vs documented bit layout mismatch | HIGH | Data |
+| Divide-by-edge-value | `x / tickSpacing` with edge admittable | HIGH | Math |
+| Bytes20 truncation | `bytes20(longerBytes)` cross-chain encode | CRITICAL | Bridge |
+| ERC721 hook re-entry | `safeTransferFrom` before state finalized | HIGH | Reentry |
+| Unrestricted custody call | Token-holder makes user-supplied external call | CRITICAL | Custody |
+| Unbounded caller fee | `external` accepts fee/bonus without cap | CRITICAL | Economic |
+| Approval residual | `approve(out+fee)` + `consume(out-fee)` | HIGH | Token |
+| Same-block oracle | Spot oracle read + write in one tx | CRITICAL | Oracle |

@@ -8,7 +8,7 @@ This is probably your first question, so let's get it out of the way.
 
 Skills are **lazy**. Claude Code reads the short trigger clause from each `SKILL.md` frontmatter -- _the first few lines per skill_ -- and only pulls in the full skill content when the trigger matches your conversation. The sub-files (examples, checklists, reference tables) stay out of context until they're actually needed.
 
-What's always present: ~2-4 lines of trigger description per skill. What's lazy: everything else. 53 skills at a few lines each is a small fraction of the context window. The heavy content -- sometimes hundreds of lines of domain-specific reference -- only loads when you're actually working in that domain.
+What's always present: ~2-4 lines of trigger description per skill. What's lazy: everything else. 54 skills at a few lines each is a small fraction of the context window. The heavy content -- sometimes hundreds of lines of domain-specific reference -- only loads when you're actually working in that domain.
 
 So no, installing all 54 won't bloat your sessions. I.E. the noir ZK skill isn't eating tokens while you're reviewing a PR.
 

@@ -227,9 +227,85 @@ Unpinned -> drop verdict tier.
 
 ---
 
-## `invariants.md` (delta from pashov)
+## `invariants.md` (delta from pashov v2)
 
-Use pashov's invariants.md template verbatim for §1 (Guards), §2 (Single-Contract), §3 (Cross-Contract), §4 (Economic). **Add §5:**
+Five sections. **All five use `#### G-N` / `#### I-N` / `#### X-N` / `#### E-N`
+/ `#### CSC-N` heading blocks — never tables**, because heading anchors
+(slug `#g-1`, `#i-17`, `#csc-2`) are the cross-file link targets from x-ray.md
+attack surfaces. Inline `<a id>` anchors inside table cells do NOT work
+cross-file in VS Code or most Markdown renderers.
+
+### §1 Enforced Guards (Reference)
+
+Per-call preconditions only — not falsifiable invariants. Mechanical dump
+from Pass A of the guard-extraction walk.
+
+```markdown
+#### G-1
+
+> [verbatim require/assert/if-revert predicate]
+
+**Location** -- `Contract.sol:LN`
+**Purpose** -- [what the guard protects, NOT just what it checks]
+```
+
+### §2 Inferred (Single-Contract)
+
+Conservation, Bound, Ratio, StateMachine, Temporal — global properties lifted
+from Pass B guard analysis, conservation Δ-pairs, or NatSpec routing.
+
+```markdown
+#### I-1
+
+On-chain: **Yes/No**
+
+> [global property — e.g. "every active position has collateral ≥ MIN"]
+
+**Derivation** -- [Pass B lift from G-N, OR Δ-pair at Contract.sol:LN-LN, OR NatSpec: Contract.sol:LN]
+**Write sites** -- [list every storage-write callsite for the constrained variable; cite which are guarded vs unguarded]
+**If violated** -- [consequence]
+```
+
+A row with On-chain=**No** (any write site lacks the equivalent guard) is the
+high-signal output — simultaneously an invariant and a potential bug.
+
+### §3 Inferred (Cross-Contract)
+
+Caller-side assumption + callee-side write sites. Both must be inside scope.
+
+```markdown
+#### X-1
+
+On-chain: **Yes/No**
+
+> [property — e.g. "the underlying vault price never drops below the
+>  protocol's recorded lastPrice without the protocol observing the change"]
+
+**Caller side** -- `Caller.sol:LN-LN` (assumption / use of return value)
+**Callee side** -- `Callee.sol:LN-LN` (write sites of the assumed state)
+**If violated** -- [consequence]
+```
+
+Include **setter-vs-invariant mismatches** where an admin setter writes a
+storage value without checking existing invariants still hold.
+
+### §4 Economic
+
+Higher-order properties derived from §2 + §3. Each block cites the I-N / X-N
+IDs it derives from. If any source row is On-chain=No, the economic row is No.
+
+```markdown
+#### E-1
+
+On-chain: **Yes/No**
+
+> [property — e.g. "no caller can withdraw more value than they deposited"]
+
+**Derivation** -- I-3 + I-7 + X-2
+**If violated** -- [consequence + concrete profit estimate if computable]
+```
+
+### §5 Circuit↔Solidity Consistency (CSC)
 
 ```markdown
 ## 5. Circuit↔Solidity Consistency (CSC)
