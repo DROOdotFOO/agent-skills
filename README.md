@@ -1,6 +1,6 @@
 # agent-skills
 
-54 Claude Code skills and 8 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming.
+56 Claude Code skills and 9 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming.
 
 ## How skill loading works
 
@@ -8,9 +8,9 @@ This is probably your first question, so let's get it out of the way.
 
 Skills are **lazy**. Claude Code reads the short trigger clause from each `SKILL.md` frontmatter -- _the first few lines per skill_ -- and only pulls in the full skill content when the trigger matches your conversation. The sub-files (examples, checklists, reference tables) stay out of context until they're actually needed.
 
-What's always present: ~2-4 lines of trigger description per skill. What's lazy: everything else. 54 skills at a few lines each is a small fraction of the context window. The heavy content -- sometimes hundreds of lines of domain-specific reference -- only loads when you're actually working in that domain.
+What's always present: ~2-4 lines of trigger description per skill. What's lazy: everything else. 56 skills at a few lines each is a small fraction of the context window. The heavy content -- sometimes hundreds of lines of domain-specific reference -- only loads when you're actually working in that domain.
 
-So no, installing all 54 won't bloat your sessions. I.E. the noir ZK skill isn't eating tokens while you're reviewing a PR.
+So no, installing all 56 won't bloat your sessions. I.E. the noir ZK skill isn't eating tokens while you're reviewing a PR.
 
 ## Skills
 
@@ -92,7 +92,7 @@ Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
 
 ## Agents
 
-Eight standalone tools, each with a Typer CLI, pydantic models, and a FastMCP server. They run independently of the skill system -- install them separately, talk to them over MCP.
+Nine standalone tools, each with a Typer CLI, pydantic models, and a FastMCP server. They run independently of the skill system -- install them separately, talk to them over MCP.
 
 | Agent          | What it does                                                               | MCP tools |
 | -------------- | -------------------------------------------------------------------------- | --------- |
@@ -104,6 +104,7 @@ Eight standalone tools, each with a Typer CLI, pydantic models, and a FastMCP se
 | `prepper`      | Pre-session context builder (git, GitHub, deps, recall, sentinel)          | 3         |
 | `sentinel`     | On-chain contract monitor via Blockscout (11 chains)                       | 2         |
 | `patchbot`     | Polyglot dependency updater (Elixir, Rust, Node, Go, Python)               | 3         |
+| `regen`        | Incident reader + SigNoz OTel correlation (Fluidify Regen)                 | 7         |
 
 ### MCP integration
 
@@ -120,6 +121,7 @@ Each agent doubles as an MCP server. Add to `~/.mcp.json`:
     "prepper": { "command": "prepper", "args": ["serve"] },
     "sentinel": { "command": "sentinel", "args": ["serve"] },
     "patchbot": { "command": "patchbot", "args": ["serve"] },
+    "regen": { "command": "regen", "args": ["serve"] },
     "coingecko": { "url": "https://mcp.api.coingecko.com/mcp" }
   }
 }

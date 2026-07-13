@@ -2,14 +2,14 @@
 
 ## Project Overview
 
-Agent-skills: 56 Claude Code skills and 8 autonomous agents (31 MCP tools, 1,113 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
+Agent-skills: 56 Claude Code skills and 9 autonomous agents (38 MCP tools, 1,167 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
 
 ## Structure
 
 ```
 skills/                   # 56 Claude Code skills (context-injection via SKILL.md)
   <name>/SKILL.md         # Entry point per skill, with frontmatter + trigger clauses
-agents/                   # 8 autonomous agents (standalone tools)
+agents/                   # 9 autonomous agents (standalone tools)
   digest/                 # Multi-platform activity digest (18 sources)
   recall/                 # Knowledge capture + FTS5 search + MCP server
   scribe/                 # Session insight extractor (writes to recall)
@@ -18,6 +18,7 @@ agents/                   # 8 autonomous agents (standalone tools)
   prepper/                # Pre-session context builder
   sentinel/               # On-chain contract monitor
   patchbot/               # Polyglot dependency updater
+  regen/                  # Regen incident reader + SigNoz OTel correlation
 scripts/                  # Repo tooling (skills-lint.sh)
 .claude-plugin/           # Plugin distribution (plugin.json, marketplace.json)
 ```
@@ -50,7 +51,7 @@ Validates: frontmatter fields, trigger clauses, file references, cross-skill lin
 
 ## Agents
 
-8 agents, each self-contained with Typer CLI, pydantic models, FastMCP server, and tests. Install: `cd agents/<name> && pip install -e ".[dev]"`
+9 agents, each self-contained with Typer CLI, pydantic models, FastMCP server, and tests. Install: `cd agents/<name> && pip install -e ".[dev]"`
 
 All agents expose MCP servers via `<agent> serve` (stdio transport). Configure in `~/.mcp.json`:
 
@@ -68,6 +69,7 @@ All agents expose MCP servers via `<agent> serve` (stdio transport). Configure i
 | prepper      | `prepper`      | `brief [--budget N] [--task HINT]`, `inject`, `watch [--once]`, `alerts`, `serve`                                     | 3         |
 | sentinel     | `sentinel`     | `check --address 0x...`, `watch --config sentinel.toml`, `alerts`                                                     | 2         |
 | patchbot     | `patchbot`     | `scan`, `update`, `pr`                                                                                                | 3         |
+| regen        | `regen`        | `incidents [--severity]`, `incident <id>`, `alerts`, `correlate <id>`, `serve [--write]`                             | 7         |
 
 ### Tests
 
@@ -75,7 +77,7 @@ All agents expose MCP servers via `<agent> serve` (stdio transport). Configure i
 cd agents/<name> && python -m pytest tests/ -v
 ```
 
-1,113 tests total across all agents + shared, 0 mocks. Shared helpers (HTTP, dates, value coercion) live in `agents/shared/src/shared/` and are imported by every agent that talks to an external API.
+1,167 tests total across all agents + shared, 0 mocks. Shared helpers (HTTP, dates, value coercion) live in `agents/shared/src/shared/` and are imported by every agent that talks to an external API.
 
 ## Conventions
 
