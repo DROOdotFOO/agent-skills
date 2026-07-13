@@ -98,3 +98,12 @@ formatted = ToolConverter.format_tool_result(tool_call, result)
 Process agents expose actions via `available_actions/0`. When a Strategy
 (e.g., `Strategy.ReAct`) is configured, returning `{:act, {ActionModule, params}, state}`
 from `think/2` runs the LLM tool loop automatically.
+
+## Policies & authorization (v2.6)
+
+Tool/action execution can be gated by the authorization layer before it runs:
+`Raxol.Agent.Authorization.Engine` evaluates `Hook`s (`CommandHook`, `PermissionHook`,
+`SandboxHook`) and a `ToolPolicy`, returning a `Verdict`. Execution policies wrap the
+call itself -- `Policy.Retry`, `Policy.Timeout`, `Policy.Cache` -- applied via
+`PolicyApplier`. Configure these on the agent rather than re-checking inside `run/2`,
+so the same guardrails apply to every action and MCP tool call.

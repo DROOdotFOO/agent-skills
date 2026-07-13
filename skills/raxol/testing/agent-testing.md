@@ -69,6 +69,22 @@ assert {:error, _} = ReadFile.call(%{})  # missing required :path
 [latency_ms: 200]                       # simulate latency
 ```
 
+## Turn driver + native backends
+
+Drive a full turn with `Backend.Mock` -- never a real model or a native CLI:
+
+```elixir
+{:ok, out} =
+  Raxol.Agent.Turn.run(MyAgent, "do the thing",
+    backend: Raxol.Agent.Backend.Mock,
+    backend_opts: [tool_calls: [%{"name" => "read_file", "arguments" => %{"path" => "/tmp/x"}}]],
+    log: log, conversation_id: "t1")
+```
+
+For native backends (`Backend.ClaudeCode`/`Cursor`), test the harness in isolation:
+feed captured NDJSON lines to `Raxol.Agent.Harness.StreamJson.parse_line/1` and assert
+the parsed events -- do not spawn the real `claude`/`cursor` CLI in tests.
+
 ## Teams
 
 ```elixir
