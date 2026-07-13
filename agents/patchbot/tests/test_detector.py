@@ -125,8 +125,7 @@ def test_python_update_requirements_txt():
     with tempfile.TemporaryDirectory() as tmp:
         (Path(tmp) / "requirements.txt").touch()
         assert (
-            get_update_command(Ecosystem.PYTHON, tmp)
-            == "pip install --upgrade -r requirements.txt"
+            get_update_command(Ecosystem.PYTHON, tmp) == "pip install --upgrade -r requirements.txt"
         )
 
 
