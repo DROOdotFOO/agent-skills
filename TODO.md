@@ -22,7 +22,7 @@
 - [ ] Evaluate `guard install claude` for real-time PreToolUse hooks
 - [ ] Evaluate Skill IDs ([skill-id-standard](https://github.com/gendigitalinc/skill-id-standard)) for integrity verification
 - [ ] Track AARTS spec evolution (currently v0.1)
-- [ ] Track Sage MCP interception support (not in v0.8.0, needed for our 8 MCP agents)
+- [ ] Track Sage MCP interception support (not in v0.8.0, needed for our 9 MCP agents)
 
 ### Agents
 
