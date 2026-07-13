@@ -2,12 +2,12 @@
 
 ## Project Overview
 
-Agent-skills: 54 Claude Code skills and 8 autonomous agents (31 MCP tools, 1,113 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
+Agent-skills: 56 Claude Code skills and 8 autonomous agents (31 MCP tools, 1,113 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
 
 ## Structure
 
 ```
-skills/                   # 54 Claude Code skills (context-injection via SKILL.md)
+skills/                   # 56 Claude Code skills (context-injection via SKILL.md)
   <name>/SKILL.md         # Entry point per skill, with frontmatter + trigger clauses
 agents/                   # 8 autonomous agents (standalone tools)
   digest/                 # Multi-platform activity digest (18 sources)
@@ -24,9 +24,9 @@ scripts/                  # Repo tooling (skills-lint.sh)
 
 ## Skills
 
-54 skills across 4 categories. Each lives in `skills/<name>/` with a `SKILL.md` entry point. Sub-files use YAML frontmatter with `impact`, `impactDescription`, and `tags` fields.
+56 skills across 4 categories. Each lives in `skills/<name>/` with a `SKILL.md` entry point. Sub-files use YAML frontmatter with `impact`, `impactDescription`, and `tags` fields.
 
-**Domain** (14): claude-api, droo-stack, raxol, noir, solidity-auditor, zk-x-ray, ethskills, nix, native-code, ffmpeg-asm, blockscout, coingecko, web-asset-generator, cancer-predisposition-variant-analyst
+**Domain** (16): claude-api, droo-stack, raxol, raxol-payments, raxol-symphony, noir, solidity-auditor, zk-x-ray, ethskills, nix, native-code, ffmpeg-asm, blockscout, coingecko, web-asset-generator, cancer-predisposition-variant-analyst
 
 **Workflow** (11): tdd, code-review, prd-to-plan, focused-fix, release, qa, interface-designer, ubiquitous-language, design-ux, property-testing, refactoring-strategy
 

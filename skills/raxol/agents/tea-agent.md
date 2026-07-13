@@ -60,6 +60,25 @@ run_pipeline_async([Step1, Step2], params)           # pipeline
 Command.none()  # no-op
 ```
 
+### Directive effects (v2.6)
+
+The helpers above wrap struct-based `Directive`s. You can build them explicitly and
+return a list of effects; each is dispatched via the
+`Raxol.Core.Runtime.Directive.Executor` protocol, results arrive as `{:command_result, _}`.
+
+```elixir
+import Raxol.Agent.Directive   # async/1, shell/2, send_agent/2
+import Raxol.Core.Runtime.Directive, only: [schedule: 2, spawn_task: 1, stop: 1]
+
+# From update/2, return effects to run
+{model, [
+  async(fn sender -> sender.({:done, work()}) end),
+  shell("ls -la", timeout: 5_000),
+  send_agent("worker-1", {:task, payload}),
+  schedule(1_000, :tick)
+]}
+```
+
 ## Messaging
 
 Three primitives via `Raxol.Agent.Comm` (see SKILL.md for message format reference):
