@@ -1,6 +1,6 @@
 # agent-skills
 
-56 Claude Code skills and 9 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming.
+58 Claude Code skills and 9 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming.
 
 ## How skill loading works
 
@@ -8,9 +8,9 @@ This is probably your first question, so let's get it out of the way.
 
 Skills are **lazy**. Claude Code reads the short trigger clause from each `SKILL.md` frontmatter -- _the first few lines per skill_ -- and only pulls in the full skill content when the trigger matches your conversation. The sub-files (examples, checklists, reference tables) stay out of context until they're actually needed.
 
-What's always present: ~2-4 lines of trigger description per skill. What's lazy: everything else. 56 skills at a few lines each is a small fraction of the context window. The heavy content -- sometimes hundreds of lines of domain-specific reference -- only loads when you're actually working in that domain.
+What's always present: ~2-4 lines of trigger description per skill. What's lazy: everything else. 58 skills at a few lines each is a small fraction of the context window. The heavy content -- sometimes hundreds of lines of domain-specific reference -- only loads when you're actually working in that domain.
 
-So no, installing all 56 won't bloat your sessions. I.E. the noir ZK skill isn't eating tokens while you're reviewing a PR.
+So no, installing all 58 won't bloat your sessions. I.E. the noir ZK skill isn't eating tokens while you're reviewing a PR.
 
 ## Skills
 
@@ -32,6 +32,7 @@ Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
 | `ffmpeg-asm`                            | ffmpeg upstream + integration: x86inc.asm, NEON + Apple M4 SME, HBD templating, dispatch, checkasm, upstream patch workflow |
 | `coingecko`                             | CoinGecko/GeckoTerminal API: prices, markets, DEX pools, trending tokens                 |
 | `blockscout`                            | Blockscout MCP: 16 tools for on-chain data across 8+ chains                              |
+| `signoz`                                | SigNoz MCP: ~41 tools for OTel metrics/traces/logs, alerts, and regen correlation        |
 | `web-asset-generator`                   | Favicon, app icon, OG image, devicon generation and optimization                         |
 | `cancer-predisposition-variant-analyst` | Ultra-rare variant interpretation, mechanistic paradox resolution, ACMG/ClinGen evidence |
 
@@ -86,6 +87,7 @@ Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
 | `autoresearch`         | Check experiment status, run iterations, view dashboards               |
 | `watchdog`             | Scan repos for stale PRs, failing CI, security advisories              |
 | `sentinel`             | Monitor on-chain contracts for anomalous transactions                  |
+| `regen`                | Read Fluidify Regen incidents, extract SigNoz correlation keys          |
 | `patchbot`             | Scan and update outdated dependencies across ecosystems                |
 | `writing-voice`        | Writing voice calibration from studied authors, combinatorial blending |
 | `skill-creator`        | Scaffold new skills with frontmatter, triggers, and sub-files          |

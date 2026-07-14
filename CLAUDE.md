@@ -2,12 +2,12 @@
 
 ## Project Overview
 
-Agent-skills: 56 Claude Code skills and 9 autonomous agents (38 MCP tools, 1,175 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
+Agent-skills: 58 Claude Code skills and 9 autonomous agents (38 MCP tools, 1,175 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
 
 ## Structure
 
 ```
-skills/                   # 56 Claude Code skills (context-injection via SKILL.md)
+skills/                   # 58 Claude Code skills (context-injection via SKILL.md)
   <name>/SKILL.md         # Entry point per skill, with frontmatter + trigger clauses
 agents/                   # 9 autonomous agents (standalone tools)
   digest/                 # Multi-platform activity digest (18 sources)
@@ -25,15 +25,15 @@ scripts/                  # Repo tooling (skills-lint.sh)
 
 ## Skills
 
-56 skills across 4 categories. Each lives in `skills/<name>/` with a `SKILL.md` entry point. Sub-files use YAML frontmatter with `impact`, `impactDescription`, and `tags` fields.
+58 skills across 4 categories. Each lives in `skills/<name>/` with a `SKILL.md` entry point. Sub-files use YAML frontmatter with `impact`, `impactDescription`, and `tags` fields.
 
-**Domain** (16): claude-api, droo-stack, raxol, raxol-payments, raxol-symphony, noir, solidity-auditor, zk-x-ray, ethskills, nix, native-code, ffmpeg-asm, blockscout, coingecko, web-asset-generator, cancer-predisposition-variant-analyst
+**Domain** (17): claude-api, droo-stack, raxol, raxol-payments, raxol-symphony, noir, solidity-auditor, zk-x-ray, ethskills, nix, native-code, ffmpeg-asm, blockscout, coingecko, signoz, web-asset-generator, cancer-predisposition-variant-analyst
 
 **Workflow** (11): tdd, code-review, prd-to-plan, focused-fix, release, qa, interface-designer, ubiquitous-language, design-ux, property-testing, refactoring-strategy
 
 **Infrastructure** (13): mcp-server-builder, ci-cd-pipeline-builder, dependency-auditor, observability-designer, database-designer, performance-profiler, git-guardrails, git-worktree-manager, env-secrets-manager, tech-debt-tracker, security-auditor, playwright, prepper
 
-**Meta** (16): polymath, architect, agent-designer, adversarial-reviewer, self-improving-agent, codebase-onboarding, rag-architect, llm-cost-optimizer, digest, recall, writing-voice, autoresearch, watchdog, sentinel, patchbot, skill-creator
+**Meta** (17): polymath, architect, agent-designer, adversarial-reviewer, self-improving-agent, codebase-onboarding, rag-architect, llm-cost-optimizer, digest, recall, writing-voice, autoresearch, watchdog, sentinel, regen, patchbot, skill-creator
 
 ### Lint
 
