@@ -4,22 +4,14 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
+from shared.chains import blockscout_hosts
+
 from digest.adapters._helpers import fetch_json, parse_iso_utc
 from digest.expansion import ExpandedQuery
 from digest.models import Item
 
-BLOCKSCOUT_URLS: dict[int, str] = {
-    1: "https://eth.blockscout.com",
-    137: "https://polygon.blockscout.com",
-    10: "https://optimism.blockscout.com",
-    42161: "https://arbitrum.blockscout.com",
-    8453: "https://base.blockscout.com",
-    100: "https://gnosis.blockscout.com",
-    324: "https://zksync.blockscout.com",
-    534352: "https://scroll.blockscout.com",
-}
-
-# Default chain for digest queries
+# Default chain for digest queries. Host mapping lives in shared.chains
+# (single source of truth shared with sentinel).
 DEFAULT_CHAIN = 1
 
 
@@ -51,7 +43,7 @@ class BlockscoutAdapter:
 
     def _search_and_fetch(self, term: str, limit: int) -> list[Item]:
         """Search Blockscout for tokens/addresses and fetch recent activity."""
-        base_url = BLOCKSCOUT_URLS[DEFAULT_CHAIN]
+        base_url = blockscout_hosts(DEFAULT_CHAIN)[0]
         items: list[Item] = []
 
         data = fetch_json(f"{base_url}/api/v2/search", params={"q": term}, default={})

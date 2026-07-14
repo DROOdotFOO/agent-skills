@@ -6,34 +6,18 @@ import logging
 from collections.abc import Callable
 from datetime import datetime, timezone
 
+from shared.chains import blockscout_hosts, fetch_blockscout_json
 from shared.dates import parse_iso_utc
-from shared.http import fetch_json
 
 from sentinel.models import Alert, ContractWatch, Transaction
 from sentinel.rules import ALL_RULES
 
 logger = logging.getLogger(__name__)
 
-BLOCKSCOUT_URLS: dict[int, str] = {
-    1: "https://eth.blockscout.com",
-    137: "https://polygon.blockscout.com",
-    10: "https://optimism.blockscout.com",
-    42161: "https://arbitrum.blockscout.com",
-    8453: "https://base.blockscout.com",
-    100: "https://gnosis.blockscout.com",
-    324: "https://zksync.blockscout.com",
-    534352: "https://scroll.blockscout.com",
-    42220: "https://celo.blockscout.com",
-    34443: "https://explorer.mode.network",
-    245022934: "https://neon.blockscout.com",
-}
-
 
 def get_blockscout_url(chain_id: int) -> str:
-    """Map a chain_id to its Blockscout instance URL."""
-    if chain_id in BLOCKSCOUT_URLS:
-        return BLOCKSCOUT_URLS[chain_id]
-    raise ValueError(f"No Blockscout instance configured for chain_id={chain_id}")
+    """Map a chain_id to its primary Blockscout instance URL."""
+    return blockscout_hosts(chain_id)[0]
 
 
 def _parse_transaction(raw: dict) -> Transaction:
@@ -71,13 +55,16 @@ def fetch_transactions(
     since_block: int | None = None,
 ) -> list[Transaction]:
     """Fetch recent transactions for an address from Blockscout API v2."""
-    base_url = get_blockscout_url(chain_id)
-    url = f"{base_url}/api/v2/addresses/{address}/transactions"
     params: dict[str, str] = {}
     if since_block is not None:
         params["start_block"] = str(since_block)
 
-    data = fetch_json(url, params=params, default={})
+    data = fetch_blockscout_json(
+        chain_id,
+        f"/api/v2/addresses/{address}/transactions",
+        params=params,
+        default={},
+    )
     items = data.get("items", []) or []
     txs = [_parse_transaction(item) for item in items]
 

@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Agent-skills: 56 Claude Code skills and 9 autonomous agents (38 MCP tools, 1,167 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
+Agent-skills: 56 Claude Code skills and 9 autonomous agents (38 MCP tools, 1,175 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
 
 ## Structure
 
@@ -77,7 +77,7 @@ All agents expose MCP servers via `<agent> serve` (stdio transport). Configure i
 cd agents/<name> && python -m pytest tests/ -v
 ```
 
-1,167 tests total across all agents + shared, 0 mocks. Shared helpers (HTTP, dates, value coercion) live in `agents/shared/src/shared/` and are imported by every agent that talks to an external API.
+1,175 tests total across all agents + shared, 0 mocks. Shared helpers (HTTP with retry/backoff, dates, value coercion, Blockscout chain endpoints) live in `agents/shared/src/shared/` and are imported by every agent that talks to an external API.
 
 ## Conventions
 
