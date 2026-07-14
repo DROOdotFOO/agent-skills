@@ -8,46 +8,54 @@ tags: "blockscout,mcp,tools,reference"
 
 ### Setup
 
-| Tool | Description |
-|------|-------------|
+| Tool                             | Description                                             |
+| -------------------------------- | ------------------------------------------------------- |
 | `__unlock_blockchain_analysis__` | **Call first** -- provides instructions to the MCP host |
-| `get_chains_list` | List all known chains with IDs |
+| `get_chains_list`                | List all known chains with IDs                          |
 
 ### Address intelligence
 
-| Tool | Description |
-|------|-------------|
-| `get_address_info` | Balance, ENS name, contract status, proxy info, token details |
-| `get_address_by_ens_name` | Resolve ENS name to Ethereum address |
-| `get_tokens_by_address` | ERC-20 token holdings with exchange rates and market cap |
-| `nft_tokens_by_address` | ERC-721/404/1155 NFT holdings grouped by collection |
+| Tool                      | Description                                                   |
+| ------------------------- | ------------------------------------------------------------- |
+| `get_address_info`        | Balance, ENS name, contract status, proxy info, token details |
+| `get_address_by_ens_name` | Resolve ENS name to Ethereum address                          |
+| `get_tokens_by_address`   | ERC-20 token holdings with exchange rates and market cap      |
+| `nft_tokens_by_address`   | ERC-721/404/1155 NFT holdings grouped by collection           |
 
 ### Transactions
 
-| Tool | Description |
-|------|-------------|
-| `get_transactions_by_address` | Transaction history with decoded parameters. Supports `age_from`/`age_to` time filtering |
-| `get_token_transfers_by_address` | ERC-20 transfer history with time filtering |
-| `get_transaction_info` | Full tx details: decoded input, token transfers, fee breakdown |
+| Tool                             | Description                                                                              |
+| -------------------------------- | ---------------------------------------------------------------------------------------- |
+| `get_transactions_by_address`    | Transaction history with decoded parameters. Supports `age_from`/`age_to` time filtering |
+| `get_token_transfers_by_address` | ERC-20 transfer history with time filtering                                              |
+| `get_transaction_info`           | Full tx details: decoded input, token transfers, fee breakdown                           |
 
 ### Contracts
 
-| Tool | Description |
-|------|-------------|
-| `get_contract_abi` | Retrieve ABI for verified contracts |
-| `inspect_contract_code` | View verified source code and metadata |
-| `read_contract` | Execute read-only (view/pure) contract functions |
+| Tool                    | Description                                      |
+| ----------------------- | ------------------------------------------------ |
+| `get_contract_abi`      | Retrieve ABI for verified contracts              |
+| `inspect_contract_code` | View verified source code and metadata           |
+| `read_contract`         | Execute read-only (view/pure) contract functions |
 
 ### Blocks & tokens
 
-| Tool | Description |
-|------|-------------|
-| `get_block_info` | Block metadata (timestamp, gas, tx count) |
-| `get_block_number` | Map a specific date/time to a block number |
-| `lookup_token_by_symbol` | Search for tokens by symbol or name |
+| Tool                     | Description                                |
+| ------------------------ | ------------------------------------------ |
+| `get_block_info`         | Block metadata (timestamp, gas, tx count)  |
+| `get_block_number`       | Map a specific date/time to a block number |
+| `lookup_token_by_symbol` | Search for tokens by symbol or name        |
 
 ### Raw access
 
-| Tool | Description |
-|------|-------------|
+| Tool              | Description                                          |
+| ----------------- | ---------------------------------------------------- |
 | `direct_api_call` | Call any curated Blockscout API v2 endpoint directly |
+
+High-value `direct_api_call` endpoints (pass `endpoint_path`, no query string):
+
+| Endpoint                                          | Use                                                                                                    |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `/api/v2/tokens` (`query_params={"q": "SYMBOL"}`) | Search tokens by symbol/name; richer fields than `lookup_token_by_symbol` for disambiguating imposters |
+| `/api/v2/stats`                                   | Chain stats: native coin price, gas prices, total tx/addresses/blocks                                  |
+| `/api/v2/tokens/{address}/holders`                | Holder distribution for a confirmed token                                                              |

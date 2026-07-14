@@ -63,7 +63,7 @@ sentinel alerts --limit 50
 
 ## Supported chains
 
-Ethereum (1), Polygon (137), Optimism (10), Arbitrum (42161), Base (8453), Gnosis (100), zkSync Era (324), Scroll (534352).
+Ethereum (1), Polygon (137), Optimism (10), Arbitrum (42161), Base (8453), Gnosis (100), zkSync Era (324), Scroll (534352), Celo (42220), Mode (34443), Neon EVM (245022934).
 
 ## Tests
 

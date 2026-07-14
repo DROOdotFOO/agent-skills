@@ -20,7 +20,7 @@ def create_server() -> FastMCP:
         instructions=(
             "On-chain contract monitor. Use sentinel_check to scan a contract address for "
             "anomalous transactions (large transfers, ownership changes, unusual methods, "
-            "selfdestruct). Supports 8 chains via Blockscout API v2."
+            "selfdestruct). Supports 11 chains via Blockscout API v2."
         ),
     )
 

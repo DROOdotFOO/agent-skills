@@ -10,7 +10,7 @@ description: >
   (use coingecko skill), or writing Solidity code (use solidity-auditor skill).
 metadata:
   author: DROOdotFOO
-  version: "1.0.0"
+  version: "1.1.0"
   tags: blockscout, blockchain, onchain, mcp, ethereum, web3
 ---
 
@@ -29,23 +29,41 @@ or Tron -- use CoinGecko contract endpoints for token data on those chains.
 
 ### Common chain IDs
 
-| Chain | ID | Chain | ID |
-|-------|----|-------|----|
-| Ethereum | 1 | Arbitrum One | 42161 |
-| Polygon | 137 | OP Mainnet | 10 |
-| Base | 8453 | zkSync Era | 324 |
-| Gnosis | 100 | Scroll | 534352 |
-| Celo | 42220 | Mode | 34443 |
-| Neon EVM (Solana) | 245022934 | Filecoin | 314 |
+| Chain             | ID        | Chain        | ID     |
+| ----------------- | --------- | ------------ | ------ |
+| Ethereum          | 1         | Arbitrum One | 42161  |
+| Polygon           | 137       | OP Mainnet   | 10     |
+| Base              | 8453      | zkSync Era   | 324    |
+| Gnosis            | 100       | Scroll       | 534352 |
+| Celo              | 42220     | Mode         | 34443  |
+| Neon EVM (Solana) | 245022934 | Filecoin     | 314    |
+| Robinhood Chain   | 4663      |              |        |
+
+Robinhood Chain (4663) is an Arbitrum Orbit L3 (native currency ETH), reachable by
+chain_id like any other -- no instance URL needed.
 
 Default: Ethereum (1). Use `get_chains_list` to discover all 90+ supported chains.
 
+### Discover a chain ID
+
+For any chain not in the table -- Orbit L3s, new rollups, or chains with their own
+Blockscout instance (e.g. `robinhoodchain.blockscout.com`) -- pass a name substring to
+`get_chains_list` instead of assuming it is unsupported:
+
+```
+get_chains_list(query="robinhood")
+  -> { name: "Robinhood Chain", chain_id: "4663", ecosystem: "Arbitrum Orbit" }
+```
+
+If a chain has a Blockscout explorer, it is almost certainly reachable through the MCP
+by chain_id -- you do not need the instance URL.
+
 ## Reference
 
-| File | Topic |
-|------|-------|
-| [tools-reference.md](tools-reference.md) | All 16 tools grouped by category |
-| [usage-patterns.md](usage-patterns.md) | Common workflows, pagination, error handling |
+| File                                     | Topic                                        |
+| ---------------------------------------- | -------------------------------------------- |
+| [tools-reference.md](tools-reference.md) | All 16 tools grouped by category             |
+| [usage-patterns.md](usage-patterns.md)   | Common workflows, pagination, error handling |
 
 ## What You Get
 

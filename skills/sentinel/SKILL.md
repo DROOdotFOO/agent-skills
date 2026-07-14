@@ -15,7 +15,7 @@ metadata:
 # Sentinel
 
 On-chain contract monitor. 4 alert rules (large transfers, ownership changes,
-unusual methods, selfdestruct) across 8 chains via Blockscout API v2.
+unusual methods, selfdestruct) across 11 chains via Blockscout API v2.
 
 ## What You Get
 
