@@ -62,3 +62,42 @@ Claude Code.
 Typical workflow: start -> screenshot -> send keys -> screenshot -> get model -> stop.
 
 Manual injection: `Raxol.Headless.McpTools.inject_into_tidewave()`.
+
+## MCP Server (Production)
+
+Two paths expose Raxol over MCP; pick by whether a Phoenix app is running:
+
+- **Dev (Tidewave)**: tools ride the running `mix phx.server` HTTP endpoint at
+  `localhost:4000/tidewave/mcp` (see above). Requires Phoenix; six headless tools.
+- **Standalone stdio**: `mix mcp.server` boots a dedicated JSON-RPC MCP server on
+  stdin/stdout -- no Phoenix, no terminal. This is the entry point for Claude
+  Code and other MCP clients (`mix.exs` task in the `raxol_mcp` package).
+
+```bash
+mix mcp.server   # reads JSON-RPC from stdin, writes responses to stdout
+```
+
+Startup is lightweight: it sets `startup_mode: :mcp` and `skip_endpoint: true`,
+so the terminal driver, cache, and Phoenix endpoint are skipped. The app still
+starts `Raxol.MCP.Supervisor` and `Raxol.Headless`. Logger is redirected to
+stderr so it never corrupts the stdout JSON-RPC stream. Transport is
+`Raxol.MCP.Transport.Stdio` wrapping `Raxol.MCP.Server`.
+
+Claude Code `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "raxol": {
+      "type": "stdio",
+      "command": "mix",
+      "args": ["mcp.server"],
+      "env": { "MIX_ENV": "dev" }
+    }
+  }
+}
+```
+
+Unlike Tidewave (six fixed headless tools), the stdio server exposes the full
+MCP surface: auto-derived per-Component tools (Button `click`, TextInput
+`type_into`) via the focus lens. See [../mcp/server.md](../mcp/server.md).
