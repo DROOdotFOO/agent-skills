@@ -1,7 +1,7 @@
 ---
 title: Agent Client Protocol (Bridge)
 impact: MEDIUM
-impactDescription: Editor-integration protocol; only needed when exposing a Raxol agent to a code editor over ACP, but the name collision with raxol_acp is a correctness trap.
+impactDescription: Editor-integration protocol; only needed when exposing a Raxol agent to a code editor over ACP, but the shared "ACP" acronym with raxol_earn (Agent Commerce Protocol) is a correctness trap.
 tags: raxol, agent, acp, client-protocol, editor, jsonrpc
 ---
 
@@ -15,12 +15,12 @@ NOTHING else. Pick the wrong one and every symbol you reach for is wrong.
 | Package                          | "ACP" means                | Domain                                              | Skill            |
 | -------------------------------- | -------------------------- | -------------------------------------------------- | ---------------- |
 | `raxol_agent_client_protocol`    | Agent **CLIENT** Protocol  | editor <-> agent JSON-RPC (Zed et al.), THIS file  | `raxol` (here)   |
-| `raxol_acp`                      | Agent **COMMERCE** Protocol| Virtuals / on-chain payments / job sessions        | `raxol-payments` |
+| `raxol_earn`                      | Agent **COMMERCE** Protocol| Virtuals / on-chain payments / job sessions        | `raxol-payments` |
 
-- Module roots: `Raxol.AgentClientProtocol.*` (this) vs `Raxol.ACP.*` (payments).
+- Module roots: `Raxol.AgentClientProtocol.*` (this) vs `Raxol.Earn.*` (payments).
 - If you are wiring an editor to drive a coding agent -> this file.
 - If you are doing agent wallets, x402/402 auto-pay, or ACP job offerings ->
-  the `raxol-payments` skill. Do not document or reach into `Raxol.ACP.*` here.
+  the `raxol-payments` skill. Do not document or reach into `Raxol.Earn.*` here.
 
 The package's own README opens with the same disambiguation. When in doubt,
 check the module prefix, not the acronym.
@@ -237,5 +237,5 @@ for `Transport.Paired.create_pair/0`.
 - `ai/backends.md` -- the LLM backends `TurnRunner` drives per `ExecutorConfig`.
 - `ai/mcp-client.md` -- consuming external MCP tool servers (a different
   protocol; ACP is editor-integration, MCP is tool-provisioning).
-- `raxol-payments` skill -- the OTHER "ACP" (`Raxol.ACP.*`, Agent Commerce
+- `raxol-payments` skill -- the OTHER "ACP" (`Raxol.Earn.*`, Agent Commerce
   Protocol). Not this package.

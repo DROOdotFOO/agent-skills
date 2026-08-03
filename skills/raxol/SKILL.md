@@ -13,7 +13,7 @@ description: >
   workflow engine, blast radius / spend gate, or Raxol headless/MCP tools.
   DO NOT TRIGGER when: general Elixir patterns (use droo-stack skill),
   Claude API / Anthropic SDK usage (use claude-api skill), agentic commerce / payments /
-  the Agent COMMERCE Protocol (raxol_acp) / agent wallets / ACP job sessions
+  the Agent COMMERCE Protocol (raxol_earn) / agent wallets / ACP job sessions
   (use raxol-payments skill -- note this is distinct from raxol_agent_client_protocol, the
   Agent CLIENT Protocol, which IS in scope), the Symphony coding-agent orchestrator
   (use raxol-symphony skill), or other TUI frameworks (Scenic, Termbox, etc.).
@@ -58,9 +58,9 @@ this skill covers:
   binary via npm wrapper
 - `raxol_console` -- console runtime: boots an ACP Console agent package onto the gateway stack
 
-Payments / the Agent COMMERCE Protocol (`raxol_payments`, `raxol_acp`) and the Symphony
+Payments / the Agent COMMERCE Protocol (`raxol_payments`, `raxol_earn`) and the Symphony
 orchestrator (`raxol_symphony`) have their own skills -- see below. Do not confuse
-`raxol_acp` (Agent Commerce Protocol, payments) with `raxol_agent_client_protocol`
+`raxol_earn` (Agent Commerce Protocol, payments) with `raxol_agent_client_protocol`
 (Agent Client Protocol, in scope here).
 
 ## What You Get

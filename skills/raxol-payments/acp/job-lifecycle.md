@@ -7,10 +7,10 @@ tags: raxol, acp, job-session, offering, erc4337
 
 # ACP Job Lifecycle + Offerings
 
-`raxol_acp` implements the Agent Commerce Protocol: a per-job state machine, seller
+`raxol_earn` implements the Agent Commerce Protocol: a per-job state machine, seller
 offerings, and on-chain writes via a smart account or EOA.
 
-## Job state machine (`Raxol.ACP.JobSession`)
+## Job state machine (`Raxol.Earn.JobSession`)
 
 One GenServer per job. States (`JobSession.Status`):
 
@@ -24,14 +24,14 @@ open -> budget_set -> funded -> submitted -> completed
 legal transitions; `JobSession.Tools.allowed?/3` enforces which role may drive each one.
 
 ```elixir
-{:ok, s} = Raxol.ACP.JobSession.start_link(
+{:ok, s} = Raxol.Earn.JobSession.start_link(
   chain_id: 8453, job_id: "job-42", role: :provider)
-:ok = Raxol.ACP.JobSession.subscribe(s)
+:ok = Raxol.Earn.JobSession.subscribe(s)
 
-{:ok, :budget_set} = Raxol.ACP.JobSession.set_budget(s, asset_token)
-{:ok, :submitted}  = Raxol.ACP.JobSession.submit(s, %{deliverable: "..."})
-{:ok, :completed}  = Raxol.ACP.JobSession.complete(s, "approval msg")
-status = Raxol.ACP.JobSession.get_status(s)
+{:ok, :budget_set} = Raxol.Earn.JobSession.set_budget(s, asset_token)
+{:ok, :submitted}  = Raxol.Earn.JobSession.submit(s, %{deliverable: "..."})
+{:ok, :completed}  = Raxol.Earn.JobSession.complete(s, "approval msg")
+status = Raxol.Earn.JobSession.get_status(s)
 ```
 
 Roles are `:client`, `:provider`, `:evaluator`. `set_budget`/`fund` are client-side;
@@ -39,12 +39,12 @@ Roles are `:client`, `:provider`, `:evaluator`. `set_budget`/`fund` are client-s
 
 ## Offerings (seller DSL)
 
-`Raxol.ACP.Offering` declares a service; `handle_request/2` accepts/rejects work and
+`Raxol.Earn.Offering` declares a service; `handle_request/2` accepts/rejects work and
 `handle_deliver/2` produces the deliverable.
 
 ```elixir
 defmodule MyOffering do
-  use Raxol.ACP.Offering,
+  use Raxol.Earn.Offering,
     name: "my.offering", price_usdc: "0.50", sla_minutes: 5, cluster: "on_chain"
 
   @impl true
@@ -65,9 +65,9 @@ MyOffering.register()
 
 ## On-chain writes (`HookClient` + provider adapters)
 
-`Raxol.ACP.HookClient` wraps the ACP Core contract calls (`set_budget/6`, `fund/6`,
+`Raxol.Earn.HookClient` wraps the ACP Core contract calls (`set_budget/6`, `fund/6`,
 `submit/6`, `complete/6`, `reject/6`), each returning `{:ok, tx_hash}`. It writes through
-a `Raxol.ACP.ProviderAdapter`:
+a `Raxol.Earn.ProviderAdapter`:
 
 | Adapter                          | Backend                                  |
 | -------------------------------- | ---------------------------------------- |
@@ -76,18 +76,18 @@ a `Raxol.ACP.ProviderAdapter`:
 | `ProviderAdapter.SCA`            | ERC-4337 smart account (UserOps)         |
 
 ```elixir
-adapter = Raxol.ACP.ProviderAdapter.SCA.new(...)
-{:ok, tx} = Raxol.ACP.HookClient.set_budget(adapter, 8453, acp_core_addr, 42, 1_000_000, <<0>>)
+adapter = Raxol.Earn.ProviderAdapter.SCA.new(...)
+{:ok, tx} = Raxol.Earn.HookClient.set_budget(adapter, 8453, acp_core_addr, 42, 1_000_000, <<0>>)
 ```
 
 ## Wallets: SCA vs EOA
 
-- **Smart account** (`Raxol.ACP.Wallet.SCA`, ERC-4337 v0.7, Alchemy Modular Account v2):
+- **Smart account** (`Raxol.Earn.Wallet.SCA`, ERC-4337 v0.7, Alchemy Modular Account v2):
   a session key signs UserOps, optionally sponsored by a paymaster.
 
   ```elixir
   defmodule MyAgent.SCA do
-    use Raxol.ACP.Wallet.SCA,
+    use Raxol.Earn.Wallet.SCA,
       account_address: "0x..", chain_id: 8453,
       signer: MyAgent.SessionKey, signer_entity_id: 1,
       bundler_url: {:system, "ALCHEMY_BUNDLER_URL"},
@@ -96,7 +96,7 @@ adapter = Raxol.ACP.ProviderAdapter.SCA.new(...)
   end
   ```
 
-- **EOA** (`Raxol.ACP.Wallet.NonceServer`): serializes nonce assignment so concurrent
+- **EOA** (`Raxol.Earn.Wallet.NonceServer`): serializes nonce assignment so concurrent
   sends never collide. `get_next/1` hands out monotonically increasing nonces.
 
 ## Pitfalls

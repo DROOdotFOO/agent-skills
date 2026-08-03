@@ -118,4 +118,4 @@ Emits spans/events under `[:raxol_speech, ...]`: `:tts, :speak` (`:start` /
 Speech is purely another surface over the core event/announcement model -- see
 the accessibility announcements it consumes and the `Event` structs it emits.
 It is independent of the agent-commerce surfaces (`raxol_payments` /
-`raxol_acp`) and the Symphony orchestrator (`raxol_symphony`).
+`raxol_earn`) and the Symphony orchestrator (`raxol_symphony`).

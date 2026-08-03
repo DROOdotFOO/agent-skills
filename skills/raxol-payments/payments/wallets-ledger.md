@@ -25,7 +25,7 @@ addr = Raxol.Payments.Wallets.Op.address(w)
 ```
 
 For ERC-4337 smart accounts and EOA nonce serialization, see
-`acp/job-lifecycle.md` (`Raxol.ACP.Wallet.SCA` / `Wallet.NonceServer`).
+`acp/job-lifecycle.md` (`Raxol.Earn.Wallet.SCA` / `Wallet.NonceServer`).
 
 ## Ledger (spend limits)
 

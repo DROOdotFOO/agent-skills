@@ -12,18 +12,18 @@ provider adapter and deterministic wallets.
 
 ## Mock provider adapter (ACP)
 
-`Raxol.ACP.ProviderAdapter.Mock` records every call and lets you preset receipts, reads,
+`Raxol.Earn.ProviderAdapter.Mock` records every call and lets you preset receipts, reads,
 and logs -- so you can exercise the full job lifecycle with no RPC.
 
 ```elixir
-adapter = Raxol.ACP.ProviderAdapter.Mock.new(address: "0x1234..", supported_chain_ids: [8453])
-:ok = Raxol.ACP.ProviderAdapter.Mock.set_receipt(adapter, "0xtx", %{status: 1})
+adapter = Raxol.Earn.ProviderAdapter.Mock.new(address: "0x1234..", supported_chain_ids: [8453])
+:ok = Raxol.Earn.ProviderAdapter.Mock.set_receipt(adapter, "0xtx", %{status: 1})
 
 {:ok, ["0xtx"]} =
-  Raxol.ACP.ProviderAdapter.send_calls(adapter, 8453, [%{to: "0xcore", data: "0x.."}])
+  Raxol.Earn.ProviderAdapter.send_calls(adapter, 8453, [%{to: "0xcore", data: "0x.."}])
 
 # assert what the client actually sent
-assert [{8453, [%{to: "0xcore"}]}] = Raxol.ACP.ProviderAdapter.Mock.sent_calls(adapter)
+assert [{8453, [%{to: "0xcore"}]}] = Raxol.Earn.ProviderAdapter.Mock.sent_calls(adapter)
 ```
 
 Other setters: `set_contract_read/4`, `set_logs/2`, `set_send_calls_error/2`;
@@ -45,9 +45,9 @@ assert %{session: session} = Raxol.Payments.Ledger.get_totals(ledger, "a", polic
 Assert `NonceServer` hands out increasing nonces (the concurrent-send regression):
 
 ```elixir
-{:ok, _} = Raxol.ACP.Wallet.NonceServer.start_link(name: N, initial_nonce: 12)
-assert 12 = Raxol.ACP.Wallet.NonceServer.get_next(N)
-assert 13 = Raxol.ACP.Wallet.NonceServer.get_next(N)
+{:ok, _} = Raxol.Earn.Wallet.NonceServer.start_link(name: N, initial_nonce: 12)
+assert 12 = Raxol.Earn.Wallet.NonceServer.get_next(N)
+assert 13 = Raxol.Earn.Wallet.NonceServer.get_next(N)
 ```
 
 ## Telemetry assertions

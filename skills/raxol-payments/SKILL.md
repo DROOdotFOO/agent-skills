@@ -1,11 +1,11 @@
 ---
 name: raxol-payments
 description: >
-  Agentic commerce for Raxol agents in Elixir: the raxol_payments + raxol_acp packages
+  Agentic commerce for Raxol agents in Elixir: the raxol_payments + raxol_earn packages
   (Xochi/Riddler/MPP/Permit2/x402 protocols, agent wallets, spend limits, stealth + privacy
   tiers, ZKSAR trust scores, and the ACP job lifecycle).
-  TRIGGER when: mix.exs lists :raxol_payments or :raxol_acp; code imports Raxol.Payments.*
-  or Raxol.ACP.*; user asks about agent wallets, HTTP 402 auto-pay, Xochi/Riddler cross-chain
+  TRIGGER when: mix.exs lists :raxol_payments or :raxol_earn; code imports Raxol.Payments.*
+  or Raxol.Earn.*; user asks about agent wallets, HTTP 402 auto-pay, Xochi/Riddler cross-chain
   transfers, stealth addresses / privacy tiers, ZKSAR attestations, spend gating, or the
   ACP (Agent Commerce Protocol) job state machine / offerings.
   DO NOT TRIGGER when: writing or auditing Solidity contracts (use solidity-auditor skill);
@@ -22,7 +22,7 @@ metadata:
 
 Agentic commerce layer for Raxol agents. `raxol_payments` (v0.2) gives an agent a
 wallet, a ledger with spend limits, HTTP 402 auto-pay, and the cross-chain settlement
-protocols (Xochi/Riddler/MPP/Permit2/x402) plus stealth/privacy. `raxol_acp` (v0.2)
+protocols (Xochi/Riddler/MPP/Permit2/x402) plus stealth/privacy. `raxol_earn` (v0.2)
 implements the Agent Commerce Protocol: a per-job state machine, service offerings, and
 on-chain writes via ERC-4337 smart accounts or EOAs.
 
@@ -44,7 +44,7 @@ of scope (see `solidity-auditor`). Riddler is the payments protocol/module here
 | Concern                                  | Package         | Entry modules                              |
 | ---------------------------------------- | --------------- | ------------------------------------------ |
 | Pay for a resource / cross-chain move    | `raxol_payments`| `Protocols.Xochi`, `Ledger`, `SpendGate`   |
-| Sell/deliver a job on-chain (ACP)        | `raxol_acp`     | `JobSession`, `Offering`, `HookClient`     |
+| Sell/deliver a job on-chain (ACP)        | `raxol_earn`     | `JobSession`, `Offering`, `HookClient`     |
 
 ## See also
 
@@ -82,4 +82,4 @@ of scope (see `solidity-auditor`). Riddler is the payments protocol/module here
    the reservation. Always pair `authorize` with `release`/`release_by_intent`.
 3. **Re-submitting on retry** -- without a `Checkpoint`, a retry double-spends; derive
    the key from intent fields and short-circuit on a hit.
-4. **Real RPC in tests** -- use `Raxol.ACP.ProviderAdapter.Mock`; never a live bundler.
+4. **Real RPC in tests** -- use `Raxol.Earn.ProviderAdapter.Mock`; never a live bundler.

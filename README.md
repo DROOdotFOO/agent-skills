@@ -1,6 +1,6 @@
 # agent-skills
 
-58 agent skills and 9 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming. Default host is the Raxol agent; Claude Code also works.
+59 agent skills and 9 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming. Default host is the Raxol agent; Claude Code also works.
 
 ## How skill loading works
 
@@ -8,11 +8,11 @@ This is probably your first question, so let's get it out of the way.
 
 Skills are portable `SKILL.md` files -- the [agentskills.io](https://agentskills.io) format: YAML frontmatter (a `name`, a short trigger `description`) plus a markdown body. Any compatible host loads the same files. Two are documented here.
 
-**Raxol agent (default).** `Raxol.Agent.Skills.Store` scans `~/.agents/skills/**/SKILL.md` on boot and holds them as read-only procedural memory. Skills are **pull-based**: the agent sees only each skill's name and description (via the `skills_list` tool) and reads a full body on demand (`skill_view`) when it judges one relevant -- the trigger clause in the description guides that choice. Nothing but the list metadata sits in context until the agent pulls a skill, so all 58 cost almost nothing until used.
+**Raxol agent (default).** `Raxol.Agent.Skills.Store` scans `~/.agents/skills/**/SKILL.md` on boot and holds them as read-only procedural memory. Skills are **pull-based**: the agent sees only each skill's name and description (via the `skills_list` tool) and reads a full body on demand (`skill_view`) when it judges one relevant -- the trigger clause in the description guides that choice. Nothing but the list metadata sits in context until the agent pulls a skill, so all 59 cost almost nothing until used.
 
 **Claude Code (secondary).** Lazy in a different way: Claude Code reads the trigger clause from each frontmatter and auto-injects the full skill content when the trigger matches your conversation. Sub-files (examples, checklists, reference tables) stay out of context until they're needed.
 
-Either way, 58 skills don't bloat your sessions. The noir ZK skill isn't eating tokens while you're reviewing a PR.
+Either way, 59 skills don't bloat your sessions. The noir ZK skill isn't eating tokens while you're reviewing a PR.
 
 ## Skills
 
@@ -92,6 +92,7 @@ Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
 | `regen`                | Read Fluidify Regen incidents, extract SigNoz correlation keys         |
 | `patchbot`             | Scan and update outdated dependencies across ecosystems                |
 | `writing-voice`        | Writing voice calibration from studied authors, combinatorial blending |
+| `humanizer`            | Strip AI-isms and add real voice; de-slop AI-generated prose            |
 | `skill-creator`        | Scaffold new skills with frontmatter, triggers, and sub-files          |
 
 ## Agents
