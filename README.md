@@ -1,16 +1,18 @@
 # agent-skills
 
-58 Claude Code skills and 9 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming.
+58 agent skills and 9 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming. Default host is the Raxol agent; Claude Code also works.
 
 ## How skill loading works
 
 This is probably your first question, so let's get it out of the way.
 
-Skills are **lazy**. Claude Code reads the short trigger clause from each `SKILL.md` frontmatter -- _the first few lines per skill_ -- and only pulls in the full skill content when the trigger matches your conversation. The sub-files (examples, checklists, reference tables) stay out of context until they're actually needed.
+Skills are portable `SKILL.md` files -- the [agentskills.io](https://agentskills.io) format: YAML frontmatter (a `name`, a short trigger `description`) plus a markdown body. Any compatible host loads the same files. Two are documented here.
 
-What's always present: ~2-4 lines of trigger description per skill. What's lazy: everything else. 58 skills at a few lines each is a small fraction of the context window. The heavy content -- sometimes hundreds of lines of domain-specific reference -- only loads when you're actually working in that domain.
+**Raxol agent (default).** `Raxol.Agent.Skills.Store` scans `~/.agents/skills/**/SKILL.md` on boot and holds them as read-only procedural memory. Skills are **pull-based**: the agent sees only each skill's name and description (via the `skills_list` tool) and reads a full body on demand (`skill_view`) when it judges one relevant -- the trigger clause in the description guides that choice. Nothing but the list metadata sits in context until the agent pulls a skill, so all 58 cost almost nothing until used.
 
-So no, installing all 58 won't bloat your sessions. I.E. the noir ZK skill isn't eating tokens while you're reviewing a PR.
+**Claude Code (secondary).** Lazy in a different way: Claude Code reads the trigger clause from each frontmatter and auto-injects the full skill content when the trigger matches your conversation. Sub-files (examples, checklists, reference tables) stay out of context until they're needed.
+
+Either way, 58 skills don't bloat your sessions. The noir ZK skill isn't eating tokens while you're reviewing a PR.
 
 ## Skills
 
@@ -18,39 +20,39 @@ Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
 
 ### Domain
 
-| Skill                                   | What it does                                                                             |
-| --------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `claude-api`                            | Anthropic SDK reference (Python, TS, Go, Elixir, Rust, Lua, cURL)                        |
-| `droo-stack`                            | Polyglot patterns (Elixir, TS, Go, Rust, C, Zig, Python, Lua, Shell, Noir, Chezmoi)      |
-| `raxol`                                 | Elixir TUI/agent framework (TEA agents, MCP, headless sessions)                          |
-| `noir`                                  | ZK circuit design, Aztec contracts, constraint optimization                              |
-| `solidity-auditor`                        | Solidity dev standards, vulnerability taxonomy, Foundry-first audit                      |
-| `zk-x-ray`                              | Pre-audit briefing for ZK + EVM hybrids (Noir + Solidity), public-input parity check     |
-| `ethskills`                             | Ethereum tooling, framework selection, EIP/ERC standards                                 |
-| `nix`                                   | Nix language, flakes, NixOS, Home Manager, packaging                                     |
-| `native-code`                           | NIF development (C/Rust/Rustler), SIMD (Zig), BEAM native boundary                       |
+| Skill                                   | What it does                                                                                                                |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `claude-api`                            | Anthropic SDK reference (Python, TS, Go, Elixir, Rust, Lua, cURL)                                                           |
+| `droo-stack`                            | Polyglot patterns (Elixir, TS, Go, Rust, C, Zig, Python, Lua, Shell, Noir, Chezmoi)                                         |
+| `raxol`                                 | Elixir TUI/agent framework (TEA agents, MCP, headless sessions)                                                             |
+| `noir`                                  | ZK circuit design, Aztec contracts, constraint optimization                                                                 |
+| `solidity-auditor`                      | Solidity dev standards, vulnerability taxonomy, Foundry-first audit                                                         |
+| `zk-x-ray`                              | Pre-audit briefing for ZK + EVM hybrids (Noir + Solidity), public-input parity check                                        |
+| `ethskills`                             | Ethereum tooling, framework selection, EIP/ERC standards                                                                    |
+| `nix`                                   | Nix language, flakes, NixOS, Home Manager, packaging                                                                        |
+| `native-code`                           | NIF development (C/Rust/Rustler), SIMD (Zig), BEAM native boundary                                                          |
 | `ffmpeg-asm`                            | ffmpeg upstream + integration: x86inc.asm, NEON + Apple M4 SME, HBD templating, dispatch, checkasm, upstream patch workflow |
-| `coingecko`                             | CoinGecko/GeckoTerminal API: prices, markets, DEX pools, trending tokens                 |
-| `blockscout`                            | Blockscout MCP: 16 tools for on-chain data across 8+ chains                              |
-| `signoz`                                | SigNoz MCP: ~41 tools for OTel metrics/traces/logs, alerts, and regen correlation        |
-| `web-asset-generator`                   | Favicon, app icon, OG image, devicon generation and optimization                         |
-| `cancer-predisposition-variant-analyst` | Ultra-rare variant interpretation, mechanistic paradox resolution, ACMG/ClinGen evidence |
+| `coingecko`                             | CoinGecko/GeckoTerminal API: prices, markets, DEX pools, trending tokens                                                    |
+| `blockscout`                            | Blockscout MCP: 16 tools for on-chain data across 8+ chains                                                                 |
+| `signoz`                                | SigNoz MCP: ~41 tools for OTel metrics/traces/logs, alerts, and regen correlation                                           |
+| `web-asset-generator`                   | Favicon, app icon, OG image, devicon generation and optimization                                                            |
+| `cancer-predisposition-variant-analyst` | Ultra-rare variant interpretation, mechanistic paradox resolution, ACMG/ClinGen evidence                                    |
 
 ### Workflow
 
-| Skill                   | What it does                                                            |
-| ----------------------- | ----------------------------------------------------------------------- |
-| `tdd`                   | Test-driven development: vertical slices, mutation testing, polyglot    |
-| `code-review`           | PR review: blast radius, security scan, SOLID checks, 40-item checklist |
-| `prd-to-plan`           | PRD -> phased tracer-bullet vertical slices (and optionally GitHub issues) |
-| `focused-fix`           | 5-phase bug fix: SCOPE -> TRACE -> DIAGNOSE -> FIX -> VERIFY            |
-| `release`               | Conventional commits, semver bumping, changelog, readiness checks       |
-| `qa`                    | Bug triage and issue creation; interactive QA with background explorer  |
-| `interface-designer`   | "Design It Twice" -- parallel sub-agents with divergent constraints     |
-| `ubiquitous-language`   | DDD glossary extraction, canonical terms                                |
-| `design-ux`             | UI/UX design patterns, design tokens, accessibility, TUI aesthetics     |
-| `property-testing`      | Generative/property-based testing (Hypothesis, proptest, StreamData, fast-check) |
-| `refactoring-strategy`  | Strangler fig, large renames, safe restructuring for polyglot codebases |
+| Skill                  | What it does                                                                     |
+| ---------------------- | -------------------------------------------------------------------------------- |
+| `tdd`                  | Test-driven development: vertical slices, mutation testing, polyglot             |
+| `code-review`          | PR review: blast radius, security scan, SOLID checks, 40-item checklist          |
+| `prd-to-plan`          | PRD -> phased tracer-bullet vertical slices (and optionally GitHub issues)       |
+| `focused-fix`          | 5-phase bug fix: SCOPE -> TRACE -> DIAGNOSE -> FIX -> VERIFY                     |
+| `release`              | Conventional commits, semver bumping, changelog, readiness checks                |
+| `qa`                   | Bug triage and issue creation; interactive QA with background explorer           |
+| `interface-designer`   | "Design It Twice" -- parallel sub-agents with divergent constraints              |
+| `ubiquitous-language`  | DDD glossary extraction, canonical terms                                         |
+| `design-ux`            | UI/UX design patterns, design tokens, accessibility, TUI aesthetics              |
+| `property-testing`     | Generative/property-based testing (Hypothesis, proptest, StreamData, fast-check) |
+| `refactoring-strategy` | Strangler fig, large renames, safe restructuring for polyglot codebases          |
 
 ### Infrastructure
 
@@ -87,7 +89,7 @@ Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
 | `autoresearch`         | Check experiment status, run iterations, view dashboards               |
 | `watchdog`             | Scan repos for stale PRs, failing CI, security advisories              |
 | `sentinel`             | Monitor on-chain contracts for anomalous transactions                  |
-| `regen`                | Read Fluidify Regen incidents, extract SigNoz correlation keys          |
+| `regen`                | Read Fluidify Regen incidents, extract SigNoz correlation keys         |
 | `patchbot`             | Scan and update outdated dependencies across ecosystems                |
 | `writing-voice`        | Writing voice calibration from studied authors, combinatorial blending |
 | `skill-creator`        | Scaffold new skills with frontmatter, triggers, and sub-files          |
@@ -96,17 +98,17 @@ Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
 
 Nine standalone tools, each with a Typer CLI, pydantic models, and a FastMCP server. They run independently of the skill system -- install them separately, talk to them over MCP.
 
-| Agent          | What it does                                                               | MCP tools |
-| -------------- | -------------------------------------------------------------------------- | --------- |
-| `digest`       | Multi-platform activity digest (18 sources, differential, structured views)| 7         |
-| `recall`       | Knowledge capture and retrieval (SQLite + FTS5)                            | 8         |
-| `scribe`       | Session insight extractor (writes to recall)                               | 3         |
-| `autoresearch` | Autonomous experiment runner (ML, Noir, Solidity)                          | 3         |
-| `watchdog`     | Repo health monitor (PRs, CI, deps, advisories)                            | 2         |
-| `prepper`      | Pre-session context builder (git, GitHub, deps, recall, sentinel)          | 3         |
-| `sentinel`     | On-chain contract monitor via Blockscout (11 chains)                       | 2         |
-| `patchbot`     | Polyglot dependency updater (Elixir, Rust, Node, Go, Python)               | 3         |
-| `regen`        | Incident reader + SigNoz OTel correlation (Fluidify Regen)                 | 7         |
+| Agent          | What it does                                                                | MCP tools |
+| -------------- | --------------------------------------------------------------------------- | --------- |
+| `digest`       | Multi-platform activity digest (18 sources, differential, structured views) | 7         |
+| `recall`       | Knowledge capture and retrieval (SQLite + FTS5)                             | 8         |
+| `scribe`       | Session insight extractor (writes to recall)                                | 3         |
+| `autoresearch` | Autonomous experiment runner (ML, Noir, Solidity)                           | 3         |
+| `watchdog`     | Repo health monitor (PRs, CI, deps, advisories)                             | 2         |
+| `prepper`      | Pre-session context builder (git, GitHub, deps, recall, sentinel)           | 3         |
+| `sentinel`     | On-chain contract monitor via Blockscout (11 chains)                        | 2         |
+| `patchbot`     | Polyglot dependency updater (Elixir, Rust, Node, Go, Python)                | 3         |
+| `regen`        | Incident reader + SigNoz OTel correlation (Fluidify Regen)                  | 7         |
 
 ### MCP integration
 
@@ -133,39 +135,42 @@ See [TODO.md](TODO.md) for the roadmap.
 
 ## Install
 
-### Claude Code plugin
+Skills live at `~/.agents/skills/<name>/SKILL.md`. Get them on disk once (below), then point your host at that directory -- the Raxol agent reads it natively.
 
-```bash
-/plugin install agent-skills@DROOdotFOO/agent-skills
+### Raxol agent (default)
+
+`~/.agents/skills` is already the Raxol agent's default external skills dir. Enable the provider:
+
+```elixir
+# config/config.exs (or runtime.exs)
+config :raxol_agent, skills_provider: Raxol.Agent.Skills.Store
 ```
 
-Or add the marketplace first:
+That supervises `Raxol.Agent.Skills.Store` (which scans `~/.agents/skills/**/SKILL.md` on boot) and exposes the `skills_list`, `skill_view`, and `skill_manage` tools to the agent. Verify:
 
-```bash
-/plugin marketplace add DROOdotFOO/agent-skills
+```elixir
+length(Raxol.Agent.Skills.Store.list())  # => 58
 ```
 
-### npx
+To load skills straight from a repo checkout instead, add its path:
 
-Pick individual skills:
+```elixir
+config :raxol_agent, skills_external_dirs: ["~/.agents/skills", "~/CODE/agent-skills/skills"]
+```
+
+### Get the skills on disk
+
+**npx** -- pick individual skills or grab everything:
 
 ```bash
 npx skills@latest add DROOdotFOO/agent-skills/tdd
-npx skills@latest add DROOdotFOO/agent-skills/code-review
-npx skills@latest add DROOdotFOO/agent-skills/polymath
-```
-
-Or grab everything:
-
-```bash
 npx skills@latest add DROOdotFOO/agent-skills
 ```
 
-### chezmoi
-
-Add to `.chezmoiexternal.toml`:
+**chezmoi (recommended -- this is how the skills are kept fresh)** -- add the external, then a single `chezmoi apply` pulls the whole collection to `~/.agents/skills`:
 
 ```toml
+# ~/.chezmoiexternal.toml
 [".agents/skills"]
     type = "archive"
     url = "https://github.com/DROOdotFOO/agent-skills/archive/main.tar.gz"
@@ -174,20 +179,39 @@ Add to `.chezmoiexternal.toml`:
     refreshPeriod = "168h"
 ```
 
-Then symlink into Claude Code:
+Apply to install, and force a refresh whenever you want the latest before the 168h window elapses:
+
+```bash
+chezmoi apply                      # install / update (auto-refreshes every 168h)
+chezmoi apply --refresh-externals  # force-pull the newest skills right now
+```
+
+The Raxol agent reads `~/.agents/skills` directly after apply -- no further step. To add a new skill: push it to `agent-skills` `main`, then `chezmoi apply --refresh-externals`. For the full reproducible rig (this external plus the repo clone for the MCP agent CLIs and the `~/.claude/skills` symlinks), see [DROOdotFOO/dotfiles](https://github.com/DROOdotFOO/dotfiles) -- `chezmoi apply --refresh-externals` is the one command that applies or refreshes everything.
+
+**Manual** -- clone and symlink:
+
+```bash
+git clone https://github.com/DROOdotFOO/agent-skills.git ~/.agents/skills-repo
+ln -s ~/.agents/skills-repo/skills ~/.agents/skills
+```
+
+### Claude Code (secondary)
+
+Self-contained plugin (no `~/.agents/skills` needed):
+
+```bash
+/plugin install agent-skills@DROOdotFOO/agent-skills
+# or add the marketplace first:
+/plugin marketplace add DROOdotFOO/agent-skills
+```
+
+Already installed to `~/.agents/skills` via the methods above? Symlink them into Claude Code:
 
 ```bash
 mkdir -p ~/.claude/skills
 for d in ~/.agents/skills/*/; do
     ln -sf "../../.agents/skills/$(basename "$d")" ~/.claude/skills/
 done
-```
-
-### Manual
-
-```bash
-git clone https://github.com/DROOdotFOO/agent-skills.git ~/.agents/skills-repo
-ln -s ~/.agents/skills-repo/skills ~/.agents/skills
 ```
 
 ### Agents

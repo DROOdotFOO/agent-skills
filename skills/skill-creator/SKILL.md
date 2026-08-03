@@ -1,7 +1,7 @@
 ---
 name: skill-creator
 description: >
-  Interactively scaffold new Claude Code skills with correct frontmatter,
+  Interactively scaffold new agent skills with correct frontmatter,
   trigger clauses, sub-files, and linter compliance. TRIGGER when: user asks
   to create a new skill, scaffold a skill, add a skill to agent-skills, or
   says "new skill" or "skill creator". DO NOT TRIGGER when: user is editing
@@ -15,7 +15,7 @@ metadata:
 
 # Skill Creator
 
-Scaffold new Claude Code skills that pass `./scripts/skills-lint.sh` on the
+Scaffold new agent skills that pass `./scripts/skills-lint.sh` on the
 first try. Walk the user through naming, trigger design, sub-file structure,
 and quality review.
 

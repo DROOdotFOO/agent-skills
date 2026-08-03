@@ -2,12 +2,12 @@
 
 ## Project Overview
 
-Agent-skills: 58 Claude Code skills and 9 autonomous agents (38 MCP tools, 1,175 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills provide context-injection for Claude Code sessions. Agents are standalone tools with CLIs and MCP servers.
+Agent-skills: 58 agent skills and 9 autonomous agents (38 MCP tools, 1,175 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills are portable agentskills.io `SKILL.md` files; the default host is the Raxol agent (`Raxol.Agent.Skills.Store` scans `~/.agents/skills`, pull-based `skill_view`), and Claude Code also loads them (auto-trigger context-injection). Agents are standalone tools with CLIs and MCP servers.
 
 ## Structure
 
 ```
-skills/                   # 58 Claude Code skills (context-injection via SKILL.md)
+skills/                   # 58 agent skills (agentskills.io SKILL.md; raxol default, Claude Code also)
   <name>/SKILL.md         # Entry point per skill, with frontmatter + trigger clauses
 agents/                   # 9 autonomous agents (standalone tools)
   digest/                 # Multi-platform activity digest (18 sources)
