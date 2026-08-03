@@ -20,6 +20,7 @@ Each adapter spec maps directly to the implementation touchpoints below. Read th
 ```python
 class Adapter(Protocol):
     name: str
+
     def fetch(self, query: ExpandedQuery, days: int, limit: int = 50) -> list[Item]: ...
 ```
 
@@ -27,12 +28,12 @@ class Adapter(Protocol):
 
 ```python
 class Item(BaseModel):
-    source: str          # adapter key ("hn", "pubmed", etc.)
+    source: str  # adapter key ("hn", "pubmed", etc.)
     title: str
     url: str
     author: str | None
     timestamp: datetime
-    engagement: int      # normalized engagement score (log-scaled in ranking)
+    engagement: int  # normalized engagement score (log-scaled in ranking)
     summary: str | None  # platform-specific summary text
     raw: dict[str, Any]  # source-specific data read by credibility._per_item_bonus()
 ```
