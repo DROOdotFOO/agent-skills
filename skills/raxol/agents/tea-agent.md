@@ -40,6 +40,11 @@ def compaction_config() :: %{          # auto-compact model.history
 } | nil
 ```
 
+`available_actions/0` defaults are provider-driven: `use Raxol.Agent` auto-includes
+`Raxol.Agent.Actions.Memory.actions()` when `memory_provider/0` (or `memory_providers/0`)
+is set, and the skill actions (`skills_list`, `skill_view`, `skill_manage`) when
+`skills_provider/0` is set. Override to add your own action modules.
+
 ## Command Helpers
 
 ```elixir

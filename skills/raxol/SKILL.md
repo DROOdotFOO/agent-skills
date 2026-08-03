@@ -1,19 +1,26 @@
 ---
 name: raxol
 description: >
-  Raxol terminal framework for TUI apps and AI agents in Elixir (v2.6, 15-package monorepo).
+  Raxol terminal framework for TUI apps and AI agents in Elixir (v2.6, 17-package monorepo).
   TRIGGER when: code imports Raxol modules (Raxol.Agent, Raxol.Core, Raxol.MCP,
-  Raxol.LiveView, Raxol.Workflow, Raxol.Headless), mix.exs lists :raxol / :raxol_agent /
-  :raxol_core / :raxol_mcp as a dependency, user asks about building TUI apps or AI agents
-  with Raxol, agent memory/self-improvement, the workflow engine, or Raxol headless/MCP tools.
+  Raxol.LiveView, Raxol.Workflow, Raxol.Headless, Raxol.Agent.Harness, Raxol.Agent.Skills,
+  Raxol.Agent.Journal, Raxol.Gateway, Raxol.Telegram, Raxol.Watch, Raxol.Speech,
+  Raxol.Agent.ClientProtocol, Raxol.AgentClientProtocol), mix.exs lists :raxol / :raxol_agent /
+  :raxol_core / :raxol_mcp / :raxol_terminal / :raxol_gateway / :raxol_telegram / :raxol_watch /
+  :raxol_speech / :raxol_agent_client_protocol as a dependency, commands "mix raxol.code" or
+  "mix raxol.p", user asks about building TUI apps or AI agents with Raxol, agent
+  memory/self-improvement, agent skills / procedural memory, the coding agent harness, the
+  workflow engine, blast radius / spend gate, or Raxol headless/MCP tools.
   DO NOT TRIGGER when: general Elixir patterns (use droo-stack skill),
   Claude API / Anthropic SDK usage (use claude-api skill), agentic commerce / payments /
-  ACP job sessions (use raxol-payments skill), the Symphony coding-agent orchestrator
+  the Agent COMMERCE Protocol (raxol_acp) / agent wallets / ACP job sessions
+  (use raxol-payments skill -- note this is distinct from raxol_agent_client_protocol, the
+  Agent CLIENT Protocol, which IS in scope), the Symphony coding-agent orchestrator
   (use raxol-symphony skill), or other TUI frameworks (Scenic, Termbox, etc.).
 metadata:
   author: droo
   version: "2.6.0"
-  tags: elixir, raxol, tui, agents, mcp, headless, workflow, orchestration
+  tags: elixir, raxol, tui, agents, mcp, headless, workflow, orchestration, harness, skills, gateway, speech, telegram, watch, acp-client, surfaces
 ---
 
 # Raxol Skill
@@ -22,19 +29,39 @@ Elixir TEA framework for terminal UIs + AI agent orchestration. The same TEA mod
 runs in the terminal, browser (LiveView), SSH, and as MCP tools/resources. OTP
 provides supervision, crash isolation, and hot reload.
 
-Raxol v2.6 is a 15-package monorepo (Elixir 1.20 / OTP 29). The packages this skill
-covers:
+Raxol v2.6 is a 17-package monorepo (targets Elixir 1.20 / OTP 29, supports 1.17+).
+The terminal emulator + termbox2 NIF were extracted from the root `raxol` package into
+`raxol_terminal`; `raxol` is now the umbrella / full-framework package. The 15 packages
+this skill covers:
 
 - `raxol_core` -- TEA runtime, buffer/rendering, events, directives, telemetry
-- `raxol` -- umbrella + terminal surface (termbox2 NIF + IO fallback)
+- `raxol` -- umbrella / full-framework package (pulls in the modular packages)
+- `raxol_terminal` -- VT/ANSI emulator, screen buffers, driver, input, sessions,
+  termbox2 NIF (extracted from `raxol` in v2.6)
 - `raxol_agent` -- agent framework: TEA/Process agents, turn driver, memory,
-  self-improving skills, backends, harnesses, teams
+  self-improving skills, journal, backends, coding harness, teams
 - `raxol_mcp` -- MCP server/client: tool auto-derivation, focus lens, resources
 - `raxol_liveview` -- Phoenix LiveView bridge (buffer -> HTML, a11y)
-- `raxol_plugin`, `raxol_sensor` -- plugin SDK, sensor fusion
+- `raxol_plugin` -- plugin SDK (`mix raxol.gen.plugin`)
+- `raxol_sensor` -- sensor fusion for Process agents
+- `raxol_gateway` -- unified messaging gateway: one daemon, many chat platforms via a
+  shared adapter contract, process-per-chat sessions, DM pairing auth
+- `raxol_speech` -- speech surface: TTS reads a11y announcements, STT captures voice
+  input via Bumblebee/Whisper and injects events
+- `raxol_telegram` -- Telegram surface: renders TEA apps as monospace code blocks with
+  inline-keyboard navigation
+- `raxol_watch` -- Watch notification bridge: glanceable summaries to Apple Watch (APNS)
+  and Wear OS (FCM); tap actions route back as events
+- `raxol_agent_client_protocol` -- Elixir/OTP implementation of ACP (Agent CLIENT
+  Protocol): JSON-RPC 2.0 between editors and coding agents, pluggable transports
+- `raxol_cli` -- the `raxol` command: interactive AI agent + toolkit as a self-contained
+  binary via npm wrapper
+- `raxol_console` -- console runtime: boots an ACP Console agent package onto the gateway stack
 
-Payments/ACP (`raxol_payments`, `raxol_acp`) and the Symphony orchestrator
-(`raxol_symphony`) have their own skills -- see below.
+Payments / the Agent COMMERCE Protocol (`raxol_payments`, `raxol_acp`) and the Symphony
+orchestrator (`raxol_symphony`) have their own skills -- see below. Do not confuse
+`raxol_acp` (Agent Commerce Protocol, payments) with `raxol_agent_client_protocol`
+(Agent Client Protocol, in scope here).
 
 ## What You Get
 
@@ -45,6 +72,10 @@ Payments/ACP (`raxol_payments`, `raxol_acp`) and the Symphony orchestrator
 - MCP server (auto-derive tools from the widget tree) and MCP client
 - LiveView surface (buffer -> HTML, themes, accessibility)
 - Multi-agent orchestration (teams, cockpit, message protocol)
+- Agent skills / procedural memory + the journal (blast radius, spend gate)
+- Coding agent harness (`mix raxol.code`, `mix raxol.p`) with tool classification
+- Chat surfaces via the gateway (Telegram, Discord, email) + speech (TTS/STT)
+- Agent Client Protocol: editor <-> agent JSON-RPC (distinct from ACP payments)
 - Headless sessions and agent testing patterns (unit, integration, E2E)
 
 ## Two Agent Models
@@ -76,13 +107,18 @@ For a full LLM chat turn (memory + skills + user model + tool loop) use the
 | Build a TEA agent + messaging     | `agents/tea-agent.md`          |
 | Build an autonomous agent         | `agents/process-agent.md`      |
 | Full LLM turn: memory + skills    | `agents/turn-memory.md`        |
+| Agent skills / procedural memory  | `agents/skills-procedural-memory.md` |
+| Coding agent harness (raxol.code) | `agents/coding-harness.md`     |
 | Reusable actions / LLM tools      | `agents/actions-pipelines.md`  |
 | Multi-agent teams / cockpit       | `agents/teams-orchestrator.md` |
 | Orchestrate steps as a graph      | `workflow/graph.md`            |
 | AI backend + harness selection    | `ai/backends.md`               |
 | Consume external MCP servers      | `ai/mcp-client.md`             |
+| Editor<->agent ACP (Zed, not payments) | `ai/agent-client-protocol.md` |
 | Expose your app as MCP tools      | `mcp/server.md`                |
 | Render a TEA app in LiveView      | `surfaces/liveview.md`         |
+| Chat surfaces: gateway / Telegram | `surfaces/messaging.md`        |
+| Speech surface (TTS/STT)          | `surfaces/speech.md`           |
 | Headless sessions + MCP tools     | `headless/sessions.md`         |
 | Testing agents and actions        | `testing/agent-testing.md`     |
 
