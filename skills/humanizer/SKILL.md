@@ -30,6 +30,13 @@ Identify and remove signs of AI-generated text to make writing sound natural and
 
 **Key insight:** LLMs use statistical algorithms to guess what should come next. The result tends toward the most statistically likely completion, which is how the telltale patterns below get baked in.
 
+## What You Get
+
+- A catalog of 29 AI writing patterns (vocabulary, structure, punctuation, tone) with concrete before/after rewrites
+- An honest threat model: what humanizing reliably beats (readers, statistical detectors) and what it does not (trained neural detectors like Pangram 4)
+- Editing passes to strip AI-isms and restore genuine voice, cadence, and specificity
+- Guidance on when word-level rewriting is insufficient and provenance is the only real lever
+
 ## THREAT MODEL: what this skill can and cannot do
 
 Read this before you assume "humanized" means "undetectable." It does not.
