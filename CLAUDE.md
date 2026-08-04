@@ -2,12 +2,12 @@
 
 ## Project Overview
 
-Agent-skills: 58 agent skills and 9 autonomous agents (38 MCP tools, 1,175 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills are portable agentskills.io `SKILL.md` files; the default host is the Raxol agent (`Raxol.Agent.Skills.Store` scans `~/.agents/skills`, pull-based `skill_view`), and Claude Code also loads them (auto-trigger context-injection). Agents are standalone tools with CLIs and MCP servers.
+Agent-skills: 59 agent skills and 9 autonomous agents (38 MCP tools, 1,175 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills are portable agentskills.io `SKILL.md` files; the default host is the Raxol agent (`Raxol.Agent.Skills.Store` scans `~/.agents/skills`, pull-based `skill_view`), and Claude Code also loads them (auto-trigger context-injection). Agents are standalone tools with CLIs and MCP servers.
 
 ## Structure
 
 ```
-skills/                   # 58 agent skills (agentskills.io SKILL.md; raxol default, Claude Code also)
+skills/                   # 59 agent skills (agentskills.io SKILL.md; raxol default, Claude Code also)
   <name>/SKILL.md         # Entry point per skill, with frontmatter + trigger clauses
 agents/                   # 9 autonomous agents (standalone tools)
   digest/                 # Multi-platform activity digest (18 sources)
@@ -25,7 +25,7 @@ scripts/                  # Repo tooling (skills-lint.sh)
 
 ## Skills
 
-58 skills across 4 categories. Each lives in `skills/<name>/` with a `SKILL.md` entry point. Sub-files use YAML frontmatter with `impact`, `impactDescription`, and `tags` fields.
+59 skills across 4 categories. Each lives in `skills/<name>/` with a `SKILL.md` entry point. Sub-files use YAML frontmatter with `impact`, `impactDescription`, and `tags` fields.
 
 **Domain** (17): claude-api, droo-stack, raxol, raxol-payments, raxol-symphony, noir, solidity-auditor, zk-x-ray, ethskills, nix, native-code, ffmpeg-asm, blockscout, coingecko, signoz, web-asset-generator, cancer-predisposition-variant-analyst
 
@@ -33,7 +33,7 @@ scripts/                  # Repo tooling (skills-lint.sh)
 
 **Infrastructure** (13): mcp-server-builder, ci-cd-pipeline-builder, dependency-auditor, observability-designer, database-designer, performance-profiler, git-guardrails, git-worktree-manager, env-secrets-manager, tech-debt-tracker, security-auditor, playwright, prepper
 
-**Meta** (17): polymath, architect, agent-designer, adversarial-reviewer, self-improving-agent, codebase-onboarding, rag-architect, llm-cost-optimizer, digest, recall, writing-voice, autoresearch, watchdog, sentinel, regen, patchbot, skill-creator
+**Meta** (18): polymath, architect, agent-designer, adversarial-reviewer, self-improving-agent, codebase-onboarding, rag-architect, llm-cost-optimizer, digest, recall, writing-voice, humanizer, autoresearch, watchdog, sentinel, regen, patchbot, skill-creator
 
 ### Lint
 

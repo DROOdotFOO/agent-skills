@@ -150,7 +150,7 @@ config :raxol_agent, skills_provider: Raxol.Agent.Skills.Store
 That supervises `Raxol.Agent.Skills.Store` (which scans `~/.agents/skills/**/SKILL.md` on boot) and exposes the `skills_list`, `skill_view`, and `skill_manage` tools to the agent. Verify:
 
 ```elixir
-length(Raxol.Agent.Skills.Store.list())  # => 58
+length(Raxol.Agent.Skills.Store.list())  # => 59
 ```
 
 To load skills straight from a repo checkout instead, add its path:

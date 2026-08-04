@@ -1,7 +1,7 @@
 ---
 name: raxol
 description: >
-  Raxol terminal framework for TUI apps and AI agents in Elixir (v2.6, 17-package monorepo).
+  Raxol terminal framework for TUI apps and AI agents in Elixir (v2.6, 18-package monorepo).
   TRIGGER when: code imports Raxol modules (Raxol.Agent, Raxol.Core, Raxol.MCP,
   Raxol.LiveView, Raxol.Workflow, Raxol.Headless, Raxol.Agent.Harness, Raxol.Agent.Skills,
   Raxol.Agent.Journal, Raxol.Gateway, Raxol.Telegram, Raxol.Watch, Raxol.Speech,
@@ -29,7 +29,7 @@ Elixir TEA framework for terminal UIs + AI agent orchestration. The same TEA mod
 runs in the terminal, browser (LiveView), SSH, and as MCP tools/resources. OTP
 provides supervision, crash isolation, and hot reload.
 
-Raxol v2.6 is a 17-package monorepo (targets Elixir 1.20 / OTP 29, supports 1.17+).
+Raxol v2.6 is an 18-package monorepo (targets Elixir 1.20 / OTP 29, supports 1.17+).
 The terminal emulator + termbox2 NIF were extracted from the root `raxol` package into
 `raxol_terminal`; `raxol` is now the umbrella / full-framework package. The 15 packages
 this skill covers:

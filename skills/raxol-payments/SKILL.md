@@ -44,7 +44,7 @@ of scope (see `solidity-auditor`). Riddler is the payments protocol/module here
 | Concern                                  | Package         | Entry modules                              |
 | ---------------------------------------- | --------------- | ------------------------------------------ |
 | Pay for a resource / cross-chain move    | `raxol_payments`| `Protocols.Xochi`, `Ledger`, `SpendGate`   |
-| Sell/deliver a job on-chain (ACP)        | `raxol_earn`     | `JobSession`, `Offering`, `HookClient`     |
+| Sell/deliver a job on-chain (ACP)        | `raxol_earn`    | `JobSession`, `Offering`, `HookClient`     |
 
 ## See also
 

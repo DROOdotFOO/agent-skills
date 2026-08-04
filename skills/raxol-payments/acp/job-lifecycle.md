@@ -28,10 +28,13 @@ legal transitions; `JobSession.Tools.allowed?/3` enforces which role may drive e
   chain_id: 8453, job_id: "job-42", role: :provider)
 :ok = Raxol.Earn.JobSession.subscribe(s)
 
+# Happy-path lifecycle; each call assumes the actor holding that role (see below).
+# Status machine: open -> budget_set -> funded -> submitted -> completed.
 {:ok, :budget_set} = Raxol.Earn.JobSession.set_budget(s, asset_token)
+{:ok, :funded}     = Raxol.Earn.JobSession.fund(s)
 {:ok, :submitted}  = Raxol.Earn.JobSession.submit(s, %{deliverable: "..."})
 {:ok, :completed}  = Raxol.Earn.JobSession.complete(s, "approval msg")
-status = Raxol.Earn.JobSession.get_status(s)
+status = Raxol.Earn.JobSession.status(s)  # => :completed
 ```
 
 Roles are `:client`, `:provider`, `:evaluator`. `set_budget`/`fund` are client-side;
