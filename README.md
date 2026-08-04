@@ -4,8 +4,6 @@
 
 ## How skill loading works
 
-This is probably your first question, so let's get it out of the way.
-
 Skills are portable `SKILL.md` files -- the [agentskills.io](https://agentskills.io) format: YAML frontmatter (a `name`, a short trigger `description`) plus a markdown body. Any compatible host loads the same files. Two are documented here.
 
 **Raxol agent (default).** `Raxol.Agent.Skills.Store` scans `~/.agents/skills/**/SKILL.md` on boot and holds them as read-only procedural memory. Skills are **pull-based**: the agent sees only each skill's name and description (via the `skills_list` tool) and reads a full body on demand (`skill_view`) when it judges one relevant -- the trigger clause in the description guides that choice. Nothing but the list metadata sits in context until the agent pulls a skill, so all 59 cost almost nothing until used.
