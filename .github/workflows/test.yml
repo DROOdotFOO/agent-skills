@@ -39,4 +39,7 @@ jobs:
         run: pytest agents/ -v
 
       - name: Skills lint
-        run: bash scripts/skills-lint.sh
+        run: |
+          bash scripts/skills-lint.sh
+          python scripts/skill-triggers-test.py
+          python scripts/codex-compat-test.py

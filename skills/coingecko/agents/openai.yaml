@@ -1,0 +1,12 @@
+interface:
+  display_name: "CoinGecko"
+  short_description: "Query crypto markets and DEX activity"
+  default_prompt: "Use $coingecko to research this token or market."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "coingecko"
+      description: "Query crypto market data through CoinGecko"
+      transport: "streamable_http"
+      url: "https://mcp.api.coingecko.com/mcp"

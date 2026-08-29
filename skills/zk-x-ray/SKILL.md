@@ -125,7 +125,7 @@ In the same message (parallel), launch:
 3. **Reference reads** (foreground, parallel):
    - `$SKILL_DIR/references/zk-threats.md` -- ZK-specific threat profiles
    - `$SKILL_DIR/references/templates.md` -- output templates
-4. **Spec/EIP detection** (Glob): `**/{eip,erc,spec,whitepaper,protocol,architecture,README,THREAT*}*.{md,pdf}` excluding `node_modules/`, `lib/`, `target/`, `out/`, `cache/`, `zk-x-ray/`. If size-aware: ≤5 files & ≤300 lines each, read directly in Phase 2's parallel batch; else delegate to a sonnet subagent for structured extraction (same prompt as pashov's templates.md spec extractor).
+4. **Spec/EIP detection** (the host's file search tool): `**/{eip,erc,spec,whitepaper,protocol,architecture,README,THREAT*}*.{md,pdf}` excluding `node_modules/`, `lib/`, `target/`, `out/`, `cache/`, `zk-x-ray/`. If size-aware: ≤5 files & ≤300 lines each, read directly in Phase 2's parallel batch; otherwise delegate structured extraction to a capable read-only sub-agent (same prompt as pashov's templates.md spec extractor).
 
 Proceed to Phase 2 without waiting for coverage / nargo test.
 
@@ -137,7 +137,7 @@ In **one message**, parallel-call:
 
 ### 2a. Solidity source reads
 
-Same logic as pashov: ≤20 files -> direct Read calls; >20 files -> sonnet subagents
+Same logic as pashov: ≤20 files -> direct file reads; >20 files -> read-only sub-agents
 grouped by subsystem. Per-file extraction includes the standard pashov fields
 (type, inheritance, roles, state vars, external calls, fund flows, guards,
 delta-writes, enum/one-shot transitions) **plus**:

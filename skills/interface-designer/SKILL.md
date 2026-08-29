@@ -30,7 +30,13 @@ Do NOT start designing until requirements are agreed upon.
 
 ### Phase 2: Spawn Divergent Sub-Agents
 
-Launch 3+ parallel sub-agents (via `Agent` tool with `subagent_type`), each given the same requirements but a different constraint set. Constraints must force **radically different** designs -- not minor variations. See [constraints.md](constraints.md) for examples.
+Launch 3+ parallel sub-agents with the host's delegation facility, each given
+the same requirements but a different constraint set. In Codex, use parallel
+`spawn_agent` calls; in Claude Code, use parallel Agent calls. If the host has
+no sub-agent facility, stop and explain that the workflow cannot preserve its
+required independent design passes. Constraints must force **radically
+different** designs -- not minor variations. See [constraints.md](constraints.md)
+for examples.
 
 Each sub-agent produces:
 - Interface definition (function signatures, types, module API)

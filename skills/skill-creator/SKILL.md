@@ -5,7 +5,7 @@ description: >
   trigger clauses, sub-files, and linter compliance. TRIGGER when: user asks
   to create a new skill, scaffold a skill, add a skill to agent-skills, or
   says "new skill" or "skill creator". DO NOT TRIGGER when: user is editing
-  an existing skill, writing CLAUDE.md instructions, or building an MCP
+  an existing skill, writing AGENTS.md or CLAUDE.md instructions, or building an MCP
   server (use mcp-server-builder skill).
 metadata:
   author: DROOdotFOO
@@ -23,11 +23,12 @@ and quality review.
 
 A skill is a directory under `skills/<name>/` containing markdown files with
 YAML frontmatter. The entry point is always `SKILL.md`. Skills provide
-context-injection for Claude Code sessions -- they load automatically when
-trigger conditions in the description match the user's task.
+progressively disclosed guidance for compatible hosts such as Codex, Claude
+Code, and Raxol. Hosts use the description to decide when the skill applies and
+load the full instructions only when needed.
 
-Skills are NOT agents, NOT plugins, NOT code libraries. They are structured
-knowledge documents that shape Claude's behavior for a specific domain.
+Skills are NOT agents, plugins, or code libraries. They are structured
+knowledge documents that shape an agent host's behavior for a specific domain.
 
 ## Scaffolding workflow
 

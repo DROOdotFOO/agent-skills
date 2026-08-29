@@ -6,7 +6,34 @@ tags: "git-guardrails,settings,hooks,config"
 
 ## Settings configuration
 
-### Project scope (`.claude/settings.json`)
+The bundled script accepts the shared `tool_input.command` hook field and
+blocks by writing the reason to stderr and exiting with status 2.
+
+### Codex project scope (`.codex/hooks.json`)
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "^Bash$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$(git rev-parse --show-toplevel)/.codex/hooks/block-dangerous-git.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+For global Codex scope, put the configuration in `~/.codex/hooks.json` and
+use an absolute command path. Review and trust the hook through `/hooks` after
+installing or changing it.
+
+### Claude Code project scope (`.claude/settings.json`)
 
 ```json
 {
@@ -26,7 +53,7 @@ tags: "git-guardrails,settings,hooks,config"
 }
 ```
 
-### Global scope (`~/.claude/settings.json`)
+### Claude Code global scope (`~/.claude/settings.json`)
 
 ```json
 {

@@ -1,20 +1,27 @@
 # agent-skills
 
-59 agent skills and 9 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming. Default host is the Raxol agent; Claude Code also works.
+58 portable agent skills, one optional submodule skill, and 9 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming. Raxol, Codex, and Claude Code consume the same `SKILL.md` workflows.
 
 ## How skill loading works
 
-Skills are portable `SKILL.md` files -- the [agentskills.io](https://agentskills.io) format: YAML frontmatter (a `name`, a short trigger `description`) plus a markdown body. Any compatible host loads the same files. Two are documented here.
+Skills are portable `SKILL.md` files -- the [agentskills.io](https://agentskills.io) format: YAML frontmatter (a `name`, a short trigger `description`) plus a markdown body. Any compatible host loads the same files. Three are documented here.
 
-**Raxol agent (default).** `Raxol.Agent.Skills.Store` scans `~/.agents/skills/**/SKILL.md` on boot and holds them as read-only procedural memory. Skills are **pull-based**: the agent sees only each skill's name and description (via the `skills_list` tool) and reads a full body on demand (`skill_view`) when it judges one relevant -- the trigger clause in the description guides that choice. Nothing but the list metadata sits in context until the agent pulls a skill, so all 59 cost almost nothing until used.
+**Raxol agent (default).** `Raxol.Agent.Skills.Store` scans `~/.agents/skills/**/SKILL.md` on boot and holds them as read-only procedural memory. Skills are **pull-based**: the agent sees only each skill's name and description (via the `skills_list` tool) and reads a full body on demand (`skill_view`) when it judges one relevant -- the trigger clause in the description guides that choice. Nothing but the list metadata sits in context until the agent pulls a skill, so the installed inventory costs almost nothing until used.
+
+**Codex.** Codex discovers personal skills under `~/.agents/skills`, supports
+explicit `$skill-name` invocation, and progressively loads full instructions.
+For distribution, this repository is also a skills-only plugin through
+`.codex-plugin/plugin.json`. See [docs/codex.md](docs/codex.md).
 
 **Claude Code (secondary).** Lazy in a different way: Claude Code reads the trigger clause from each frontmatter and auto-injects the full skill content when the trigger matches your conversation. Sub-files (examples, checklists, reference tables) stay out of context until they're needed.
 
-Either way, 59 skills don't bloat your sessions. The noir ZK skill isn't eating tokens while you're reviewing a PR.
+In every host, the noir ZK skill is not loaded while you are reviewing a PR.
 
 ## Skills
 
-Each skill lives in `skills/<name>/` with a `SKILL.md` entry point.
+Each skill lives in `skills/<name>/` with a `SKILL.md` entry point. The cancer
+analysis skill is a git submodule and is optional because source archives and
+ordinary plugin installs do not populate submodules.
 
 ### Domain
 
@@ -111,7 +118,11 @@ Nine standalone tools, each with a Typer CLI, pydantic models, and a FastMCP ser
 
 ### MCP integration
 
-Each agent doubles as an MCP server. Add to `~/.mcp.json`:
+Each agent doubles as an MCP server. Claude Code reads `~/.mcp.json`; Codex
+uses `[mcp_servers.<name>]` entries in `~/.codex/config.toml`. Complete examples
+for both hosts are in [docs/codex.md](docs/codex.md).
+
+Claude Code example:
 
 ```json
 {
@@ -148,7 +159,7 @@ config :raxol_agent, skills_provider: Raxol.Agent.Skills.Store
 That supervises `Raxol.Agent.Skills.Store` (which scans `~/.agents/skills/**/SKILL.md` on boot) and exposes the `skills_list`, `skill_view`, and `skill_manage` tools to the agent. Verify:
 
 ```elixir
-length(Raxol.Agent.Skills.Store.list())  # => 59
+length(Raxol.Agent.Skills.Store.list())  # => 58, or 59 with the optional submodule
 ```
 
 To load skills straight from a repo checkout instead, add its path:
@@ -185,7 +196,7 @@ chezmoi apply                      # install / update (auto-refreshes every 168h
 chezmoi apply --refresh-externals  # force-pull the newest skills right now
 ```
 
-The Raxol agent reads `~/.agents/skills` directly after apply -- no further step. To add a new skill: push it to `agent-skills` `main`, then `chezmoi apply --refresh-externals`. For the full reproducible rig (this external plus the repo clone for the MCP agent CLIs and the `~/.claude/skills` symlinks), see [DROOdotFOO/dotfiles](https://github.com/DROOdotFOO/dotfiles) -- `chezmoi apply --refresh-externals` is the one command that applies or refreshes everything.
+The Raxol agent reads `~/.agents/skills` directly after apply -- no further step. To add a new skill: push it to `agent-skills` `main`, then refresh the external. For the full reproducible rig (this external plus the repo clone for the MCP agent CLIs and the `~/.claude/skills` symlinks), see [DROOdotFOO/dotfiles](https://github.com/DROOdotFOO/dotfiles) and use its scoped `make codex-diff` / `make codex-apply` workflow for Codex rollout.
 
 **Manual** -- clone and symlink:
 
@@ -193,6 +204,17 @@ The Raxol agent reads `~/.agents/skills` directly after apply -- no further step
 git clone https://github.com/DROOdotFOO/agent-skills.git ~/.agents/skills-repo
 ln -s ~/.agents/skills-repo/skills ~/.agents/skills
 ```
+
+### Codex
+
+Codex reads the `~/.agents/skills` installation above directly. For an
+isolated plugin installation instead, add this repository as a marketplace and
+install `agent-skills` from the Codex plugin browser. Do not install the plugin
+and the same personal skill collection in one profile: duplicate skill names
+are shown separately rather than merged.
+
+The plugin intentionally contains instructions only. Install the agent CLIs
+separately before configuring their MCP servers.
 
 ### Claude Code (secondary)
 
@@ -228,6 +250,8 @@ cd agents/<name> && pip install -e .
 ```
 
 Checks frontmatter, trigger clauses, file references, and cross-skill links.
+`python3 scripts/codex-compat-test.py` additionally checks Codex packaging and
+rejects unqualified host-specific workflow instructions.
 
 ## License
 

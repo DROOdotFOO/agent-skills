@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Agent-skills: 59 agent skills and 9 autonomous agents (38 MCP tools, 1,175 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Skills are portable agentskills.io `SKILL.md` files; the default host is the Raxol agent (`Raxol.Agent.Skills.Store` scans `~/.agents/skills`, pull-based `skill_view`), and Claude Code also loads them (auto-trigger context-injection). Agents are standalone tools with CLIs and MCP servers.
+Agent-skills: 58 portable agent skills, one optional submodule skill, and 9 autonomous agents (38 MCP tools, 1,175 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Raxol, Codex, and Claude Code consume the same `SKILL.md` workflows. Agents are standalone tools with CLIs and MCP servers.
 
 ## Structure
 
@@ -20,12 +20,14 @@ agents/                   # 9 autonomous agents (standalone tools)
   patchbot/               # Polyglot dependency updater
   regen/                  # Regen incident reader + SigNoz OTel correlation
 scripts/                  # Repo tooling (skills-lint.sh)
-.claude-plugin/           # Plugin distribution (plugin.json, marketplace.json)
+.codex-plugin/            # Codex plugin manifest
+.claude-plugin/           # Claude Code plugin distribution
+AGENTS.md                 # Codex repository guidance
 ```
 
 ## Skills
 
-59 skills across 4 categories. Each lives in `skills/<name>/` with a `SKILL.md` entry point. Sub-files use YAML frontmatter with `impact`, `impactDescription`, and `tags` fields.
+The portable distribution contains 58 skills. A populated checkout can also contain the optional cancer-analysis submodule skill. Each lives in `skills/<name>/` with a `SKILL.md` entry point. Sub-files use YAML frontmatter with `impact`, `impactDescription`, and `tags` fields.
 
 **Domain** (17): claude-api, droo-stack, raxol, raxol-payments, raxol-symphony, noir, solidity-auditor, zk-x-ray, ethskills, nix, native-code, ffmpeg-asm, blockscout, coingecko, signoz, web-asset-generator, cancer-predisposition-variant-analyst
 
@@ -47,7 +49,8 @@ Validates: frontmatter fields, trigger clauses, file references, cross-skill lin
 
 1. Create `skills/<name>/SKILL.md` with frontmatter: `name`, `description` (include `TRIGGER when:` / `DO NOT TRIGGER`), `metadata`
 2. Add sub-files with YAML frontmatter (`impact`, `impactDescription`, `tags` as comma-separated string)
-3. Run `./scripts/skills-lint.sh`
+3. Keep host-specific behavior behind explicit Codex/Claude/Raxol branches
+4. Run `./scripts/skills-lint.sh`, `python3 scripts/skill-triggers-test.py`, and `python3 scripts/codex-compat-test.py`
 
 ## Agents
 

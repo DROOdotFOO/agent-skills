@@ -12,7 +12,15 @@ prepper serve
 
 ### Configure MCP
 
-Add to `~/.mcp.json`:
+For Codex, add to `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.prepper]
+command = "prepper"
+args = ["serve"]
+```
+
+For Claude Code, add to `~/.mcp.json`:
 
 ```json
 {
@@ -30,12 +38,34 @@ Add to `~/.mcp.json`:
 | Tool             | Description                                                 |
 | ---------------- | ----------------------------------------------------------- |
 | `prepper_brief`  | Generate a project briefing (git, GitHub, CI, deps, recall) |
-| `prepper_inject` | Generate and write briefing to .claude/prepper-briefing.md  |
+| `prepper_inject` | Generate and write Claude Code's .claude/prepper-briefing.md |
 | `prepper_alerts` | Unified cross-agent alert view with agent filter            |
 
 ## Auto-inject on SessionStart
 
-Add to your project's `.claude/settings.json`:
+For Codex, add to `.codex/hooks.json` or `~/.codex/hooks.json`:
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "prepper brief --raw",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Review and trust the Codex hook through `/hooks`. For Claude Code, add to the
+project's `.claude/settings.json`:
 
 ```json
 {
@@ -56,8 +86,8 @@ Add to your project's `.claude/settings.json`:
 }
 ```
 
-This generates a briefing at session start and injects it as context.
-For more control (repo/project detection), use the hook script:
+This generates a briefing at session start and injects it as context. For more
+control (repo/project detection) in either host, use the hook script:
 
 ```json
 "command": "~/.agents/skills-repo/scripts/hooks/prepper-session-start.sh"

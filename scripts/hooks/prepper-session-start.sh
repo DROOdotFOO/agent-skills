@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# SessionStart hook: generate a prepper briefing and inject into context.
+# Codex/Claude Code SessionStart hook: generate a prepper briefing for context.
 #
-# Install: add to your project's .claude/settings.json:
+# Install through .codex/hooks.json or .claude/settings.json:
 #
 #   {
 #     "hooks": {
@@ -21,7 +21,7 @@
 #   "command": "/path/to/prepper-session-start.sh"
 #
 # The script checks if prepper is installed, generates a briefing,
-# and outputs it to stdout (which Claude Code injects as context).
+# and outputs it to stdout for the host to inject as context.
 
 set -euo pipefail
 
@@ -40,14 +40,14 @@ if command -v gh &>/dev/null && git rev-parse --is-inside-work-tree &>/dev/null 
     PROJECT=$(basename "$(git rev-parse --show-toplevel 2>/dev/null)" 2>/dev/null || true)
 fi
 
-# Build the command
-CMD="prepper brief --raw"
+# Build the command without eval so repository names cannot become shell syntax.
+cmd=(prepper brief --raw)
 if [[ -n "$REPO" ]]; then
-    CMD="$CMD --repo $REPO"
+    cmd+=(--repo "$REPO")
 fi
 if [[ -n "$PROJECT" ]]; then
-    CMD="$CMD --project $PROJECT"
+    cmd+=(--project "$PROJECT")
 fi
 
 # Generate and output briefing (stdout is injected as context)
-eval "$CMD" 2>/dev/null || echo "prepper briefing failed -- continuing without context"
+"${cmd[@]}" 2>/dev/null || echo "prepper briefing failed -- continuing without context"

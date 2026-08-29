@@ -23,7 +23,7 @@ A pattern is NOT ready for promotion when:
 
 ## Where to Promote
 
-### CLAUDE.md (project-wide rules)
+### AGENTS.md or CLAUDE.md (project-wide rules)
 
 Best for: coding conventions, tool preferences, workflow patterns, architectural decisions.
 
@@ -32,9 +32,11 @@ Examples:
 - "Run `make lint` before committing"
 - "Prefer composition over inheritance in this codebase"
 
-### .claude/rules/ (context-specific)
+### Scoped host guidance (context-specific)
 
-Best for: patterns that apply only in certain directories, file types, or situations. Rules files support glob patterns for automatic activation.
+Best for: patterns that apply only in certain directories, file types, or
+situations. In Codex, place a nested AGENTS.md close to the affected subtree.
+In Claude Code, use `.claude/rules/` when its glob activation is appropriate.
 
 Examples:
 - `*.test.ts` -- "Always use `describe`/`it` blocks, never standalone `test()`"
@@ -53,16 +55,16 @@ Criteria for skill extraction:
 
 ### Memory Analyst
 
-Runs during `/si:review`. Responsibilities:
+Runs during the `review` operation. Responsibilities:
 
 - **Identify candidates** -- Scan MEMORY.md for entries with recurrence count >= 2
 - **Flag stale entries** -- Entries older than 30 days without recurrence are candidates for removal
-- **Detect gaps** -- Compare CLAUDE.md rules against recent session corrections. Missing rules that keep getting corrected are promotion candidates.
+- **Detect gaps** -- Compare AGENTS.md or CLAUDE.md rules against recent session corrections. Missing rules that keep getting corrected are promotion candidates.
 - **Deduplicate** -- Find entries that describe the same pattern in different words
 
 ### Skill Extractor
 
-Runs during `/si:extract`. Responsibilities:
+Runs during the `extract` operation. Responsibilities:
 
 - Generate a complete skill directory with SKILL.md and sub-files
 - Include proper frontmatter (name, description with TRIGGER/DO NOT TRIGGER, metadata)
@@ -93,7 +95,7 @@ Before promoting, verify:
 
 1. [ ] Pattern recurred 2+ times
 2. [ ] User confirmed the preference (if subjective)
-3. [ ] Target location identified (CLAUDE.md / rules / skill)
+3. [ ] Target location identified (AGENTS.md / CLAUDE.md / scoped rule / skill)
 4. [ ] No existing rule covers this pattern
 5. [ ] Wording is clear and actionable
 6. [ ] Entry removed from MEMORY.md after promotion
