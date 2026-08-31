@@ -1,7 +1,8 @@
 ---
 name: raxol
 description: >
-  Raxol terminal framework for TUI apps and AI agents in Elixir (v2.6, 18-package monorepo).
+  Raxol terminal framework for TUI apps and AI agents in Elixir (v2.6.1; 17 packages under
+  packages/ plus the root raxol package).
   TRIGGER when: code imports Raxol modules (Raxol.Agent, Raxol.Core, Raxol.MCP,
   Raxol.LiveView, Raxol.Workflow, Raxol.Headless, Raxol.Agent.Harness, Raxol.Agent.Skills,
   Raxol.Agent.Journal, Raxol.Gateway, Raxol.Telegram, Raxol.Watch, Raxol.Speech,
@@ -29,13 +30,19 @@ Elixir TEA framework for terminal UIs + AI agent orchestration. The same TEA mod
 runs in the terminal, browser (LiveView), SSH, and as MCP tools/resources. OTP
 provides supervision, crash isolation, and hot reload.
 
-Raxol v2.6 is an 18-package monorepo (targets Elixir 1.20 / OTP 29, supports 1.17+).
+Raxol v2.6.1 targets Elixir 1.20 / OTP 29 and supports 1.17+. The repo holds 18 Mix
+projects: 17 under `packages/` plus the root `raxol` package. Both numbers are correct
+and they count different things, so a `packages/` listing showing 17 is not stale.
+
 The terminal emulator + termbox2 NIF were extracted from the root `raxol` package into
-`raxol_terminal`; `raxol` is now the umbrella / full-framework package. The 15 packages
-this skill covers:
+`raxol_terminal`. `raxol` is now the full-framework package, and it is a plain Mix
+project rather than a Mix umbrella (the root `mix.exs` has no `apps_path`): it depends on
+`raxol_core`, `raxol_terminal`, `raxol_sensor`, `raxol_mcp`, `raxol_liveview`, and
+`raxol_plugin`. The 15 packages this skill covers:
 
 - `raxol_core` -- TEA runtime, buffer/rendering, events, directives, telemetry
-- `raxol` -- umbrella / full-framework package (pulls in the modular packages)
+- `raxol` -- full-framework package at the REPO ROOT, not under `packages/`
+  (depends on core, terminal, sensor, mcp, liveview, plugin)
 - `raxol_terminal` -- VT/ANSI emulator, screen buffers, driver, input, sessions,
   termbox2 NIF (extracted from `raxol` in v2.6)
 - `raxol_agent` -- agent framework: TEA/Process agents, turn driver, memory,
