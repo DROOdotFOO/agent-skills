@@ -1,0 +1,37 @@
+{
+  "name": "agent-skills",
+  "version": "1.0.0",
+  "description": "Portable development, security, infrastructure, and agent workflows for Codex, Claude Code, and Raxol.",
+  "author": {
+    "name": "DROOdotFOO",
+    "url": "https://github.com/DROOdotFOO"
+  },
+  "homepage": "https://github.com/DROOdotFOO/agent-skills",
+  "repository": "https://github.com/DROOdotFOO/agent-skills",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "agents",
+    "polyglot",
+    "security",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Agent Skills",
+    "shortDescription": "Portable engineering and agent workflows",
+    "longDescription": "Reusable workflows for polyglot development, security, infrastructure, Web3, ZK, UI/UX, and agent systems.",
+    "developerName": "DROOdotFOO",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/DROOdotFOO/agent-skills",
+    "defaultPrompt": [
+      "Use $adversarial-reviewer to stress-test these changes.",
+      "Use $focused-fix to diagnose this failure.",
+      "Use $code-review to review this changeset."
+    ]
+  }
+}

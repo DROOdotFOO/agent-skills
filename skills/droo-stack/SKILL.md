@@ -4,7 +4,7 @@ description: >
   Detailed coding patterns for a polyglot stack. TRIGGER when: working in
   Elixir, TypeScript, Go, Rust, Python, Lua, C, Zig, Shell/Bash, Noir, or
   chezmoi templates. Provides incorrect/correct examples that complement
-  CLAUDE.md preferences. DO NOT TRIGGER when: working with Claude API or
+  AGENTS.md or CLAUDE.md preferences. DO NOT TRIGGER when: working with Claude API or
   Anthropic SDK (use claude-api skill), Raxol TUI/agent framework patterns
   (use raxol skill), Solidity smart contracts (use solidity-auditor skill),
   ZK circuit domain questions (use noir skill -- this skill only covers Noir
@@ -19,14 +19,14 @@ metadata:
 
 # droo-stack
 
-Concrete coding patterns for a polyglot stack. Each rule shows **Incorrect** and **Correct** examples with rationale. These complement CLAUDE.md (which sets high-level preferences) with detailed, actionable reference material.
+Concrete coding patterns for a polyglot stack. Each rule shows **Incorrect** and **Correct** examples with rationale. These complement repository guidance such as AGENTS.md or CLAUDE.md with detailed, actionable reference material.
 
 ## What You Get
 
 - Incorrect/Correct code examples with rationale for each language
 - Patterns organized by impact level (critical, high, medium)
 - Language-specific idioms: pipes, pattern matching, error handling, testing
-- Complements CLAUDE.md preferences with concrete, actionable rules
+- Complements AGENTS.md or CLAUDE.md preferences with concrete, actionable rules
 
 ## When to use
 

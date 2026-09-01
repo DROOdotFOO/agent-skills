@@ -19,25 +19,28 @@ Curate session memory, promote recurring patterns to permanent config, and extra
 
 Three tiers, from most permanent to most ephemeral:
 
-1. **CLAUDE.md** (you write) -- Project-wide rules, preferences, conventions. Survives across all sessions.
-2. **MEMORY.md** (Claude writes) -- Observations, patterns, corrections accumulated during sessions. Review candidates.
+1. **Repository guidance** (you write) -- AGENTS.md in Codex or CLAUDE.md in Claude Code. Project-wide rules, preferences, and conventions that survive across sessions.
+2. **Review memory** -- The host memory store, or a project MEMORY.md when the user has chosen a file-backed ledger. Observations, patterns, and corrections awaiting review.
 3. **Session Memory** -- In-context learnings that exist only for the current session. Lost on exit unless promoted.
 
 ## Commands
 
 | Command | Action |
 |---------|--------|
-| `/si:review` | Scan MEMORY.md for promotion candidates. Show each with recurrence count and recommendation. |
-| `/si:promote` | Promote a specific pattern from MEMORY.md to CLAUDE.md or `.claude/rules/`. Remove from MEMORY.md after promotion. |
-| `/si:extract` | Generate a complete skill from a recurring pattern (creates `skills/<name>/SKILL.md`). |
-| `/si:status` | Show memory stats: entries in MEMORY.md, staleness, promotion candidates, session observations. |
-| `/si:remember` | Capture a specific observation to MEMORY.md with timestamp and context. |
+| `review` | Scan the active review-memory source for promotion candidates. Show each with recurrence count and recommendation. |
+| `promote` | Promote a pattern to AGENTS.md, CLAUDE.md, or an appropriate scoped rule. Remove it from review memory after promotion. |
+| `extract` | Generate a complete skill from a recurring pattern (creates `skills/<name>/SKILL.md`). |
+| `status` | Show memory stats: entries, staleness, promotion candidates, and session observations. |
+| `remember` | Capture a specific observation with timestamp and context. |
+
+Invoke these as `$self-improving-agent <command>` in Codex, `/si:<command>` in
+Claude Code, or describe the operation in natural language.
 
 ## Promotion Lifecycle
 
 See [promotion-lifecycle.md](./promotion-lifecycle.md) for detailed rules.
 
-Summary: discover -> recurs 2-3x -> review flags -> promote to CLAUDE.md or rules -> remove from MEMORY.md.
+Summary: discover -> recurs 2-3x -> review flags -> promote to durable host guidance or a skill -> remove from review memory.
 
 ## MEMORY.md Format
 
@@ -59,7 +62,7 @@ Summary: discover -> recurs 2-3x -> review flags -> promote to CLAUDE.md or rule
 ## What You Get
 
 - A curated MEMORY.md with timestamped patterns, corrections, and observations accumulated across sessions
-- Promotion recommendations identifying recurring patterns ready to graduate to CLAUDE.md or `.claude/rules/`
+- Promotion recommendations identifying recurring patterns ready to graduate to AGENTS.md, CLAUDE.md, scoped rules, or a reusable skill
 - Extracted skills scaffolded from patterns that recur frequently enough to warrant standalone skill files
 
 ## Rules

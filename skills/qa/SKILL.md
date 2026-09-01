@@ -46,7 +46,8 @@ Do NOT start exploring code until the problem is clearly stated.
 
 ### Phase 2: Explore
 
-Use the Agent tool with `subagent_type` "Explore" to investigate the codebase:
+Use the host's read-only exploration sub-agent to investigate the codebase. In
+Codex, use `spawn_agent`; in Claude Code, use an Explore Agent:
 - Find the code path that handles the reported behavior
 - Identify where the actual behavior diverges from expected
 - Check for related tests -- do they exist? Do they pass? Do they test the wrong thing?
@@ -87,9 +88,9 @@ When the user wants to run a QA session or report multiple bugs:
 1. **Listen** -- Let the user describe the bug in their own words
 2. **Clarify** -- Ask at most 2-3 focused questions. Do not interrogate.
    Infer what you can from context and codebase exploration
-3. **Explore** -- Fire background Agent (subagent_type=Explore) to search
-   the codebase for relevant code, tests, and related issues. Do this while
-   the user is still talking if possible
+3. **Explore** -- Start a background read-only exploration sub-agent with the
+   host's delegation facility to search the codebase for relevant code, tests,
+   and related issues. Do this while the user is still talking if possible
 4. **Assess scope** -- Determine if this is a single issue or needs breakdown:
    - Single issue: one clear bug with one fix
    - Breakdown: multiple related problems that should be separate issues

@@ -1,0 +1,12 @@
+interface:
+  display_name: "Blockscout"
+  short_description: "Read on-chain data across supported chains"
+  default_prompt: "Use $blockscout to inspect this address or transaction."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "blockscout"
+      description: "Read on-chain data through Blockscout"
+      transport: "streamable_http"
+      url: "https://mcp.blockscout.com/mcp"

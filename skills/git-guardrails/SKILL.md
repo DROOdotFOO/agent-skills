@@ -1,9 +1,9 @@
 ---
 name: git-guardrails
 description: >
-  Set up Claude Code hooks to block dangerous git commands before they execute.
+  Set up Codex or Claude Code hooks to block dangerous git commands before they execute.
   TRIGGER when: user wants to prevent destructive git operations, add git safety hooks,
-  or block git push/reset in Claude Code.
+  or block git push/reset in an agent coding host.
   DO NOT TRIGGER when: user is asking about git workflow or branching strategy.
 metadata:
   author: mattpocock
@@ -14,7 +14,7 @@ metadata:
 
 # Git Guardrails
 
-Sets up a PreToolUse hook that intercepts and blocks dangerous git commands before Claude executes them.
+Sets up a PreToolUse hook that intercepts and blocks dangerous git commands before the coding agent executes them.
 
 ## What You Get
 
@@ -31,12 +31,12 @@ Sets up a PreToolUse hook that intercepts and blocks dangerous git commands befo
 - `git branch -D`
 - `git checkout .` / `git restore .`
 
-When blocked, Claude sees a message telling it that it does not have authority to run these commands.
+When blocked, the host receives a message explaining why the command is denied.
 
 ## WRONG: no guardrails, Claude runs destructive commands silently
 
 ```bash
-# Claude decides to "clean up" and runs:
+# The coding agent decides to "clean up" and runs:
 git reset --hard HEAD~3   # 3 commits of work gone
 git clean -fd             # untracked files deleted
 git push --force          # rewrites shared history
@@ -51,9 +51,9 @@ BLOCKED: git push is not allowed. Ask the user to run it manually.
 
 ## Setup Steps
 
-1. **Ask scope** -- project (`.claude/settings.json`) or global (`~/.claude/settings.json`)?
-2. **Copy hook script** -- bundled at [scripts/block-dangerous-git.sh](scripts/block-dangerous-git.sh). Copy to `.claude/hooks/` (project) or `~/.claude/hooks/` (global). Make executable.
-3. **Add to settings** -- see [settings-config.md](settings-config.md) for the JSON
+1. **Identify host and scope** -- Codex or Claude Code; project or global.
+2. **Copy hook script** -- bundled at [scripts/block-dangerous-git.sh](scripts/block-dangerous-git.sh). Put it in the host's project or global hooks directory and make it executable.
+3. **Add to settings** -- see [settings-config.md](settings-config.md) for Codex and Claude Code examples.
 4. **Customize** -- ask if user wants to add/remove patterns from the blocked list
 5. **Verify** -- `echo '{"tool_input":{"command":"git push origin main"}}' | <path-to-script>` should exit code 2 with BLOCKED message
 
@@ -61,5 +61,5 @@ BLOCKED: git push is not allowed. Ask the user to run it manually.
 
 | File | Topic |
 |------|-------|
-| [settings-config.md](settings-config.md) | Project and global settings JSON |
+| [settings-config.md](settings-config.md) | Codex and Claude Code hook configuration |
 | [scripts/block-dangerous-git.sh](scripts/block-dangerous-git.sh) | The hook script |

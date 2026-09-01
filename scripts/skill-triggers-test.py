@@ -26,27 +26,27 @@ TEST_CASES: list[tuple[str, list[str], list[str]]] = [
     (
         "How do I use the Anthropic SDK in Python?",
         ["claude-api"],
-        ["solidity-audit", "noir"],
+        ["solidity-auditor", "noir"],
     ),
     (
         "Write a Foundry test for this Solidity contract",
-        ["solidity-audit"],
+        ["solidity-auditor"],
         ["noir", "claude-api"],
     ),
     (
         "Design a Noir circuit for range proofs",
         ["noir"],
-        ["solidity-audit"],
+        ["solidity-auditor"],
     ),
     (
         "What Ethereum tooling and ERC standard should I use for NFTs?",
         ["ethskills"],
-        [],  # solidity-audit also matches ERC; acceptable overlap
+        [],  # solidity-auditor also matches ERC; acceptable overlap
     ),
     (
         "Check the price of Bitcoin",
         ["coingecko"],
-        ["solidity-audit", "noir"],
+        ["solidity-auditor", "noir"],
     ),
     (
         "Look up this contract address on chain",

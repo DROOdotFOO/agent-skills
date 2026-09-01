@@ -38,8 +38,11 @@ prepper brief --repo owner/repo --project myproject
 # Write to file
 prepper brief --output briefing.md
 
-# Inject into .claude/prepper-briefing.md for auto-loading
+# Claude Code: write .claude/prepper-briefing.md
 prepper inject --repo owner/repo --project myproject
+
+# Codex: emit raw context from a .codex/hooks.json SessionStart hook
+prepper brief --raw --repo owner/repo --project myproject
 
 # Cross-agent alert view
 prepper alerts --agent sentinel --limit 20
