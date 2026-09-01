@@ -1,6 +1,6 @@
 # agent-skills
 
-58 portable agent skills, one optional submodule skill, and 9 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming. Raxol, Codex, and Claude Code consume the same `SKILL.md` workflows.
+59 portable agent skills, one optional submodule skill, and 9 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming. Raxol, Codex, and Claude Code consume the same `SKILL.md` workflows.
 
 ## How skill loading works
 
@@ -55,7 +55,8 @@ ordinary plugin installs do not populate submodules.
 | `qa`                   | Bug triage and issue creation; interactive QA with background explorer           |
 | `interface-designer`   | "Design It Twice" -- parallel sub-agents with divergent constraints              |
 | `ubiquitous-language`  | DDD glossary extraction, canonical terms                                         |
-| `design-ux`            | UI/UX design patterns, design tokens, accessibility, TUI aesthetics              |
+| `design-ux`            | UI/UX design patterns, design tokens, motion, accessibility, TUI aesthetics      |
+| `frontend-slop-audit`  | Audit generated UI for AI tells and layout defects; pre-flight ship checklist    |
 | `property-testing`     | Generative/property-based testing (Hypothesis, proptest, StreamData, fast-check) |
 | `refactoring-strategy` | Strangler fig, large renames, safe restructuring for polyglot codebases          |
 
@@ -159,7 +160,7 @@ config :raxol_agent, skills_provider: Raxol.Agent.Skills.Store
 That supervises `Raxol.Agent.Skills.Store` (which scans `~/.agents/skills/**/SKILL.md` on boot) and exposes the `skills_list`, `skill_view`, and `skill_manage` tools to the agent. Verify:
 
 ```elixir
-length(Raxol.Agent.Skills.Store.list())  # => 58, or 59 with the optional submodule
+length(Raxol.Agent.Skills.Store.list())  # => 59, or 60 with the optional submodule
 ```
 
 To load skills straight from a repo checkout instead, add its path:

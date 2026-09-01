@@ -9,10 +9,12 @@ description: >
   DO NOT TRIGGER when: writing React/TypeScript code logic (use droo-stack skill),
   building Raxol TUI framework features (use raxol skill), working with
   CSS-in-JS runtime concerns (this skill covers design decisions, not runtime),
-  or designing API/module/public-surface interfaces (use interface-designer skill).
+  designing API/module/public-surface interfaces (use interface-designer skill),
+  or auditing an already-built page for AI-generated tells before shipping
+  (use frontend-slop-audit skill).
 metadata:
   author: DROOdotFOO
-  version: "1.0.0"
+  version: "1.1.0"
   tags: design, ux, ui, tailwind, react, accessibility, tokens, typography, tui
 ---
 
@@ -28,6 +30,7 @@ Design decisions flow from constraints, not decoration. Start from the character
 - Component composition patterns (React, TUI, mobile)
 - Typography, color, and spacing decisions with constraint rationale
 - Accessibility audit checklist (WCAG AA)
+- Motion primitives, scroll choreography, and reduced-motion contracts
 - Terminal-first design principles for monospace layouts
 
 ## When to Use
@@ -36,6 +39,8 @@ Design decisions flow from constraints, not decoration. Start from the character
 - Design token systems and theming
 - Typography, color, and spacing decisions
 - Accessibility and WCAG compliance
+- Motion, scroll animation, and reduced-motion behavior
+- Choosing a design system foundation vs. building on tokens
 - Layout and grid systems
 - Terminal UI design principles
 - Mobile/responsive design
@@ -60,6 +65,8 @@ Design decisions flow from constraints, not decoration. Start from the character
 | Grid, spacing, responsive breakpoints           | `web/layout-grid.md`             |
 | Type scale, font stacks, vertical rhythm        | `web/typography.md`              |
 | Color palettes, semantic tokens, contrast       | `web/color-systems.md`           |
+| Scroll animation, motion primitives, choreography | `web/motion.md`                |
+| Choosing a design system vs. rolling your own   | `web/design-system-selection.md` |
 | Terminal UI layout, box-drawing, constraints    | `terminal/tui-layout.md`         |
 | Monospace design language, density, ASCII       | `terminal/terminal-aesthetic.md` |
 | Mobile/responsive/touch, native patterns        | `mobile/responsive-native.md`    |
@@ -68,6 +75,7 @@ Design decisions flow from constraints, not decoration. Start from the character
 
 ## See also
 
+- `frontend-slop-audit` -- for auditing an already-built page against AI-generated tells
 - `droo-stack` -- for code-level patterns (TypeScript, React hooks, error handling)
 - `raxol` -- for Raxol TUI framework API (TEA agents, headless sessions)
 - `ethskills` -- for Ethereum/dApp ecosystem tooling
@@ -83,6 +91,8 @@ Design decisions flow from constraints, not decoration. Start from the character
 | Keyboard-inaccessible components   | Excludes keyboard-only users (WCAG AA fail)   | Test all interactive components with Tab key          |
 | Giant component with boolean props | Unmaintainable, untestable API surface        | Compose small focused components                      |
 | Pixel-perfect layouts              | Fragile across viewports and font sizes       | Constraint-based sizing from content                  |
+| Scroll position in React state     | Re-renders every frame, collapses on mobile   | Motion values, IntersectionObserver, or CSS timelines |
+| Hand-rolling an official system    | Drifts on upgrade, inherits none of its a11y  | Install the real package, theme its documented surface |
 
 ## Key Conventions
 
