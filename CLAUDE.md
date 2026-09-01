@@ -2,12 +2,12 @@
 
 ## Project Overview
 
-Agent-skills: 58 portable agent skills, one optional submodule skill, and 9 autonomous agents (38 MCP tools, 1,175 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Raxol, Codex, and Claude Code consume the same `SKILL.md` workflows. Agents are standalone tools with CLIs and MCP servers.
+Agent-skills: 59 portable agent skills, one optional submodule skill, and 9 autonomous agents (38 MCP tools, 1,175 tests) for polyglot development, web3, ZK, UI/UX, and systems programming. Raxol, Codex, and Claude Code consume the same `SKILL.md` workflows. Agents are standalone tools with CLIs and MCP servers.
 
 ## Structure
 
 ```
-skills/                   # 59 agent skills (agentskills.io SKILL.md; raxol default, Claude Code also)
+skills/                   # 60 agent skills (agentskills.io SKILL.md; raxol default, Claude Code also)
   <name>/SKILL.md         # Entry point per skill, with frontmatter + trigger clauses
 agents/                   # 9 autonomous agents (standalone tools)
   digest/                 # Multi-platform activity digest (18 sources)
@@ -27,11 +27,11 @@ AGENTS.md                 # Codex repository guidance
 
 ## Skills
 
-The portable distribution contains 58 skills. A populated checkout can also contain the optional cancer-analysis submodule skill. Each lives in `skills/<name>/` with a `SKILL.md` entry point. Sub-files use YAML frontmatter with `impact`, `impactDescription`, and `tags` fields.
+The portable distribution contains 59 skills. A populated checkout can also contain the optional cancer-analysis submodule skill. Each lives in `skills/<name>/` with a `SKILL.md` entry point. Sub-files use YAML frontmatter with `impact`, `impactDescription`, and `tags` fields.
 
 **Domain** (17): claude-api, droo-stack, raxol, raxol-payments, raxol-symphony, noir, solidity-auditor, zk-x-ray, ethskills, nix, native-code, ffmpeg-asm, blockscout, coingecko, signoz, web-asset-generator, cancer-predisposition-variant-analyst
 
-**Workflow** (11): tdd, code-review, prd-to-plan, focused-fix, release, qa, interface-designer, ubiquitous-language, design-ux, property-testing, refactoring-strategy
+**Workflow** (12): tdd, code-review, prd-to-plan, focused-fix, release, qa, interface-designer, ubiquitous-language, design-ux, frontend-slop-audit, property-testing, refactoring-strategy
 
 **Infrastructure** (13): mcp-server-builder, ci-cd-pipeline-builder, dependency-auditor, observability-designer, database-designer, performance-profiler, git-guardrails, git-worktree-manager, env-secrets-manager, tech-debt-tracker, security-auditor, playwright, prepper
 

@@ -104,6 +104,21 @@ TEST_CASES: list[tuple[str, list[str], list[str]]] = [
         ["refactoring-strategy"],
         [],
     ),
+    (
+        "Why does this landing page look AI-generated?",
+        ["frontend-slop-audit"],
+        [],
+    ),
+    (
+        "Run a pre-flight check on this marketing site before we ship",
+        ["frontend-slop-audit"],
+        [],
+    ),
+    (
+        "What type scale and design tokens should I use?",
+        ["design-ux"],
+        ["frontend-slop-audit"],
+    ),
     # Infrastructure skills
     (
         "Build an MCP server from this OpenAPI spec",
