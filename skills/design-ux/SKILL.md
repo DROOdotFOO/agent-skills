@@ -10,11 +10,12 @@ description: >
   building Raxol TUI framework features (use raxol skill), working with
   CSS-in-JS runtime concerns (this skill covers design decisions, not runtime),
   designing API/module/public-surface interfaces (use interface-designer skill),
-  or auditing an already-built page for AI-generated tells before shipping
-  (use frontend-slop-audit skill).
+  auditing an already-built page for AI-generated tells before shipping
+  (use frontend-slop-audit skill), or hands-on building, redesigning, or polishing
+  a web interface when the impeccable skill is installed (use impeccable skill).
 metadata:
   author: DROOdotFOO
-  version: "1.1.0"
+  version: "1.2.0"
   tags: design, ux, ui, tailwind, react, accessibility, tokens, typography, tui
 ---
 
@@ -49,6 +50,7 @@ Design decisions flow from constraints, not decoration. Start from the character
 ## When NOT to Use
 
 - **Code-level patterns** (TypeScript, React hooks, error handling) -- use `droo-stack`
+- **Hands-on web UI build, redesign, or polish** (critique, typeset, layout, colorize, polish passes) -- use `impeccable` when installed (`npx impeccable install`); this skill still owns token architecture, the monospace/TUI side, and mobile patterns
 - **Raxol framework API** (TEA agents, headless sessions, MCP tools) -- use `raxol`
 - **Claude/Anthropic SDK integration** -- use `claude-api`
 - **Solidity/smart contract design** -- use `solidity-auditor`

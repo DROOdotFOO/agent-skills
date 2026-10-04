@@ -8,10 +8,12 @@ description: >
   DO NOT TRIGGER when: making design-system decisions such as tokens, palettes, type
   scales, or motion architecture (use design-ux skill), reviewing code correctness or
   security (use code-review skill), generating favicons or social images (use
-  web-asset-generator skill), or working on terminal/TUI interfaces (use design-ux skill).
+  web-asset-generator skill), working on terminal/TUI interfaces (use design-ux skill),
+  or fixing the flagged page rather than auditing it (use impeccable skill if installed,
+  else design-ux skill).
 metadata:
   author: DROOdotFOO
-  version: "1.0.0"
+  version: "1.1.0"
   tags: audit, frontend, ui, review, anti-slop, landing-page, pre-flight, taste
 ---
 
@@ -27,6 +29,7 @@ Two kinds of finding. **Hard rules** are countable or measurable -- a wrapped CT
 - Mechanically checkable layout rules (hero fit, eyebrow ratio, bento cell count, CTA discipline)
 - An 8-group pre-flight checklist ordered cheapest-check-first
 - Contrast and consistency-lock verification steps that catch defects static review misses
+- An optional automated pre-scan via the Impeccable detector, merged into the same findings list
 - A reporting format that produces located, actionable findings
 
 ## When to Use
@@ -43,7 +46,8 @@ Two kinds of finding. **Hard rules** are countable or measurable -- a wrapped CT
 - **Code correctness, security, blast radius** -- use `code-review`
 - **Favicons, OG images, icon sets** -- use `web-asset-generator`
 - **Terminal and TUI interfaces** -- use `design-ux`, which owns the monospace side
-- **Dashboards, data tables, multi-step forms** -- these rules target marketing and portfolio surfaces; product UI has different density constraints
+- **Dashboards, data tables, multi-step forms** -- these rules target marketing and portfolio surfaces; product UI has different density constraints. Use `impeccable` (`/impeccable critique` or `/impeccable audit`) when installed
+- **Fixing the findings** -- this skill returns defects; hand the fix pass to `impeccable` (`/impeccable polish`) when installed, else `design-ux`
 
 ## Reading Guide
 
