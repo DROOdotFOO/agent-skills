@@ -1,6 +1,6 @@
 # agent-skills
 
-59 portable agent skills, one optional submodule skill, and 9 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming. Raxol, Codex, and Claude Code consume the same `SKILL.md` workflows.
+60 portable agent skills, one optional submodule skill, and 9 autonomous agents. Polyglot dev, web3, ZK, genomics, UI/UX, systems programming. Raxol, Codex, and Claude Code consume the same `SKILL.md` workflows.
 
 ## How skill loading works
 
@@ -76,6 +76,7 @@ ordinary plugin installs do not populate submodules.
 | `tech-debt-tracker`      | Debt scanning, cost-of-delay prioritization                     |
 | `security-auditor`       | Security vulnerability scanning and compliance assessment       |
 | `playwright`             | Browser automation and e2e testing tooling (Python + TS)        |
+| `local-browser-inspector` | Inspect already-open local browser tabs, Claude artifacts, and authenticated sessions |
 | `prepper`                | Pre-session project briefings (git, GitHub, CI, deps, recall)   |
 
 ### Meta

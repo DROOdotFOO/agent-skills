@@ -11,6 +11,21 @@ Run before declaring a page done. Each group is ordered cheapest-check-first, so
 
 Report results as a list of failures with file and line, not as a pass/fail verdict on the whole page. A page with three failures needs three fixes, not a rewrite.
 
+## Optional: Detector Pre-Scan
+
+When the Impeccable CLI is available (`npx impeccable --version` succeeds), run it before Group 1. Skip this section when it is not installed or there is no network for `npx`; the groups below are complete on their own.
+
+```bash
+npx impeccable detect --json <file-or-dir>           # static HTML/CSS/JSX scan
+npx impeccable detect --json http://localhost:3000   # rendered scan (desktop)
+npx impeccable detect --json --viewport 390x844 http://localhost:3000  # mobile pass
+```
+
+- Exit `2` means findings, `1` means a target could not be scanned, `0` means clean. Treat `1` as an incomplete scan, not a pass.
+- Each JSON finding carries `antipattern`, `file`, `line`, and `snippet`. HTML scans report `line: 0`; locate the finding by grepping its `snippet` before reporting it, per the located-findings rule below.
+- The detector honors `.impeccable/` ignore config, inline `impeccable-disable` comments, and the project's `DESIGN.md`. Add `--no-config` for an unfiltered audit and say so in the report.
+- It flags pattern presence (kicker above heading, marquee, nested cards, side-tab, low contrast), not this checklist's ratios and counts: eyebrow ratio, layout-family repetition, zigzag cap, bento cell count, duplicate CTA intent, hero element count. A clean detector run never replaces Groups 1-8.
+
 ## Group 1: Mechanical Counts
 
 These are countable by reading the markup. Do them first -- they need no judgment and catch the most common defects.
