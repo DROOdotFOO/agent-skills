@@ -48,9 +48,13 @@ url = "https://mcp.blockscout.com/mcp"
 
 [mcp_servers.coingecko]
 url = "https://mcp.api.coingecko.com/mcp"
+
+[mcp_servers.linear]
+url = "https://mcp.linear.app/mcp"
 ```
 
-Verify the active inventory with `codex mcp list`.
+Linear needs a browser login once: `codex mcp login linear`. Verify the active
+inventory with `codex mcp list`.
 
 ## Host-specific workflow surfaces
 

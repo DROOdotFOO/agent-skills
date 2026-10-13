@@ -78,6 +78,7 @@ ordinary plugin installs do not populate submodules.
 | `playwright`             | Browser automation and e2e testing tooling (Python + TS)        |
 | `local-browser-inspector` | Inspect already-open local browser tabs, Claude artifacts, and authenticated sessions |
 | `prepper`                | Pre-session project briefings (git, GitHub, CI, deps, recall)   |
+| `linear`                 | Linear issues, projects, cycles, comments via hosted MCP (OAuth) |
 
 ### Meta
 
@@ -138,7 +139,8 @@ Claude Code example:
     "sentinel": { "command": "sentinel", "args": ["serve"] },
     "patchbot": { "command": "patchbot", "args": ["serve"] },
     "regen": { "command": "regen", "args": ["serve"] },
-    "coingecko": { "url": "https://mcp.api.coingecko.com/mcp" }
+    "coingecko": { "url": "https://mcp.api.coingecko.com/mcp" },
+    "linear": { "url": "https://mcp.linear.app/mcp" }
   }
 }
 ```

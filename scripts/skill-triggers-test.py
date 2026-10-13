@@ -119,6 +119,16 @@ TEST_CASES: list[tuple[str, list[str], list[str]]] = [
         ["design-ux"],
         ["frontend-slop-audit"],
     ),
+    (
+        "Create a Linear issue for this bug and assign it to me",
+        ["linear"],
+        [],  # prd-to-plan also matches "issue"; acceptable overlap -- Claude uses full context
+    ),
+    (
+        "Summarize what the team shipped in the last cycle in Linear",
+        ["linear"],
+        ["watchdog"],
+    ),
     # Infrastructure skills
     (
         "Build an MCP server from this OpenAPI spec",
