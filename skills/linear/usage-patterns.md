@@ -16,7 +16,7 @@ Every workflow starts the same way:
 ## Create an issue from findings
 
 ```
-save_issue(team="AXO", title="...", description="<markdown>",
+save_issue(team="ENG", title="...", description="<markdown>",
            priority=2, labels=["Bug"], assignee="me", links=[{url, title}])
 ```
 
@@ -29,8 +29,8 @@ save_issue(team="AXO", title="...", description="<markdown>",
 ## Update an issue
 
 ```
-save_issue(id="AXO-12", state="In Progress", addLabels=["Needs Review"])
-save_issue(id="AXO-12", patch=[...])   # anchored partial description edits
+save_issue(id="LIN-123", state="In Progress", addLabels=["Needs Review"])
+save_issue(id="LIN-123", patch=[...])   # anchored partial description edits
 ```
 
 `patch` applies atomically; one failing anchor aborts the whole save. Prefer

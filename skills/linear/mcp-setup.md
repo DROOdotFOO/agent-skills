@@ -12,15 +12,23 @@ tags: "linear,mcp,setup,oauth"
 | `https://mcp.linear.app/mcp/readonly`   | read-only  |
 
 Auth is OAuth 2.1 with dynamic client registration; the host opens a browser.
-No API key is stored in any config file. For headless clients, send
-`Authorization: Bearer <LINEAR_API_KEY>` instead (a key created with only the
-`Read` permission gives read-only access on either endpoint).
+No API key is stored in any config file. The read-write resource advertises
+`read write`; `/mcp/readonly` advertises only `read` in its protected-resource
+metadata, and write tools are rejected there server-side regardless of token
+scope. Tokens are cached per host (Claude Code credentials store, Codex
+keychain entry `Codex MCP Credentials` keyed by server name + URL, mcp-remote
+under `~/.mcp-auth`), so switching endpoints means a fresh login.
+
+For headless clients send `Authorization: Bearer <LINEAR_API_KEY>` instead; a
+personal API key carries the permissions it was created with, so create a
+`Read`-only key for reporting jobs.
 
 ## Managed setup (dotfiles)
 
 `linear = true` and `linear_readonly = false` in `chezmoi.toml` render both the
 Claude Code `~/.mcp.json` entry and the Codex `codex mcp add` call. Flip
-`linear_readonly` to pin both hosts to `/mcp/readonly`, then `chezmoi apply`.
+`linear_readonly` to pin both hosts to `/mcp/readonly`, `chezmoi apply`, then
+log in again on each host (the URL is part of the cached credential key).
 
 ## Claude Code
 
@@ -60,30 +68,45 @@ experimental_use_rmcp_client = true` for OAuth HTTP servers. Check
 
 ## Raxol
 
-`Raxol.MCP.Client` is stdio-only, so bridge with `mcp-remote` (pin the version;
-the Raxol catalog never boots an unpinned package):
+`Raxol.MCP.Client` speaks Streamable HTTP directly (needs `mint`), but only
+with a static header; it has no OAuth flow. Two options:
+
+Unattended, with the symphony `LINEAR_API_KEY`:
+
+```elixir
+{:ok, client} = Raxol.MCP.Client.start_link(
+  name: :linear,
+  url: "https://mcp.linear.app/mcp/readonly",
+  headers: [{"authorization", "Bearer " <> System.fetch_env!("LINEAR_API_KEY")}]
+)
+```
+
+Interactive OAuth, bridged over stdio with a pinned `mcp-remote` (Raxol's own
+bundle pins every npm server; follow that convention):
 
 ```elixir
 {:ok, client} = Raxol.MCP.Client.start_link(
   name: :linear, command: "npx",
-  args: ["-y", "mcp-remote@0.1.37", "https://mcp.linear.app/mcp"]
+  args: ["-y", "mcp-remote@0.14.3", "https://mcp.linear.app/mcp"]
 )
 ```
 
-Interactive OAuth caches tokens under `~/.mcp-auth`. For unattended runs reuse
-the symphony `LINEAR_API_KEY`:
+mcp-remote caches tokens under `~/.mcp-auth/mcp-remote-<version>/`. If you
+hand it a bearer header instead, mcp-remote expands `${LINEAR_API_KEY}` from
+its own environment (no shell involved), but the literal still shows in the
+process list; prefer `--header-file /path/to/headers.txt` containing
+`Authorization: Bearer ...` (mode 0600).
 
-```elixir
-args: ["-y", "mcp-remote@0.1.37", "https://mcp.linear.app/mcp",
-       "--header", "Authorization: Bearer ${LINEAR_API_KEY}"]
-```
-
-Tools arrive as `mcp__linear__<tool>` and are `sensitive: true` by default, so
-the `ToolPolicy.deny_sensitive` authorizer gates them until opted in.
+Tools surface as `mcp__linear__<tool>`. `raxol_agent` marks MCP tools
+`sensitive: true` by default, and `Raxol.Agent.ToolPolicy.deny_sensitive/0`
+(the default authorizer) blocks them until a policy opts them in.
 
 ## Recovery
 
-- Internal server error on connect or stale token: `rm -rf ~/.mcp-auth`, reconnect.
-- Second workspace: separate auth context, e.g.
-  `MCP_REMOTE_CONFIG_DIR=~/.mcp-auth/work npx mcp-remote https://mcp.linear.app/mcp`.
+- Stale or rejected token: Claude Code `/mcp` -> `linear` -> clear auth and
+  log in again; Codex `codex mcp logout linear && codex mcp login linear`;
+  mcp-remote: delete only that server's `~/.mcp-auth/mcp-remote-*/<hash>_*`
+  files (wiping the whole directory logs out every mcp-remote server).
+- Second workspace with mcp-remote: separate auth context, e.g.
+  `MCP_REMOTE_CONFIG_DIR=~/.mcp-auth/work npx -y mcp-remote@0.14.3 https://mcp.linear.app/mcp`.
 - Dropped remote connection: disconnect and reconnect from the host; no data impact.

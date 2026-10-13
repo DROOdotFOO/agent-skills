@@ -147,4 +147,4 @@ Conventions shared by most tools:
 
 ## Guarded tools
 
-`share_issue` / `unshare_issue` and every `*_diff*` write tool mutate access or code review state; the tool descriptions require an explicit user request. `merge_diff` merges or queues a PR.
+Only `share_issue` / `unshare_issue` carry a server-side "use only when the user explicitly asks" instruction. The `*_diff*` write tools, `merge_diff` (merges or queues a PR), `delete_*`, and `retire_*` have no such guard in their descriptions; the explicit-request rule for them comes from this skill, not the server.
